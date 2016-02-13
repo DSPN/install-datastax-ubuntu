@@ -1,2 +1,2 @@
-# install-dse
-sh scripts to install and configure DSE on Ubuntu
+# install-datastax
+sh scripts to install and configure DataStax Enterprise and OpsCenter on Ubuntu
