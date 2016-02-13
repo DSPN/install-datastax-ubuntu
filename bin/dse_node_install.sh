@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo $(basename "$0") "$@"
 data_center_name=$1

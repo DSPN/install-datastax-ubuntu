@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo "Installing the Oracle JDK"
 add-apt-repository -y ppa:webupd8team/java
