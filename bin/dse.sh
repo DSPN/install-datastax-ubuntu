@@ -2,10 +2,8 @@
 
 ./install_java.sh
 
-cd os
-./configure.sh
+./os/configure_limits_conf.sh
 
-cd dse
-./install.sh
-./configure.sh
-./start.sh
+./dse/install.sh
+./dse/configure.sh
+./dse/start.sh
