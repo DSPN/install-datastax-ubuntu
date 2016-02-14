@@ -4,8 +4,8 @@
 # ulimit -n is giving 1024
 
 date=$(date +%F)
-limits_conf_backup="/etc/security/limits.conf.$date"
-cp /etc/security/limits.conf $limits_conf_backup
+backup="/etc/security/limits.conf.$date"
+cp /etc/security/limits.conf $backup
 
 cat <</EOF > /etc/security/limits.conf
 root             -      memlock          unlimited
