@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # I'm not convinced this is actually working, but going to move on and come back to it.
-# not sure the command to check nofile, I don't see it under ulimit -a
+# ulimit -n is giving 1024
 
 date=$(date +%F)
 limits_conf_backup="/etc/security/limits.conf.$date"
