@@ -2,8 +2,10 @@
 
 ./install_java.sh
 
-./os/configure.sh
+cd os
+./configure.sh
 
-./dse/install.sh
-./dse/configure.sh
-./dse/start.sh
+cd dse
+./install.sh
+./configure.sh
+./start.sh
