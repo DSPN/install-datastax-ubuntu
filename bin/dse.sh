@@ -3,7 +3,7 @@
 cloud_type="azure"
 data_center_name="dc0"
 seed_node_public_ip="10.0.0.4"
-opscenter_public_ip=""
+opscenter_public_ip="13.94.43.219"
 
 node_public_ip=`curl --max-time 50000 --retry 12 --retry-delay 50000 -s 'http://checkip.dyndns.org' | sed 's/.*Current IP Address: \([0-9\.]*\).*/\1/g'`
 node_private_ip=`echo $(hostname -I)`
@@ -24,4 +24,5 @@ echo node_private_ip \'$node_private_ip\'
 ./dse/install.sh
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
 ./dse/configure_cassandra_yaml.sh $node_private_ip $node_public_ip $seed_node_public_ip
+./dse/configure_agent_address_yaml.sh $node_private_ip $node_public_ip $opscenter_public_ip
 ./dse/start.sh
