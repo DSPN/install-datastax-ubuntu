@@ -6,6 +6,6 @@ curl -L https://debian.datastax.com/debian/repo_key | sudo apt-key add -
 apt-get -y update
 apt-get -y install dse-full=4.8.4-1
 
-# The install creates a cassandra user, so now we can do this:
+# The install of dse creates a cassandra user, so now we can do this:
 chown cassandra /mnt
 chgrp cassandra /mnt

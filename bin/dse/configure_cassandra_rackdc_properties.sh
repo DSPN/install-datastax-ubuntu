@@ -28,8 +28,8 @@ function get_rack {
   echo $rack
 }
 
-cloud_type="azure"
-dc="dc0"
+cloud_type="$1"
+dc="$2"
 rack=`get_rack $cloud_type`
 
 file=/etc/dse/cassandra/cassandra-rackdc.properties

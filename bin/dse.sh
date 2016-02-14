@@ -22,6 +22,6 @@ echo node_private_ip \'$node_private_ip\'
 ./os/configure_limits_conf.sh
 
 ./dse/install.sh
-./dse/configure_cassandra_rackdc_properties.sh
-./dse/configure_cassandra_yaml.sh
+./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
+./dse/configure_cassandra_yaml.sh $node_private_ip $node_public_ip $seed_node_public_ip
 ./dse/start.sh
