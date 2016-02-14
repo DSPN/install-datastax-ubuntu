@@ -1,14 +1,8 @@
 #!/usr/bin/env bash
 
-# hard coding some things for now...
-
 cloud_type="azure"
 data_center_name="dc0"
-
-# just going to hard code a private ip for now...
 seed_node_public_ip="10.0.0.4"
-
-# and ignore opscenter...
 opscenter_public_ip=""
 
 node_public_ip=`curl --max-time 50000 --retry 12 --retry-delay 50000 -s 'http://checkip.dyndns.org' | sed 's/.*Current IP Address: \([0-9\.]*\).*/\1/g'`
@@ -29,4 +23,5 @@ echo node_private_ip \'$node_private_ip\'
 
 ./dse/install.sh
 ./dse/configure_cassandra_rackdc_properties.sh
+./dse/configure_cassandra_yaml.sh
 ./dse/start.sh

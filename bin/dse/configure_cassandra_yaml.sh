@@ -1,31 +1,25 @@
 #!/usr/bin/env bash
 
-#
-# Generate cassandra.yaml
-#
-cluster_name='Cluster'
+node_private_ip=$1
+
 seeds="$seed_node_public_ip"
 listen_address=$node_private_ip
 broadcast_address=$node_public_ip
 rpc_address=$node_private_ip
 broadcast_rpc_address=$node_public_ip
+
 endpoint_snitch="GossipingPropertyFileSnitch"
 num_tokens=64
-
-concurrent_reads=64
-concurrent_writes=64
-memtable_flush_writers=3
-concurrent_compactors=2
-compaction_throughput_mb_per_sec=0
-commitlog_segment_size_in_mb=64
-compaction_throughput_mb_per_sec=100
+data_file_directories="/mnt"
 phi_convict_threshold=12
-inter_dc_stream_throughput_outbound_megabits_per_sec=100
-write_request_timeout_in_ms=3000
 
-# TODO: Change the "-" substitutions to a  multi-line sed pattern substitution.
-cat cassandra.yaml \
-| sed -e "s:.*\(cluster_name\:\).*:cluster_name\: \'$cluster_name\':" \
+file=/etc/dse/cassandra/cassandra.yaml
+
+date=$(date +%F)
+backup="$file.$date"
+cp $file $backup
+
+cat $file \
 | sed -e "s:\(.*- *seeds\:\).*:\1 \"$seeds\":" \
 | sed -e "s:[# ]*\(listen_address\:\).*:listen_address\: $listen_address:" \
 | sed -e "s:[# ]*\(broadcast_address\:\).*:broadcast_address\: $broadcast_address:" \
@@ -44,7 +38,6 @@ cat cassandra.yaml \
 | sed -e "s:.*\(phi_convict_threshold\:\).*:phi_convict_threshold\: $phi_convict_threshold:" \
 | sed -e "s:.*\(inter_dc_stream_throughput_outbound_megabits_per_sec\:\).*:inter_dc_stream_throughput_outbound_megabits_per_sec\: $inter_dc_stream_throughput_outbound_megabits_per_sec:" \
 | sed -e "s:.*\(write_request_timeout_in_ms\:\).*:write_request_timeout_in_ms\: $write_request_timeout_in_ms:" \
-> cassandra.yaml.new
-(set -x; chown cassandra:cassandra cassandra.yaml.new)
-(set -x; diff cassandra.yaml cassandra.yaml.new)
-(set -x; mv -f cassandra.yaml.new cassandra.yaml )
+> $file.new
+
+mv $file.new $file
