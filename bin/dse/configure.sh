@@ -23,4 +23,3 @@ echo seed_node_public_ip \'$seed_node_public_ip\'
 echo opscenter_public_ip \'$opscenter_public_ip\'
 echo node_public_ip \'$node_public_ip\'
 echo node_private_ip \'$node_private_ip\'
-
