@@ -3,11 +3,13 @@
 # I'm not convinced this is actually working, but going to move on and come back to it.
 # ulimit -n is giving 1024
 
-date=$(date +%F)
-backup="/etc/security/limits.conf.$date"
-cp /etc/security/limits.conf $backup
+file=/etc/security/limits.conf
 
-cat <</EOF > /etc/security/limits.conf
+date=$(date +%F)
+backup="$file.$date"
+cp $file $backup
+
+cat <</EOF > $file
 root             -      memlock          unlimited
 root             -      nofile           100000
 root             -      nproc            32768

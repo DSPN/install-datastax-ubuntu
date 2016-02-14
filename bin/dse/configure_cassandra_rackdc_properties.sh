@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 
-#
-# generate cassandra-rackdc.properties.new
-#
-dc=$data_center_name
-rack=$rack
-cat cassandra-rackdc.properties \
+dc="dc0"
+rack="123"
+
+file=/etc/dse/cassandra/cassandra-rackdc.properties
+
+date=$(date +%F)
+backup="$file.$date"
+cp $file $backup
+
+cat $file \
 | sed -e "s:^\(dc\=\).*:dc\=$dc:" \
 | sed -e "s:^\(rack\=\).*:rack\=$rack:" \
-> cassandra-rackdc.properties.new
-(set -x; chown cassandra:cassandra cassandra-rackdc.properties.new)
-(set -x; diff cassandra-rackdc.properties cassandra-rackdc.properties.new)
-(set -x; mv -f cassandra-rackdc.properties.new cassandra-rackdc.properties )
+> $file.new
 
+mv $file.new $file
