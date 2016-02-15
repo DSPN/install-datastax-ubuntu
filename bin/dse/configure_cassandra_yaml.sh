@@ -38,5 +38,6 @@ cat $file \
 > $file.new
 
 echo "auto_bootstrap: $auto_bootstrap" >> $file.new
+echo "" >> $file.new
 
 mv $file.new $file
