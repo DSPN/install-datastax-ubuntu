@@ -15,6 +15,7 @@ data_file_directories="/mnt/data"
 commitlog_directory="/mnt/commitlog"
 saved_caches_directory="/mnt/saved_caches"
 phi_convict_threshold=12
+auto_bootstrap="false"
 
 file=/etc/dse/cassandra/cassandra.yaml
 
@@ -34,6 +35,7 @@ cat $file \
 | sed -e "s:.*\(commitlog_directory\:\).*:commitlog_directory\: $commitlog_directory:" \
 | sed -e "s:.*\(saved_caches_directory\:\).*:saved_caches_directory\: $saved_caches_directory:" \
 | sed -e "s:.*\(phi_convict_threshold\:\).*:phi_convict_threshold\: $phi_convict_threshold:" \
+| sed -e "s:.*\(auto_bootstrap\:\).*:auto_bootstrap\: $auto_bootstrap:" \
 > $file.new
 
 mv $file.new $file
