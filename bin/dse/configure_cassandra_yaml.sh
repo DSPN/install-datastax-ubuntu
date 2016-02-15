@@ -35,7 +35,8 @@ cat $file \
 | sed -e "s:.*\(commitlog_directory\:\).*:commitlog_directory\: $commitlog_directory:" \
 | sed -e "s:.*\(saved_caches_directory\:\).*:saved_caches_directory\: $saved_caches_directory:" \
 | sed -e "s:.*\(phi_convict_threshold\:\).*:phi_convict_threshold\: $phi_convict_threshold:" \
-| sed -e "s:.*\(auto_bootstrap\:\).*:auto_bootstrap\: $auto_bootstrap:" \
 > $file.new
+
+echo "auto_bootstrap: $auto_bootstrap" >> $file.new
 
 mv $file.new $file
