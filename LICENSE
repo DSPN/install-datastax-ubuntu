@@ -1,3 +1,11 @@
+# These scripts use the Oracle JDK.  By using these scripts the user accepts
+# the licensing terms set forth here: http://java.com/license
+#
+# These scripts use DataStax Enterprise.  By using these scripts the user accepts
+# the licensing terms set forth here: http://www.datastax.com/enterprise-terms
+#
+
+
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
