@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-seed_node_public_ip="13.94.43.68"
+seed_node_public_ip=$1
 
 ./os/install_java.sh
 
