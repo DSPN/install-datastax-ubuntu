@@ -5,7 +5,7 @@ data_center_name=$2
 seed_node_public_ip=$3
 opscenter_public_ip=$4
 
-node_public_ip=`curl --max-time 50000 --retry 12 --retry-delay 50000 -s 'http://checkip.dyndns.org' | sed 's/.*Current IP Address: \([0-9\.]*\).*/\1/g'`
+node_public_ip=`curl --retry 10 icanhazip.com`
 node_private_ip=`echo $(hostname -I)`
 
 echo "Configuring nodes with the settings:"
