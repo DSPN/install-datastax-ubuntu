@@ -8,9 +8,6 @@ seed_node_public_ip=$1
 cat <</EOF >> /etc/opscenter/opscenterd.conf
 [clusters]
 add_cluster_timeout = 90
-
-[cassandra]
-max_schema_agreement_wait = 90
 /EOF
 
 ./opscenter/start.sh
