@@ -3,9 +3,16 @@
 seed_node_public_ip=$1
 
 ./os/install_java.sh
-
 ./opscenter/install.sh
+
+cat <</EOF >> /etc/opscenter/opscenterd.conf
+[clusters]
+add_cluster_timeout = 90
+
+[cassandra]
+max_schema_agreement_wait = 90
+/EOF
+
 ./opscenter/start.sh
 
-# going to try setting [clusters] add_cluster_timeout to 90 seconds before running this
 #./opscenter/manage_existing_cluster.sh $seed_node_public_ip
