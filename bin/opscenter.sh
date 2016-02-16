@@ -6,6 +6,7 @@ seed_node_public_ip=$1
 ./opscenter/install.sh
 
 cat <</EOF >> /etc/opscenter/opscenterd.conf
+
 [clusters]
 add_cluster_timeout = 90
 /EOF
