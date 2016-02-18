@@ -7,5 +7,5 @@ seed_node_public_ip=$1
 ./opscenter/start.sh
 
 echo "Waiting for OpsCenter to start..."
-sleep 30
+sleep 3600
 ./opscenter/manage_existing_cluster.sh $seed_node_public_ip
