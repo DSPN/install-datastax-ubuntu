@@ -11,7 +11,6 @@ file=/var/lib/datastax-agent/conf/address.yaml
 
 cat <</EOF > $file
 stomp_interface: $opscenter_public_ip
-local_interface: $node_private_ip
 agent_rpc_interface: $node_private_ip
 agent_rpc_broadcast_address: $node_public_ip
 /EOF
