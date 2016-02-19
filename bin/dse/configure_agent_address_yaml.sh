@@ -12,3 +12,6 @@ cat <</EOF > $file
 agent_rpc_interface: $node_private_ip
 agent_rpc_broadcast_address: $node_public_ip
 /EOF
+
+chown cassandra $file
+chgrp cassandra $file
