@@ -6,4 +6,6 @@ seed_node_public_ip=$1
 ./opscenter/install.sh
 ./opscenter/start.sh
 
-#./opscenter/manage_existing_cluster.sh $seed_node_public_ip
+# Wait for OpsCenter to start
+sleep 60
+./opscenter/manage_existing_cluster.sh $seed_node_public_ip
