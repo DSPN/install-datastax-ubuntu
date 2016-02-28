@@ -18,8 +18,8 @@ function get_rack {
     fi
     rack=$(echo $availability_zone | sed -e 's/-/_/g')
   elif [[ $cloud_type == "google" ]]; then
-    echo Google is not supported yet 1>&2
-    exit 99
+    echo Google rack awareness is not supported yet.  Hard coding a rack. 1>&2
+    rack="rack1"
   else
     echo $cloud_type is not supported 1>&2
     exit 99
