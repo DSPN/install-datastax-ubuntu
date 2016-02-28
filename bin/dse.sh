@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 
+
 cloud_type=$1
 data_center_name=$2
-seed_node_public_ip=$3
+seed_nodes_dns_names=$3
+
+# Assuming only one seed is passed in for now
+seed_node_dns_name=$seed_node_dns_names
+seed_node_public_ip=`dig +short $seed_node_dns_name | awk '{ print ; exit }'`
 
 node_public_ip=`curl --retry 10 icanhazip.com`
 node_private_ip=`echo $(hostname -I)`
