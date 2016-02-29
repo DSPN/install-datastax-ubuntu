@@ -23,7 +23,7 @@ function get_rack {
 	  echo Unable to retrieve Instance Zone from instance metadata server 1>&2
 	  exit 99
     fi
-    rack=$(zone)
+    rack=$zone
   else
     echo $cloud_type is not supported 1>&2
     exit 99
