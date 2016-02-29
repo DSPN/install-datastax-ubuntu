@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "Running install-datastax/bin/opscenter.sh"
+
 seed_nodes_dns_names=$1
 
 # Assuming only one seed is passed in for now

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+echo "Running install-datastax/bin/dse.sh"
 
 cloud_type=$1
 data_center_name=$2
