@@ -18,7 +18,7 @@ function get_rack {
     fi
     rack=$(echo $availability_zone | sed -e 's/-/_/g')
   elif [[ $cloud_type == "google" ]]; then
-    zone=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/zone" -H "Metadata-Flavor: Google")
+    zone=$(curl -s -H "Metadata-Flavor: Google" "http://metadata.google.internal/computeMetadata/v1/instance/zone" | grep -o [[:alnum:]-]*$)
     if [ ! "$zone" ]; then
 	  echo Unable to retrieve Instance Zone from instance metadata server 1>&2
 	  exit 99
