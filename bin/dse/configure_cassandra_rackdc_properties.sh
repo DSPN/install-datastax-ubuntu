@@ -18,8 +18,12 @@ function get_rack {
     fi
     rack=$(echo $availability_zone | sed -e 's/-/_/g')
   elif [[ $cloud_type == "google" ]]; then
-    echo Google rack awareness is not supported yet.  Hard coding a rack. 1>&2
-    rack="rack1"
+    zone=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/zone" -H "Metadata-Flavor: Google")
+    if [ ! "$zone" ]; then
+	  echo Unable to retrieve Instance Zone from instance metadata server 1>&2
+	  exit 99
+    fi
+    rack=$(zone)
   else
     echo $cloud_type is not supported 1>&2
     exit 99
