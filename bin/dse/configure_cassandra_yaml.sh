@@ -7,7 +7,7 @@ seed_node_public_ip=$3
 seeds=$seed_node_public_ip
 listen_address=$node_private_ip
 broadcast_address=$node_public_ip
-rpc_address="0.0.0.0"
+rpc_address=$node_private_ip
 broadcast_rpc_address=$node_public_ip
 
 endpoint_snitch="GossipingPropertyFileSnitch"
