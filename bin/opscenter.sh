@@ -10,10 +10,13 @@ seed_node_dns_name=$seed_node_dns_names
 # On AWS and Azure this gets the public IP.  On Google it resolves to a private IP that is globally routeable in GCP.
 seed_node_ip=`dig +short $seed_node_dns_name | awk '{ print ; exit }'`
 
+echo "Configuring OpsCenter with the settings:"
+echo seed_node_ip \'$seed_node_ip\'
+
 ./os/install_java.sh
 ./opscenter/install.sh
 ./opscenter/start.sh
 
-# Wait for OpsCenter to start
+echo "Waiting for OpsCenter to start..."
 sleep 60
 ./opscenter/manage_existing_cluster.sh $seed_node_ip
