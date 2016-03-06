@@ -8,7 +8,7 @@ seed_nodes_dns_names=$1
 seed_node_dns_name=$seed_node_dns_names
 
 # On AWS and Azure this gets the public IP.  On Google it resolves to a private IP that is globally routeable in GCP.
-seed_node_ip=`dig +short $seed_node_dns_name | awk '{ print ; exit }'`
+seed_node_ip=`dig +short $seed_node_dns_name`
 
 echo "Configuring OpsCenter with the settings:"
 echo seed_node_ip \'$seed_node_ip\'
