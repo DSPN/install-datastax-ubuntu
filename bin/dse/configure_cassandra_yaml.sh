@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-node_private_ip=$1
-node_public_ip=$2
-seed_node_public_ip=$3
+node_ip=$1
+node_broadcast_ip=$2
+seed_node_ip=$3
 
-seeds=$seed_node_public_ip
-listen_address=$node_private_ip
-broadcast_address=$node_public_ip
-rpc_address=$node_private_ip
-broadcast_rpc_address=$node_public_ip
+seeds=$seed_node_ip
+listen_address=$node_ip
+broadcast_address=$node_broadcast_ip
+rpc_address=$node_ip
+broadcast_rpc_address=$node_broadcast_ip
 
 endpoint_snitch="GossipingPropertyFileSnitch"
 num_tokens=64

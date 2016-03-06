@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-seed_node_public_ip=$1
+seed_node_ip=$1
 
 sudo tee config.json > /dev/null <<EOF
 {
   "cassandra": {
-    "seed_hosts": "$seed_node_public_ip"
+    "seed_hosts": "seed_node_ip"
   },
   "cassandra_metrics": {},
   "jmx": {

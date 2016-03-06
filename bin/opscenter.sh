@@ -16,4 +16,4 @@ seed_node_ip=`dig +short $seed_node_dns_name | awk '{ print ; exit }'`
 
 # Wait for OpsCenter to start
 sleep 60
-./opscenter/manage_existing_cluster.sh $seed_public_ip
+./opscenter/manage_existing_cluster.sh $seed_node_ip
