@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+###### This doesn't really work.  It makes the assumption that the setup user is the login user.
+# It's not in most cases.
+# Need to set this globally somehow
+
 node_broadcast_ip=$1
 
 # By default cqlsh connects to 127.0.0.1.
