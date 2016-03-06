@@ -7,11 +7,14 @@ node_broadcast_ip=$1
 # So, we need to connect to the broadbast IP for that node
 
 mkdir $HOME/.cassandra
-set -x; chown cassandra:cassandra $HOME/.cassandra
+
+chown cassandra:cassandra $HOME/.cassandra
 chmod 777 $HOME/.cassandra
+
 cat <</EOF >$HOME/.cassandra/cqlshrc
 [connection]
 hostname = $node_broadcast_ip
 /EOF
-(set -x; chown cassandra:cassandra $HOME/.cassandra/cqlshrc)
-(set -x; chmod 755 $HOME/.cassandra/cqlshrc)
+
+chown cassandra:cassandra $HOME/.cassandra/cqlshrc
+chmod 755 $HOME/.cassandra/cqlshrc
