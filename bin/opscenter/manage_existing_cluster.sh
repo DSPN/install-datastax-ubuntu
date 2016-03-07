@@ -5,7 +5,7 @@ seed_node_ip=$1
 sudo tee config.json > /dev/null <<EOF
 {
   "cassandra": {
-    "seed_hosts": "seed_node_ip"
+    "seed_hosts": "$seed_node_ip"
   },
   "cassandra_metrics": {},
   "jmx": {

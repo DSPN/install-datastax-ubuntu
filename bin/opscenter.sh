@@ -18,5 +18,5 @@ echo seed_node_ip \'$seed_node_ip\'
 ./opscenter/start.sh
 
 echo "Waiting for OpsCenter and nodes to start..."
-sleep 300
+sleep 120
 ./opscenter/manage_existing_cluster.sh $seed_node_ip
