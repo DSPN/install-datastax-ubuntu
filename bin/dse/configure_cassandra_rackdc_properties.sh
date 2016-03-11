@@ -45,6 +45,7 @@ cp $file $backup
 cat $file \
 | sed -e "s:^\(dc\=\).*:dc\=$dc:" \
 | sed -e "s:^\(rack\=\).*:rack\=$rack:" \
+| sed -e "s:^\(prefer_local\=\).*:rack\=true:" \
 > $file.new
 
 mv $file.new $file
