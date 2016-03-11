@@ -33,11 +33,9 @@ echo node_ip \'$node_ip\'
 #### Ok, now let's starting making changes to the system...
 
 ./os/install_java.sh
-./os/configure_limits_conf.sh
 
 ./dse/install.sh
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
 ./dse/configure_cassandra_yaml.sh $node_ip $node_broadcast_ip $seed_node_ip
 ./dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip
-./dse/configure_cqlsh.sh $node_broadcast_ip
 ./dse/start.sh

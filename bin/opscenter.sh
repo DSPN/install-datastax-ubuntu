@@ -14,6 +14,7 @@ echo "Configuring OpsCenter with the settings:"
 echo seed_node_ip \'$seed_node_ip\'
 
 ./os/install_java.sh
+
 ./opscenter/install.sh
 ./opscenter/start.sh
 
