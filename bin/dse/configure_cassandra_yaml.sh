@@ -2,12 +2,12 @@
 
 node_ip=$1
 node_broadcast_ip=$2
-seed_node_ip=$3
+seed_node_public_ip=$3
 
-seeds=$seed_node_ip
+seeds=$seed_node_public_ip
 listen_address=$node_ip
 broadcast_address=$node_broadcast_ip
-rpc_address=$node_ip
+rpc_address="0.0.0.0"
 broadcast_rpc_address=$node_broadcast_ip
 
 endpoint_snitch="GossipingPropertyFileSnitch"
