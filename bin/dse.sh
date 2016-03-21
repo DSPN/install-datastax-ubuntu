@@ -3,8 +3,8 @@
 echo "Running install-datastax/bin/dse.sh"
 
 cloud_type=$1
-data_center_name=$2
-seed_nodes_dns_names=$3
+seed_nodes_dns_names=$2
+data_center_name=$3
 
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
@@ -33,7 +33,11 @@ echo node_ip \'$node_ip\'
 #### Ok, now let's starting making changes to the system...
 
 ./os/install_java.sh
-./os/set_tcp_keepalive_time.sh
+
+if [[ $cloud_type == "azure" ]]; then
+  ./os/set_tcp_keepalive_time.sh
+  ./os/set_mtu.sh
+fi
 
 ./dse/install.sh
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name

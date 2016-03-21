@@ -2,7 +2,8 @@
 
 echo "Running install-datastax/bin/opscenter.sh"
 
-seed_nodes_dns_names=$1
+cloud_type=$1
+seed_nodes_dns_names=$2
 
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
@@ -14,7 +15,10 @@ echo "Configuring OpsCenter with the settings:"
 echo seed_node_ip \'$seed_node_ip\'
 
 ./os/install_java.sh
-./os/set_tcp_keepalive_time.sh
+
+if [[ $cloud_type == "azure" ]]; then
+  ./os/set_tcp_keepalive_time.sh
+fi
 
 ./opscenter/install.sh
 ./opscenter/start.sh
