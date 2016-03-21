@@ -46,6 +46,7 @@ cat $file \
 | sed -e "s:^\(dc\=\).*:dc\=$dc:" \
 | sed -e "s:^\(rack\=\).*:rack\=$rack:" \
 | sed -e "s:^\(prefer_local\=\).*:rack\=true:" \
+| sed -e "s:[# ]*\(prefer_local\=\).*:prefer_local\=true:" \
 > $file.new
 
 mv $file.new $file
