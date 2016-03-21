@@ -14,6 +14,8 @@ echo "Configuring OpsCenter with the settings:"
 echo seed_node_ip \'$seed_node_ip\'
 
 ./os/install_java.sh
+./os/set_tcp_keepalive_time.sh
+
 ./opscenter/install.sh
 ./opscenter/start.sh
 

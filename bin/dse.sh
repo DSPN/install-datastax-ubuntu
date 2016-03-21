@@ -33,6 +33,7 @@ echo node_ip \'$node_ip\'
 #### Ok, now let's starting making changes to the system...
 
 ./os/install_java.sh
+./os/set_tcp_keepalive_time.sh
 
 ./dse/install.sh
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
