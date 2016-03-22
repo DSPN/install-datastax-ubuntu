@@ -40,6 +40,7 @@ echo node_ip \'$node_ip\'
 ./dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip
 ./dse/start.sh
 
+# It looks like DSE might be setting the keepalive to 300.  Need to confirm.
 if [[ $cloud_type == "azure" ]]; then
   ./os/set_tcp_keepalive_time.sh
 fi

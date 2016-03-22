@@ -19,10 +19,9 @@ if [[ $cloud_type == "azure" ]]; then
 fi
 
 ./os/install_java.sh
-
 ./opscenter/install.sh
 ./opscenter/start.sh
 
-echo "Waiting for OpsCenter and nodes to start..."
-sleep 60
+echo "Waiting for OpsCenter to start..."
+sleep 10
 ./opscenter/manage_existing_cluster.sh $seed_node_ip
