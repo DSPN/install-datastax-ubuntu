@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Azure public IPs have some odd keepalive behaviour.
+# Azure public IPs have some odd keepalive behavior.
 # A good summary is available here: https://docs.mongodb.org/ecosystem/platforms/windows-azure/
 
 # Set it for now
