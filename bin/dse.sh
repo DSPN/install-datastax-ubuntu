@@ -36,7 +36,6 @@ echo node_ip \'$node_ip\'
 
 if [[ $cloud_type == "azure" ]]; then
   ./os/set_tcp_keepalive_time.sh
-  ./os/set_mtu.sh
 fi
 
 ./dse/install.sh
