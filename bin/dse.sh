@@ -34,12 +34,12 @@ echo node_ip \'$node_ip\'
 
 ./os/install_java.sh
 
-if [[ $cloud_type == "azure" ]]; then
-  ./os/set_tcp_keepalive_time.sh
-fi
-
 ./dse/install.sh
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
 ./dse/configure_cassandra_yaml.sh $node_ip $node_broadcast_ip $seed_node_ip
 ./dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip
 ./dse/start.sh
+
+if [[ $cloud_type == "azure" ]]; then
+  ./os/set_tcp_keepalive_time.sh
+fi

@@ -14,11 +14,11 @@ seed_node_ip=`dig +short $seed_node_dns_name`
 echo "Configuring OpsCenter with the settings:"
 echo seed_node_ip \'$seed_node_ip\'
 
-./os/install_java.sh
-
 if [[ $cloud_type == "azure" ]]; then
   ./os/set_tcp_keepalive_time.sh
 fi
+
+./os/install_java.sh
 
 ./opscenter/install.sh
 ./opscenter/start.sh
