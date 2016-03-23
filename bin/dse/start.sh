@@ -3,5 +3,4 @@
 echo "Starting DataStax Enterprise"
 sudo service dse start
 
-echo "Starting the DataStax Agent"
-sudo service datastax-agent start
+# We don't need to start the DataStax agent.  The "manage existing cluster" call will start it for us.
