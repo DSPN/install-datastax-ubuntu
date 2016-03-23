@@ -34,6 +34,9 @@ echo node_ip \'$node_ip\'
 
 ./os/install_java.sh
 
+# OpsCenter uses iostat and Ubuntu 14.04 LTS doesn't seem to have it installed by default.
+sudo apt-get -y install sysstat
+
 ./dse/install.sh
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
 ./dse/configure_cassandra_yaml.sh $node_ip $node_broadcast_ip $seed_node_ip
