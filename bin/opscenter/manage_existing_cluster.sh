@@ -19,3 +19,6 @@ while [ "${output}" != "\"Test_Cluster\"" ]; do
     output=`curl -X POST http://127.0.0.1:8888/cluster-configs -d @config.json`
     echo $output
 done
+
+# We're seeing a concurrency bug.  Advice from engineering is to restart OpsCenter.
+sudo service opscenterd restart
