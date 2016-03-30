@@ -5,6 +5,8 @@ echo "Running install-datastax/bin/dse.sh"
 cloud_type=$1
 seed_nodes_dns_names=$2
 data_center_name=$3
+dse_username=$4
+dse_password=$5
 
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
