@@ -21,4 +21,5 @@ while [ "${output}" != "\"Test_Cluster\"" ]; do
 done
 
 # We're seeing a concurrency bug.  Advice from engineering is to restart OpsCenter.
+sleep 60
 sudo service opscenterd restart
