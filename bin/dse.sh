@@ -12,7 +12,6 @@ seed_node_dns_name=$seed_nodes_dns_names
 # On AWS and Azure this gets the public IP.
 # On GCE it resolves to a private IP that is globally routeable in GCE.
 # On GKE it resolves to a private IP (fingers crossed)
-apt-get -y install dnsutils # install dig
 seed_node_ip=`dig +short $seed_node_dns_name`
 
 if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
