@@ -9,13 +9,17 @@ data_center_name=$3
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
 
-# On AWS and Azure this gets the public IP.  On GCE it resolves to a private IP that is globally routeable in GCE.
+# On AWS and Azure this gets the public IP.
+# On GCE it resolves to a private IP that is globally routeable in GCE.
+# On GKE it resolves to a private IP (fingers crossed)
+apt-get -y install dnsutils # install dig
 seed_node_ip=`dig +short $seed_node_dns_name`
 
-if [[ $cloud_type == "gce" ]]; then
+if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
   # On Google private IPs are globally routable within GCE
   # We've also been seeing issues using the public ones for broadcast.
   # So, we're just going to use the private for everything.
+  # We're still trying to figure out GKE, but only supporting 1 DC for now, so this ought to work.
   node_broadcast_ip=`echo $(hostname -I)`
   node_ip=`echo $(hostname -I)`
 else
