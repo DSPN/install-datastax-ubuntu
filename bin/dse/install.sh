@@ -14,10 +14,6 @@ else
   exit 99
 fi
 
-echo "Installing HTTPS"
-apt-get -y update
-apt-get -y install apt-transport-https
-
 curl -L https://debian.datastax.com/debian/repo_key | sudo apt-key add -
 
 echo "Running apt-get install dse..."
