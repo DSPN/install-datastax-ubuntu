@@ -9,7 +9,8 @@ data_center_name=$3
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
 
-# On GKE it does not resolve.  Need something else...
+# Seed Resolution -----
+# On GKE we resolve to a private IP.
 # On AWS and Azure this gets the public IP.
 # On GCE it resolves to a private IP that is globally routeable in GCE.
 if [[ $cloud_type == "gke" ]]; then
