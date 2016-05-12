@@ -8,10 +8,17 @@ seed_nodes_dns_names=$2
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
 
-# On AWS and Azure this gets the public IP.  On Google it resolves to a private IP that is globally routeable in GCP.
-seed_node_ip=`dig +short $seed_node_dns_name`
+# On GKE it does not resolve.  Need something else...
+# On AWS and Azure this gets the public IP.
+# On GCE it resolves to a private IP that is globally routeable in GCE.
+if [[ $cloud_type == "gke" ]]; then
+  seed_node_ip=$seed_node_dns_name
+else
+  seed_node_ip=`dig +short $seed_node_dns_name`
+fi
 
 echo "Configuring OpsCenter with the settings:"
+echo cloud_type \'$cloud_type\'
 echo seed_node_ip \'$seed_node_ip\'
 
 if [[ $cloud_type == "azure" ]]; then

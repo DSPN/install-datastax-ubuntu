@@ -9,10 +9,14 @@ data_center_name=$3
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
 
+# On GKE it does not resolve.  Need something else...
 # On AWS and Azure this gets the public IP.
 # On GCE it resolves to a private IP that is globally routeable in GCE.
-# On GKE it resolves to a private IP (fingers crossed)
-seed_node_ip=`dig +short $seed_node_dns_name`
+if [[ $cloud_type == "gke" ]]; then
+  seed_node_ip=$seed_node_dns_name
+else
+  seed_node_ip=`dig +short $seed_node_dns_name`
+fi
 
 if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
   # On Google private IPs are globally routable within GCE
