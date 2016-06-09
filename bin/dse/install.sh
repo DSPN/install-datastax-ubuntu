@@ -9,6 +9,8 @@ if [[ $cloud_type == "azure" ]]; then
   echo "deb http://datastax%40microsoft.com:3A7vadPHbNT@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
 elif [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
   echo "deb http://datastax%40google.com:8GdeeVT2s7zi@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
+elif [[ $cloud_type == "aws" ]]; then
+  echo "deb http://datastax%40microsoft.com:3A7vadPHbNT@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
 else
   echo $cloud_type is not supported 1>&2
   exit 99
