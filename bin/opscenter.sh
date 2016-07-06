@@ -13,7 +13,7 @@ seed_node_dns_name=$seed_nodes_dns_names
 # On AWS and Azure this gets the public IP.
 # On GCE it resolves to a private IP that is globally routeable in GCE.
 if [[ $cloud_type == "gke" ]]; then
-  seed_node_ip=`getent hosts $seed_node_dns_name | awk '{ print $1 }'`
+  seed_node_ip=`getent hosts $seed_node_dns_name | awk '{ print $1w }'`
 else
   seed_node_ip=`dig +short $seed_node_dns_name`
 fi
@@ -37,5 +37,5 @@ fi
 ./opscenter/start.sh
 
 echo "Waiting for OpsCenter to start..."
-sleep 10
+sleep 100
 ./opscenter/manage_existing_cluster.sh $seed_node_ip
