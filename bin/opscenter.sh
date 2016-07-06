@@ -27,7 +27,7 @@ if [[ $cloud_type == "azure" ]]; then
 fi
 
 ./os/install_java.sh
-./opscenter/install.sh
+./opscenter/install.sh azure
 
 if [[ $cloud_type == "azure" ]]; then
   opscenter_broadcast_ip=`curl --retry 10 icanhazip.com`

@@ -2,6 +2,8 @@
 
 echo "Installing OpsCenter"
 #echo "deb http://debian.datastax.com/community stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.community.list
+cloud_type=$1
+
 echo "Adding the DataStax repository"
 if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
   echo "deb http://datastax%40google.com:8GdeeVT2s7zi@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
