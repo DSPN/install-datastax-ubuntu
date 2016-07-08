@@ -21,3 +21,6 @@ apt-get -y install dse-full=$dse_version dse=$dse_version dse-hive=$dse_version 
 # The install of dse creates a cassandra user, so now we can do this:
 chown cassandra /mnt
 chgrp cassandra /mnt
+
+echo "Installing DataStax Agent"
+sudo apt-get install datastax-agent
