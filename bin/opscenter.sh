@@ -29,7 +29,6 @@ fi
 ./os/install_java.sh
 ./opscenter/install.sh $cloud_type
 
-sleep 10
 if [[ $cloud_type == "azure" ]]; then
   opscenter_broadcast_ip=`curl --retry 10 icanhazip.com`
   ./opscenter/configure_opscenterd_conf.sh $opscenter_broadcast_ip
