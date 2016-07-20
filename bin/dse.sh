@@ -7,16 +7,18 @@ seed_nodes_dns_names=$2
 data_center_name=$3
 opscenter_dns_name=$4
 # Assuming only one seed is passed in for now
+
 seed_node_dns_name=$seed_nodes_dns_names
 
-# Seed Resolution -----
 # On GKE we resolve to a private IP.
 # On AWS and Azure this gets the public IP.
 # On GCE it resolves to a private IP that is globally routeable in GCE.
 if [[ $cloud_type == "gke" ]]; then
   seed_node_ip=`getent hosts $seed_node_dns_name | awk '{ print $1 }'`
+  opscenter_ip=`getent hosts $opscenter_dns_name | awk '{ print $1 }'`
 else
   seed_node_ip=`dig +short $seed_node_dns_name`
+  opscenter_ip=`dig +short $opscenter_dns_name`
 fi
 
 if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
@@ -31,15 +33,13 @@ else
   node_ip=`echo $(hostname -I)`
 fi
 
-opscenter_ip=`dig +short $opscenter_dns_name`
-
-
 echo "Configuring nodes with the settings:"
 echo cloud_type \'$cloud_type\'
 echo data_center_name \'$data_center_name\'
 echo seed_node_ip \'$seed_node_ip\'
 echo node_broadcast_ip \'$node_broadcast_ip\'
 echo node_ip \'$node_ip\'
+echo opscenter_ip \'$opscenter_ip\'
 
 #### Ok, now let's starting making changes to the system...
 
