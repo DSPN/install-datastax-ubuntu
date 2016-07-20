@@ -13,7 +13,7 @@ seed_node_dns_name=$seed_nodes_dns_names
 # On AWS and Azure this gets the public IP.
 # On GCE it resolves to a private IP that is globally routeable in GCE.
 if [[ $cloud_type == "gke" ]]; then
-  seed_node_ip=`getent hosts $seed_node_dns_name | awk '{ print $1 }'`
+  seed_node_ip=`getent hosts $seed_node_dns_name | awk '{ print $1w }'`
 else
   seed_node_ip=`dig +short $seed_node_dns_name`
 fi
@@ -27,7 +27,7 @@ if [[ $cloud_type == "azure" ]]; then
 fi
 
 ./os/install_java.sh
-./opscenter/install.sh
+./opscenter/install.sh $cloud_type
 
 if [[ $cloud_type == "azure" ]]; then
   opscenter_broadcast_ip=`curl --retry 10 icanhazip.com`

@@ -22,5 +22,5 @@ done
 
 # We're seeing a concurrency bug.  Advice from engineering is to restart OpsCenter.
 # This doesn't entirely fix the agent connectivity problem, but it seems to resolve some cases of it.
-sleep 60
-sudo service opscenterd restart
+#sleep 60
+#sudo service opscenterd restart

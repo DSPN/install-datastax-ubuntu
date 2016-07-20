@@ -5,7 +5,7 @@ echo "Running install-datastax/bin/dse.sh"
 cloud_type=$1
 seed_nodes_dns_names=$2
 data_center_name=$3
-
+opscenter_dns_name=$4
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
 
@@ -31,6 +31,9 @@ else
   node_ip=`echo $(hostname -I)`
 fi
 
+opscenter_ip=`dig +short $opscenter_dns_name`
+
+
 echo "Configuring nodes with the settings:"
 echo cloud_type \'$cloud_type\'
 echo data_center_name \'$data_center_name\'
@@ -48,7 +51,7 @@ sudo apt-get -y install sysstat
 ./dse/install.sh $cloud_type
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
 ./dse/configure_cassandra_yaml.sh $node_ip $node_broadcast_ip $seed_node_ip
-./dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip
+./dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip $opscenter_ip
 ./dse/start.sh
 
 # It looks like DSE might be setting the keepalive to 300.  Need to confirm.
