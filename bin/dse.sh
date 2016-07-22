@@ -19,7 +19,7 @@ if [[ $cloud_type == "gke" ]]; then
 else
   seed_node_ip=`dig +short $seed_node_dns_name`
 
-  output="255.255.255.255"
+  opscenter_ip="255.255.255.255"
   while [ "${opscenter_ip}" == "\"255.255.255.255\"" ]; do
     opscenter_ip=`dig +short $opscenter_dns_name`
   done
