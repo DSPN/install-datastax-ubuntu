@@ -19,9 +19,12 @@ if [[ $cloud_type == "gke" ]]; then
 else
   seed_node_ip=`dig +short $seed_node_dns_name`
 
+  # OpsCenter 6 now requires the agent to have the Stomp address set.
+  # If the OpsCenter IP isn't up yet it will resolve to 255.255.255.255.
   opscenter_ip="255.255.255.255"
-  while [ "${opscenter_ip}" == "\"255.255.255.255\"" ]; do
+  while [ "${opscenter_ip}" == "255.255.255.255" ]; do
     opscenter_ip=`dig +short $opscenter_dns_name`
+    echo $opscenter_ip
   done
 
 fi
