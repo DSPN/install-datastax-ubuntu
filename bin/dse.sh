@@ -6,8 +6,8 @@ cloud_type=$1
 seed_nodes_dns_names=$2
 data_center_name=$3
 opscenter_dns_name=$4
-# Assuming only one seed is passed in for now
 
+# Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
 
 # On GKE we resolve to a private IP.
@@ -18,7 +18,12 @@ if [[ $cloud_type == "gke" ]]; then
   opscenter_ip=`getent hosts $opscenter_dns_name | awk '{ print $1 }'`
 else
   seed_node_ip=`dig +short $seed_node_dns_name`
-  opscenter_ip=`dig +short $opscenter_dns_name`
+
+  output="255.255.255.255"
+  while [ "${opscenter_ip}" == "\"255.255.255.255\"" ]; do
+    opscenter_ip=`dig +short $opscenter_dns_name`
+  done
+
 fi
 
 if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
