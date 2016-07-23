@@ -16,17 +16,26 @@ seed_node_dns_name=$seed_nodes_dns_names
 if [[ $cloud_type == "gke" ]]; then
   seed_node_ip=`getent hosts $seed_node_dns_name | awk '{ print $1 }'`
   opscenter_ip=`getent hosts $opscenter_dns_name | awk '{ print $1 }'`
-else
+elif [[ $cloud_type == "gce" ]]; then
   seed_node_ip=`dig +short $seed_node_dns_name`
 
   # OpsCenter 6 now requires the agent to have the Stomp address set.
-  # If the OpsCenter IP isn't up yet it will resolve to 255.255.255.255.
+  # If the OpsCenter IP isn't up yet it will resolve to "" on GCE
+  opscenter_ip=""
+  while [ "${opscenter_ip}" == "" ]; do
+    opscenter_ip=`dig +short $opscenter_dns_name`
+    echo opscenter_ip resolved as: $opscenter_ip
+  done
+elif [[ $cloud_type == "azure" ]]; then
+  seed_node_ip=`dig +short $seed_node_dns_name`
+
+  # OpsCenter 6 now requires the agent to have the Stomp address set.
+  # If the OpsCenter IP isn't up yet it will resolve to 255.255.255.255 on Azure
   opscenter_ip="255.255.255.255"
   while [ "${opscenter_ip}" == "255.255.255.255" ]; do
     opscenter_ip=`dig +short $opscenter_dns_name`
-    echo $opscenter_ip
+    echo opscenter_ip resolved as: $opscenter_ip
   done
-
 fi
 
 if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
