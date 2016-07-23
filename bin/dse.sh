@@ -24,7 +24,6 @@ elif [[ $cloud_type == "gce" ]]; then
   opscenter_ip=""
   while [ "${opscenter_ip}" == "" ]; do
     opscenter_ip=`dig +short $opscenter_dns_name`
-    echo opscenter_ip resolved as: $opscenter_ip
   done
 elif [[ $cloud_type == "azure" ]]; then
   seed_node_ip=`dig +short $seed_node_dns_name`
@@ -34,7 +33,6 @@ elif [[ $cloud_type == "azure" ]]; then
   opscenter_ip="255.255.255.255"
   while [ "${opscenter_ip}" == "255.255.255.255" ]; do
     opscenter_ip=`dig +short $opscenter_dns_name`
-    echo opscenter_ip resolved as: $opscenter_ip
   done
 fi
 
