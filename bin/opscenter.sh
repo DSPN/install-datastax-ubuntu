@@ -8,14 +8,23 @@ seed_nodes_dns_names=$2
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
 
-# Seed Resolution -----
 # On GKE we resolve to a private IP.
 # On AWS and Azure this gets the public IP.
 # On GCE it resolves to a private IP that is globally routeable in GCE.
 if [[ $cloud_type == "gke" ]]; then
   seed_node_ip=`getent hosts $seed_node_dns_name | awk '{ print $1w }'`
-else
-  seed_node_ip=`dig +short $seed_node_dns_name`
+elif [[ $cloud_type == "gce" ]]; then
+  # If the IP isn't up yet it will resolve to "" on GCE
+  seed_node_ip=""
+  while [ "${seed_node_ip}" == "" ]; do
+    seed_node_ip=`dig +short $seed_node_dns_name`
+  done
+elif [[ $cloud_type == "azure" ]]; then
+  # If the IP isn't up yet it will resolve to 255.255.255.255 on Azure
+  seed_node_ip="255.255.255.255"
+  while [ "${seed_node_ip}" == "255.255.255.255" ]; do
+    seed_node_ip=`dig +short $seed_node_dns_name`
+  done
 fi
 
 echo "Configuring OpsCenter with the settings:"
@@ -36,6 +45,6 @@ fi
 
 ./opscenter/start.sh
 
-echo "Waiting for OpsCenter to start..."
+echo "Waiting for OpsCenter to connect to seed node..."
 sleep 10
 ./opscenter/manage_existing_cluster.sh $seed_node_ip
