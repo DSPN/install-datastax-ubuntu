@@ -49,5 +49,5 @@ echo "Waiting for OpsCenter to connect to seed node..."
 sleep 10
 ./opscenter/manage_existing_cluster.sh $seed_node_ip
 
-echo "Changing the keyspace from simple strategy to network."
+echo "Changing the keyspace from SimpleStrategy to NetworkTopologyStrategy."
 ./opscenter/configure_opscenter_keyspace.sh
