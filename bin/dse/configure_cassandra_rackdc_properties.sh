@@ -27,7 +27,7 @@ function get_rack {
   elif [[ $cloud_type == "gke" ]]; then
     rack="rack1"
   else
-    echo $cloud_type is not supported 1>&2
+    echo Cloud type $cloud_type is not supported 1>&2
     exit 99
   fi
 
