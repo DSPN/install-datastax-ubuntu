@@ -62,6 +62,7 @@ echo seed_node_ip \'$seed_node_ip\'
 echo node_broadcast_ip \'$node_broadcast_ip\'
 echo node_ip \'$node_ip\'
 echo opscenter_ip \'$opscenter_ip\'
+echo dse_version \'$dse_version\'
 
 #### Ok, now let's starting making changes to the system...
 
