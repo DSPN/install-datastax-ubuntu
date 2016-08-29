@@ -6,7 +6,6 @@ cloud_type=$1
 seed_nodes_dns_names=$2
 data_center_name=$3
 opscenter_dns_name=$4
-dse_version=$5
 
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
@@ -62,7 +61,6 @@ echo seed_node_ip \'$seed_node_ip\'
 echo node_broadcast_ip \'$node_broadcast_ip\'
 echo node_ip \'$node_ip\'
 echo opscenter_ip \'$opscenter_ip\'
-echo dse_version \'$dse_version\'
 
 #### Ok, now let's starting making changes to the system...
 
@@ -70,7 +68,7 @@ echo dse_version \'$dse_version\'
 
 # OpsCenter uses iostat and Ubuntu 14.04 LTS doesn't seem to have it installed by default.
 sudo apt-get -y install sysstat
-./dse/install.sh $cloud_type $dse_version
+./dse/install.sh $cloud_type
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
 ./dse/configure_cassandra_yaml.sh $node_ip $node_broadcast_ip $seed_node_ip
 ./dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip $opscenter_ip
