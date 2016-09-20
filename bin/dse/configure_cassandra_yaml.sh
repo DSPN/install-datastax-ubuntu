@@ -42,3 +42,7 @@ echo "auto_bootstrap: $auto_bootstrap" >> $file.new
 echo "" >> $file.new
 
 mv $file.new $file
+
+# Owner was ending up as root which caused the backup service to fail
+chown cassandra $file
+chgrp cassandra $file
