@@ -45,11 +45,6 @@ fi
 
 ./opscenter/start.sh
 
-if [[ $cloud_type == "aws" ]]; then
-  echo "aws: skipping manage_existing_cluster.sh and configure_opscenter_keyspace.sh"
-  exit
-fi
-
 echo "Waiting for OpsCenter to connect to seed node..."
 sleep 10
 ./opscenter/manage_existing_cluster.sh $seed_node_ip
