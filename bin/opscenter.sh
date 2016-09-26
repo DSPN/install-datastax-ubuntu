@@ -26,7 +26,7 @@ elif [[ $cloud_type == "azure" ]]; then
     seed_node_ip=`dig +short $seed_node_dns_name`
   done
 elif [[ $cloud_type == "aws" ]]; then
-  # If the IP isn't up yet it will resolve to "" on AWS? 
+  # If the IP isn't up yet it will resolve to "" on AWS?
   seed_node_ip=""
   while [ "${seed_node_ip}" == "" ]; do
     seed_node_ip=`dig +short $seed_node_dns_name`
@@ -51,8 +51,13 @@ fi
 
 ./opscenter/start.sh
 
+if [[ $cloud_type == "aws" ]]; then
+  sleeptime=30
+else
+  sleeptime=10
+fi
 echo "Waiting for OpsCenter to connect to seed node..."
-sleep 10
+sleep $sleeptime
 ./opscenter/manage_existing_cluster.sh $seed_node_ip
 
 echo "Changing the keyspace from SimpleStrategy to NetworkTopologyStrategy."
