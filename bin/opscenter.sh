@@ -25,6 +25,12 @@ elif [[ $cloud_type == "azure" ]]; then
   while [ "${seed_node_ip}" == "255.255.255.255" ]; do
     seed_node_ip=`dig +short $seed_node_dns_name`
   done
+elif [[ $cloud_type == "aws" ]]; then
+  # If the IP isn't up yet it will resolve to "" on AWS? 
+  seed_node_ip=""
+  while [ "${seed_node_ip}" == "" ]; do
+    seed_node_ip=`dig +short $seed_node_dns_name`
+  done
 fi
 
 echo "Configuring OpsCenter with the settings:"
