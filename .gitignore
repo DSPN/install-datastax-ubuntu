@@ -10,3 +10,5 @@ multidc/scripts/provision.json
 # PyCharm files
 *.idea
 
+# scratch work
+*scratch*
