@@ -44,7 +44,7 @@ elif [[ $cloud_type == "aws" ]]; then
   seed_node_ip=`getent hosts $seed_node_dns_name | awk '{ print $1 }'`
   #opscenter_ip=`getent hosts $opscenter_dns_name | awk '{ print $1 }'`
   # Playing tricks and passing EIP instead of hostname
-  opscenter_ip=opscenter_dns_name
+  opscenter_ip=$opscenter_dns_name
 fi
 
 if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
