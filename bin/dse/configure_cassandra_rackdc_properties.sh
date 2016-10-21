@@ -44,11 +44,10 @@ date=$(date +%F)
 backup="$file.$date"
 cp $file $backup
 
-# There's a bug in 5.0.2 with prefer-local=true, setting it to false until that goes live https://datastax.jira.com/browse/DSP-11019
 cat $file \
 | sed -e "s:^\(dc\=\).*:dc\=$dc:" \
 | sed -e "s:^\(rack\=\).*:rack\=$rack:" \
-| sed -e "s:^\(prefer_local\=\).*:rack\=false:" \
+| sed -e "s:^\(prefer_local\=\).*:rack\=true:" \
 > $file.new
 
 mv $file.new $file
