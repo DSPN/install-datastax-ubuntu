@@ -49,6 +49,7 @@ if [[ $cloud_type == "azure" ]]; then
   ./opscenter/configure_opscenterd_conf.sh $opscenter_broadcast_ip
 fi
 
+echo "Starting OpsCenter..."
 ./opscenter/start.sh
 
 echo "Waiting for OpsCenter to start..."
