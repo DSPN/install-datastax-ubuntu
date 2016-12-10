@@ -25,7 +25,7 @@ apt-get -y install dse-full=$dse_version dse=$dse_version dse-hive=$dse_version 
 #apt-get -y install dse-full=$dse_version dse=$dse_version dse-hive=$dse_version dse-pig=$dse_version dse-demos=$dse_version dse-libsolr=$dse_version dse-libtomcat=$dse_version dse-libsqoop=$dse_version dse-liblog4j=$dse_version dse-libmahout=$dse_version dse-libhadoop-native=$dse_version dse-libcassandra=$dse_version dse-libhive=$dse_version dse-libpig=$dse_version dse-libhadoop=$dse_version dse-libspark=$dse_version
 
 echo "Running apt-get install datastax-agent"
-opscenter_version=6.0.3
+opscenter_version=6.0.5
 apt-get -y install datastax-agent=$opscenter_version
 
 # The install of dse creates a cassandra user, so now we can do this:
