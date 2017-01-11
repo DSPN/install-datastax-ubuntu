@@ -26,6 +26,8 @@ function get_rack {
     rack=$zone
   elif [[ $cloud_type == "gke" ]]; then
     rack="rack1"
+  elif [[ $cloud_type == "DCOS" ]]; then
+    rack="rack1"
   else
     echo Cloud type $cloud_type is not supported 1>&2
     exit 99
