@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 cloud_type=$1
+dcos_container_path=$2
 
 echo "Installing DataStax Enterprise"
 
@@ -24,5 +25,13 @@ opscenter_version=6.0.4
 apt-get -y install datastax-agent=$opscenter_version
 
 # The install of dse creates a cassandra user, so now we can do this:
-chown cassandra /mnt
-chgrp cassandra /mnt
+if [[ $cloud_type == "azure" ]] || [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]] || [[ $cloud_type == "aws" ]]; then
+  chown cassandra /mnt
+  chgrp cassandra /mnt
+elif [[ $cloud_type == "DCOS" ]]; then
+  chown cassandra $dcos_container_path/mnt
+  chgrp cassandra $dcos_container_path/mnt
+else
+  echo Cloud type $cloud_type is not supported 1>&2
+  exit 99
+fi
