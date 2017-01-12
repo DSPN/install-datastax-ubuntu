@@ -20,9 +20,9 @@ if [[ $cloud_type == "azure" ]] || [[ $cloud_type == "gce" ]] || [[ $cloud_type 
   commitlog_directory="/mnt/commitlog"
   saved_caches_directory="/mnt/saved_caches"
 elif [[ $cloud_type == "DCOS" ]]; then
-  data_file_directories="$dcos_container_path/data"
-  commitlog_directory="$dcos_container_path/commitlog"
-  saved_caches_directory="$dcos_container_path/saved_caches"
+  data_file_directories="$dcos_container_path/mnt/data"
+  commitlog_directory="$dcos_container_path/mnt/commitlog"
+  saved_caches_directory="$dcos_container_path/mnt/saved_caches"
 else
     echo Cloud type $cloud_type is not supported 1>&2
     exit 99
