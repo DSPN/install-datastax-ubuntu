@@ -8,6 +8,7 @@ TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Get curl package
 apt-get -y update
+apt-get -y install sudo
 apt-get -y install curl
 
 # Assuming only one seed is passed in for now
