@@ -6,6 +6,8 @@ seed_node_public_ip=$3
 cloud_type=$4
 dcos_container_path=$5
 
+echo in configure_cassandra_yaml cloud_type = $cloud_type
+
 seeds=$seed_node_public_ip
 listen_address=$node_ip
 broadcast_address=$node_broadcast_ip
