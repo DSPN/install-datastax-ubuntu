@@ -38,6 +38,7 @@ function get_rack {
 
 cloud_type="$1"
 dc="$2"
+echo CLOUD_type = $cloud_type 1>&2
 rack=`get_rack $cloud_type`
 
 file=/etc/dse/cassandra/cassandra-rackdc.properties
