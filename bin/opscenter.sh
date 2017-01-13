@@ -67,6 +67,7 @@ $TOOLS_DIR/opscenter/manage_existing_cluster.sh $seed_node_ip
 echo "Changing the keyspace from SimpleStrategy to NetworkTopologyStrategy."
 $TOOLS_DIR/opscenter/configure_opscenter_keyspace.sh
 
+while true
 do
-	sleep 1
+  sleep 1
 done
