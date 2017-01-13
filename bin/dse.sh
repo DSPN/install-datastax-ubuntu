@@ -10,7 +10,7 @@ dcos_container_path=$5
 TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Get curl package
-sudo apt-get update
+sudo apt-get -y update
 sudo apt-get -y install curl
 
 # Assuming only one seed is passed in for now
