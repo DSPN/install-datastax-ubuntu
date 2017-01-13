@@ -59,6 +59,9 @@ if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
   # We're still trying to figure out GKE, but only supporting 1 DC for now, so this ought to work.
   node_broadcast_ip=`echo $(hostname -I)`
   node_ip=`echo $(hostname -I)`
+elif [[ $cloud_type == "DCOS" ]]; then
+  node_broadcast_ip=`echo $(hostname -I)`
+  node_ip=`echo $(hostname -I) | cut -f 1 -d " "`
 else
   node_broadcast_ip=`curl --retry 10 icanhazip.com`
   node_ip=`echo $(hostname -I)`
