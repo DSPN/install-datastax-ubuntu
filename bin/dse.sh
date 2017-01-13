@@ -88,3 +88,7 @@ $TOOLS_DIR/dse/start.sh
 if [[ $cloud_type == "azure" ]]; then
   $TOOLS_DIR/os/set_tcp_keepalive_time.sh
 fi
+
+do
+	sleep 1
+done
