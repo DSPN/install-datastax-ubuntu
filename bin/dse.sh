@@ -89,6 +89,7 @@ if [[ $cloud_type == "azure" ]]; then
   $TOOLS_DIR/os/set_tcp_keepalive_time.sh
 fi
 
+while true
 do
-	sleep 1
+  sleep 1
 done
