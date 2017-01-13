@@ -4,6 +4,7 @@ echo "Running install-datastax/bin/opscenter.sh"
 
 cloud_type=$1
 seed_nodes_dns_names=$2
+TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
@@ -38,25 +39,25 @@ echo cloud_type \'$cloud_type\'
 echo seed_node_ip \'$seed_node_ip\'
 
 if [[ $cloud_type == "azure" ]]; then
-  ./os/set_tcp_keepalive_time.sh
+  $TOOLS_DIR/os/set_tcp_keepalive_time.sh
 fi
 
-./os/install_java.sh
-./opscenter/install.sh $cloud_type
+$TOOLS_DIR/os/install_java.sh
+$TOOLS_DIR/opscenter/install.sh $cloud_type
 
 if [[ $cloud_type == "azure" ]]; then
   opscenter_broadcast_ip=`curl --retry 10 icanhazip.com`
-  ./opscenter/configure_opscenterd_conf.sh $opscenter_broadcast_ip
+  $TOOLS_DIR/opscenter/configure_opscenterd_conf.sh $opscenter_broadcast_ip
 fi
 
 echo "Starting OpsCenter..."
-./opscenter/start.sh
+$TOOLS_DIR/opscenter/start.sh
 
 echo "Waiting for OpsCenter to start..."
 sleep 30
 
 echo "Connecting OpsCenter to the cluster..."
-./opscenter/manage_existing_cluster.sh $seed_node_ip
+$TOOLS_DIR/opscenter/manage_existing_cluster.sh $seed_node_ip
 
 echo "Changing the keyspace from SimpleStrategy to NetworkTopologyStrategy."
-./opscenter/configure_opscenter_keyspace.sh
+$TOOLS_DIR/opscenter/configure_opscenter_keyspace.sh
