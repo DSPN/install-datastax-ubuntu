@@ -3,6 +3,8 @@
 function get_rack {
   cloud_type=$1
 
+  echo CLOUD_type inside get_rack = $cloud_type 1>&2
+
   if [[ $cloud_type == "azure" ]]; then
     fault_domain=$(curl --max-time 50000 --retry 12 --retry-delay 50000 http://169.254.169.254/metadata/v1/InstanceInfo -s -S | sed -e 's/.*"FD":"\([^"]*\)".*/\1/')
     if [ ! "$fault_domain" ]; then
