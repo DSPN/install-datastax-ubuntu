@@ -64,7 +64,7 @@ echo "Starting OpsCenter..."
 $TOOLS_DIR/opscenter/start.sh
 
 echo "Waiting for OpsCenter to start..."
-sleep 90
+sleep 60
 
 echo "Connecting OpsCenter to the cluster..."
 $TOOLS_DIR/opscenter/manage_existing_cluster.sh $seed_node_ip
