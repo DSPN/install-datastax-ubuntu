@@ -7,8 +7,8 @@ seed_nodes_dns_names=$2
 TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Get curl package
-apt-get update
-apt-get -y install curl
+sudo apt-get update
+sudo apt-get -y install curl
 
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
