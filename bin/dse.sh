@@ -20,29 +20,34 @@ seed_node_dns_name=$seed_nodes_dns_names
 # On GKE we resolve to a private IP.
 # On AWS and Azure this gets the public IP.
 # On GCE it resolves to a private IP that is globally routeable in GCE.
-if [[ $cloud_type == "gke" ]] || [[ $cloud_type == "DCOS" ]]; then
+if [[ $cloud_type == "gke" ]]; then
   seed_node_ip=`getent hosts $seed_node_dns_name | awk '{ print $1 }'`
   opscenter_ip=`getent hosts $opscenter_dns_name | awk '{ print $1 }'`
+elif [[ $cloud_type == "DCOS" ]]; then
+  seed_node_ip=""
+  while [ "${seed_node_ip}" == "" ]; do
+    seed_node_ip=`getent hosts $seed_node_dns_name | awk '{ print $1 }'`
+  done  
+  opscenter_ip=""
+  while [ "${opscenter_ip}" == "" ]; do
+    opscenter_ip=`getent hosts $opscenter_dns_name | awk '{ print $1 }'`
+  done  
 elif [[ $cloud_type == "gce" ]]; then
   # If the IP isn't up yet it will resolve to "" on GCE
-
   seed_node_ip=""
   while [ "${seed_node_ip}" == "" ]; do
     seed_node_ip=`dig +short $seed_node_dns_name`
   done
-
   opscenter_ip=""
   while [ "${opscenter_ip}" == "" ]; do
     opscenter_ip=`dig +short $opscenter_dns_name`
   done
 elif [[ $cloud_type == "azure" ]]; then
   # If the IP isn't up yet it will resolve to 255.255.255.255 on Azure
-
   seed_node_ip="255.255.255.255"
   while [ "${seed_node_ip}" == "255.255.255.255" ]; do
     seed_node_ip=`dig +short $seed_node_dns_name`
   done
-
   opscenter_ip="255.255.255.255"
   while [ "${opscenter_ip}" == "255.255.255.255" ]; do
     opscenter_ip=`dig +short $opscenter_dns_name`
