@@ -20,6 +20,10 @@ seed_node_dns_name=$seed_nodes_dns_names
 if [[ $cloud_type == "gke" ]]; then
   seed_node_ip=`getent hosts $seed_node_dns_name | awk '{ print $1w }'`
 elif [[ $cloud_type == "DCOS" ]]; then
+  opscenter_ip=""
+  while [ "${opscenter_ip}" == "" ]; do
+    opscenter_ip=`getent hosts $opscenter_dns_name | awk '{ print $1 }'`
+  done  
   seed_node_ip=""
   while [ "${seed_node_ip}" == "" ]; do
     seed_node_ip=`getent hosts $seed_node_dns_name | awk '{ print $1w }'`
@@ -47,6 +51,7 @@ fi
 echo "Configuring OpsCenter with the settings:"
 echo cloud_type \'$cloud_type\'
 echo seed_node_ip \'$seed_node_ip\'
+echo opscenter_ip \'$opscenter_ip\'
 
 if [[ $cloud_type == "azure" ]]; then
   $TOOLS_DIR/os/set_tcp_keepalive_time.sh
@@ -73,7 +78,7 @@ echo "Changing the keyspace from SimpleStrategy to NetworkTopologyStrategy."
 $TOOLS_DIR/opscenter/configure_opscenter_keyspace.sh
 
 echo "Starting DataStax Studio"
-$TOOLS_DIR/opscenter/start_datastax_studio.sh
+$TOOLS_DIR/opscenter/start_datastax_studio.sh $cloud_type $opscenter_ip
 
 while true
 do
