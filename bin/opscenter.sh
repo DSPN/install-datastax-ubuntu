@@ -72,6 +72,9 @@ $TOOLS_DIR/opscenter/manage_existing_cluster.sh $seed_node_ip
 echo "Changing the keyspace from SimpleStrategy to NetworkTopologyStrategy."
 $TOOLS_DIR/opscenter/configure_opscenter_keyspace.sh
 
+echo "Starting DataStax Studio"
+$TOOLS_DIR/opscenter/start_datastax_studio.sh
+
 while true
 do
   sleep 1
