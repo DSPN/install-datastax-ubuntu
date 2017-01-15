@@ -4,6 +4,7 @@ echo "Running install-datastax/bin/opscenter.sh"
 
 cloud_type=$1
 seed_nodes_dns_names=$2
+opscenter_dns_name=$3
 TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Get curl package
