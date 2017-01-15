@@ -3,7 +3,7 @@ cloud_type=$1
 node_ip=$2
 echo "Starting DataStax Studio"
 
-echo "Update httpBindAddress""
+echo "Update httpBindAddress"
 file=$MESOS_SANDBOX/datastax-studio-1.0.2/conf/configuration.yaml
 
 date=$(date +%F)
