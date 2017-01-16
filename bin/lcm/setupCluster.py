@@ -13,10 +13,12 @@ def setupArgs():
                           help='public ip of OpsCenter instance')
     required.add_argument('--clustername', required=True, type=str,
                           help='Name of cluster.')
-    required.add_argument('--privkey', required=True, type=str,
+    parser.add_argument('--privkey', type=str,
                           help='abs path to private key (public key on all nodes) to be used by OpsCenter')
-    required.add_argument('--username', required=True, type=str,
+    parser.add_argument('--username', type=str,
                           help='username LCM uses when ssh-ing to nodes for install/config')
+    parser.add_argument('--password', type=str,
+                          help='password for username LCM uses when ssh-ing to nodes for install/config. IGNORED if privkey non-null.')
     parser.add_argument('--pause',type=int, default=6, help="pause time (sec) between attempts to contact OpsCenter, default 6")
     parser.add_argument('--trys',type=int, default=100, help="number of times to attempt to contact OpsCenter, default 100")
     parser.add_argument('--verbose',
@@ -32,11 +34,9 @@ def main():
     pause = args.pause
     trys = args.trys
     user = args.username
-    keypath = os.path.abspath(args.privkey)
-    with open(keypath, 'r') as keyfile:
-        privkey=keyfile.read()
+    password = args.password
+    privkey = args.privkey
 
-    print "Create cluster {c} at {u} with keypath {k}".format(c=clustername, u=lcm.opsc_url, k=keypath)
 # Yay globals!
 # These should move to a config file, passed as arg maybe ?
     dserepo = json.dumps({
@@ -44,13 +44,27 @@ def main():
         "username":"collin.poczatek+awstesting@gmail.com",
         "password":"Cassandra1"})
 
-    dsecred = json.dumps({
-        "become-mode":"sudo",
-        "use-ssh-keys":True,
-        "name":"DSE creds",
-        "login-user":user,
-        "ssh-private-key":privkey,
-        "become-user":None})
+    if (privkey != ""):
+      keypath = os.path.abspath(args.privkey)
+      with open(keypath, 'r') as keyfile:
+          privkey=keyfile.read()
+      print "Create cluster {c} at {u} with keypath {k}".format(c=clustername, u=lcm.opsc_url, k=keypath)
+      dsecred = json.dumps({
+          "become-mode":"sudo",
+          "use-ssh-keys":True,
+          "name":"DSE creds",
+          "login-user":user,
+          "ssh-private-key":privkey,
+          "become-user":None})
+    else:
+        print "Create cluster {c} at {u} with password".format(c=clustername, u=lcm.opsc_url)
+        dsecred = json.dumps({
+            "become-mode":"sudo",
+            "use-ssh-keys":False,
+            "name":"DSE creds",
+            "login-user":user,
+            "password":password,
+            "become-user":None})
 
     defaultconfig = json.dumps({
         "name":"Default config",
