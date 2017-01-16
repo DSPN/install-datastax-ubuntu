@@ -37,7 +37,7 @@ def main():
     password = args.password
     privkey = args.privkey
 
-    if (password == None && privkey == None):
+    if (password == None and privkey == None):
         print "Error: must pass either private key or password"
         exit(1)
 # Yay globals!
