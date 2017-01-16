@@ -76,7 +76,7 @@ def main():
            'cassandra-yaml': {
               "authorizer": "com.datastax.bdp.cassandra.auth.DseAuthorizer",
               "authenticator": "PasswordAuthenticator",
-              "role_manager": "com.datastax.bdp.cassandra.auth.DseRoleManager"
+              "role_manager": "com.datastax.bdp.cassandra.auth.DseRoleManager",
               "num_tokens":64,
               "endpoint_snitch":"GossipingPropertyFileSnitch"
            }
