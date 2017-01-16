@@ -37,6 +37,9 @@ def main():
     password = args.password
     privkey = args.privkey
 
+    if (password == None && privkey == None):
+        print "Error: must pass either private key or password"
+        exit(1)
 # Yay globals!
 # These should move to a config file, passed as arg maybe ?
     dserepo = json.dumps({
@@ -44,7 +47,7 @@ def main():
         "username":"collin.poczatek+awstesting@gmail.com",
         "password":"Cassandra1"})
 
-    if (privkey != ""):
+    if (privkey != None):
       keypath = os.path.abspath(args.privkey)
       with open(keypath, 'r') as keyfile:
           privkey=keyfile.read()
