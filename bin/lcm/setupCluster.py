@@ -66,7 +66,7 @@ def main():
             "use-ssh-keys":False,
             "name":"DSE creds",
             "login-user":user,
-            "password":password,
+            "become-password":password,
             "become-user":None})
 
     defaultconfig = json.dumps({
