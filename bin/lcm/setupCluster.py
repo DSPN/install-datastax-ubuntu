@@ -74,7 +74,9 @@ def main():
         "datastax-version": "5.0.5",
         "json": {
            'cassandra-yaml': {
-              "authenticator":"AllowAllAuthenticator",
+              "authorizer": "com.datastax.bdp.cassandra.auth.DseAuthorizer",
+              "authenticator": "PasswordAuthenticator",
+              "role_manager": "com.datastax.bdp.cassandra.auth.DseRoleManager"
               "num_tokens":64,
               "endpoint_snitch":"GossipingPropertyFileSnitch"
            }
