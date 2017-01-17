@@ -115,6 +115,21 @@ def waitForOpsC(pause, trys):
             print("Found OpsCenter version: {version}".format(version=data['version']))
             return
 
+def waitForCluster(cname, pause, trys):
+    count = 0
+    while (True):
+        count += 1
+        if(count>trys):
+            return False
+        found = checkForCluster(cname)
+        if(found):
+            print "Cluster found."
+            return True
+        print("Cluster not found on try {c}, wait {p} sec...".format(c=count,p=pause))
+        time.sleep(pause)
+
+
+
 def checkForCluster(cname):
     try:
         clusters = requests.get("http://{url}/api/v1/lcm/clusters/".format(url=opsc_url)).json()

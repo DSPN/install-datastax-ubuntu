@@ -48,9 +48,8 @@ def main():
     publicip = args.pubip
 
     lcm.waitForOpsC(pause=pause,trys=trys)  # Block waiting for OpsC to spin up
+    lcm.waitForCluster(clustername, pause, trys)
 
-    #writepubkey(pubkey)
-    # ^^^ no-op, should happen up in the IaaS?
 
     # Check if the DC --this-- node should belong to exists, if not add DC
     c = lcm.checkForDC(dcname)

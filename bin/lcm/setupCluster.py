@@ -66,6 +66,7 @@ def main():
             "use-ssh-keys":False,
             "name":"DSE creds",
             "login-user":user,
+            "login-password":password,
             "become-password":password,
             "become-user":None})
 
