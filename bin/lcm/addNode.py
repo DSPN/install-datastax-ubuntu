@@ -21,16 +21,13 @@ def setupArgs():
     required.add_argument('--privip', required=True, type=str, help='Private ip of node.')
     required.add_argument('--pubip', required=True, type=str, help='Public ip of node.')
     required.add_argument('--dcsize', required=True, type=int, help='Number of nodes in datacenter, default 3.')
+    parser.add_argument('--dbpasswd', type=str, default='cassandra', help='DB password.')
     parser.add_argument('--pause',type=int, default=6, help="pause time (sec) between attempts to contact OpsCenter, default 6")
     parser.add_argument('--trys',type=int, default=100, help="number of times to attempt to contact OpsCenter, default 100")
     parser.add_argument('--verbose',
                         action='store_true',
                         help='Verbose flag, right now a NO-OP.' )
     return parser
-
-def writepubkey(pubkey):
-    #No-op, this should happen up in the IaaS?
-    return True
 
 def main():
     parser = setupArgs()
@@ -41,15 +38,14 @@ def main():
     lcm.opsc_url = args.opsc_ip+':8888'
     #datacenters = ['dc0','dc1','dc2']
     dcname = args.dcname
+    password = args.dbpasswd
     dcsize = args.dcsize
-    #pubkey = args.pubkey
     nodeid = args.nodeid
     privateip = args.privip
     publicip = args.pubip
 
     lcm.waitForOpsC(pause=pause,trys=trys)  # Block waiting for OpsC to spin up
-    lcm.waitForCluster(clustername, pause, trys)
-
+    lcm.waitForCluster(clustername, pause, trys) # Block until cluster created
 
     # Check if the DC --this-- node should belong to exists, if not add DC
     c = lcm.checkForDC(dcname)
@@ -92,7 +88,7 @@ def main():
     nodecount = nodes['count']
     if (nodecount == dcsize):
         print("Last node added, triggering install job...")
-        lcm.triggerInstall(dcid)
+        lcm.triggerInstall(dcid, password)
 
 # ----------------------------
 if __name__ == "__main__":

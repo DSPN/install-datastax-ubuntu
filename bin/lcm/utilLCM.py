@@ -198,12 +198,14 @@ def addDC(dcname, cid):
         # Do something?
         raise
 
-def triggerInstall(dcid):
+def triggerInstall(dcid,pw):
     data = json.dumps({
             "job-type":"install",
             "job-scope":"datacenter",
             "resource-id":dcid,
             "auto-bootstrap":False,
-            "continue-on-error":False})
+            "continue-on-error":True,
+            "change-default-cassandra-password":pw
+            })
     response = requests.post("http://{url}/api/v1/lcm/actions/install".format(url=opsc_url),data=data).json()
     pretty(response)
