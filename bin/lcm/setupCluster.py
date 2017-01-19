@@ -51,7 +51,7 @@ def main():
       keypath = os.path.abspath(args.privkey)
       with open(keypath, 'r') as keyfile:
           privkey=keyfile.read()
-      print "Create cluster {c} at {u} with keypath {k}".format(c=clustername, u=lcm.opsc_url, k=keypath)
+      print "Will create cluster {c} at {u} with keypath {k}".format(c=clustername, u=lcm.opsc_url, k=keypath)
       dsecred = json.dumps({
           "become-mode":"sudo",
           "use-ssh-keys":True,
@@ -60,7 +60,7 @@ def main():
           "ssh-private-key":privkey,
           "become-user":None})
     else:
-        print "Create cluster {c} at {u} with password".format(c=clustername, u=lcm.opsc_url)
+        print "Will create cluster {c} at {u} with password".format(c=clustername, u=lcm.opsc_url)
         dsecred = json.dumps({
             "become-mode":"sudo",
             "use-ssh-keys":False,
