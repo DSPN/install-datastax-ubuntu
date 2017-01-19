@@ -24,8 +24,6 @@ echo cloud_type \'$cloud_type\'
 echo seed_node_ip \'$seed_node_ip\'
 echo opscenter_ip \'$opscenter_ip\'
 
-$TOOLS_DIR/opscenter/install.sh $cloud_type
-
 echo "Starting OpsCenter..."
 $TOOLS_DIR/opscenter/start.sh
 
