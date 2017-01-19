@@ -10,7 +10,7 @@ backup="$file.$date"
 cp $file $backup
 
 cat $file \
-| sed -e "s:.*\(httpBindAddress\:\).*:httpBindAddress\: $node_ip:" \
+| sed -e "s:.*\(httpBindAddress\:\).*: httpBindAddress\: $node_ip:" \
 > $file.new
 
 mv $file.new $file
