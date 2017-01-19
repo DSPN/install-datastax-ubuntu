@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-cloud_type=$1
-node_ip=$2
+node_ip=$1
 echo "Starting DataStax Studio script"
 
 echo "Update httpBindAddress"
@@ -10,8 +9,6 @@ date=$(date +%F)
 backup="$file.$date"
 cp $file $backup
 
-cat $file \
-| sed -e "s:.*\(httpBindAddress\:\).*: httpBindAddress\: $node_ip:" \
 > $file.new
 
 mv $file.new $file

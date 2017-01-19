@@ -37,7 +37,7 @@ echo "Changing the keyspace from SimpleStrategy to NetworkTopologyStrategy."
 $TOOLS_DIR/opscenter/configure_opscenter_keyspace.sh
 
 echo "Starting DataStax Studio"
-$TOOLS_DIR/opscenter/start_datastax_studio.sh $cloud_type $opscenter_ip
+$TOOLS_DIR/opscenter/start_datastax_studio.sh $opscenter_ip
 
 # Need the following while loop to run indefinitely in foreground to keep the Mesosphere task running
 while true
