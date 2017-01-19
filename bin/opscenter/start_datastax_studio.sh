@@ -15,3 +15,5 @@ cat $file \
 
 mv $file.new $file
 
+echo "Starting DataStax Studio"
+$MESOS_SANDBOX/datastax-studio-1.0.2/bin/server.sh
