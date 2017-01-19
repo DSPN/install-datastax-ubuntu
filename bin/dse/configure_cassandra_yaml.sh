@@ -42,10 +42,10 @@ cp $file $backup
 
 cat $file \
 | sed -e "s:\(.*- *seeds\:\).*:\1 \"$seeds\":" \
-| sed -e "s:[# ]*\(listen_address\:\).*:listen_address\: $listen_address:" \
-| sed -e "s:[# ]*\(broadcast_address\:\).*:broadcast_address\: $broadcast_address:" \
-| sed -e "s:[# ]*\(rpc_address\:\).*:rpc_address\: $rpc_address:" \
-| sed -e "s:[# ]*\(broadcast_rpc_address\:\).*:broadcast_rpc_address\: $broadcast_rpc_address:" \
+| sed -e "s:.*\(listen_address\:\).*:listen_address\: $listen_address:" \
+| sed -e "s:.*\(broadcast_address\:\).*:broadcast_address\: $broadcast_address:" \
+| sed -e "s:.*\(rpc_address\:\).*:rpc_address\: $rpc_address:" \
+| sed -e "s:.*\(broadcast_rpc_address\:\).*:broadcast_rpc_address\: $broadcast_rpc_address:" \
 | sed -e "s:.*\(endpoint_snitch\:\).*:endpoint_snitch\: $endpoint_snitch:" \
 | sed -e "s:.*\(num_tokens\:\).*:\1 $num_tokens:" \
 | sed -e "s:\(.*- \)/var/lib/cassandra/data.*:\1$data_file_directories:" \
