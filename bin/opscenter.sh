@@ -49,15 +49,13 @@ if [[ $cloud_type == "azure" ]]; then
   ./opscenter/configure_opscenterd_conf.sh $opscenter_broadcast_ip
 fi
 
+echo "Starting OpsCenter..."
 ./opscenter/start.sh
 
-if [[ $cloud_type == "aws" ]]; then
-  sleeptime=30
-else
-  sleeptime=10
-fi
-echo "Waiting for OpsCenter to connect to seed node..."
-sleep $sleeptime
+echo "Waiting for OpsCenter to start..."
+sleep 30
+
+echo "Connecting OpsCenter to the cluster..."
 ./opscenter/manage_existing_cluster.sh $seed_node_ip
 
 echo "Changing the keyspace from SimpleStrategy to NetworkTopologyStrategy."

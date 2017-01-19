@@ -26,6 +26,8 @@ function get_rack {
     rack=$zone
   elif [[ $cloud_type == "gke" ]]; then
     rack="rack1"
+  elif [[ $cloud_type == "DCOS" ]]; then
+    rack="rack1"
   else
     echo Cloud type $cloud_type is not supported 1>&2
     exit 99
@@ -48,7 +50,6 @@ cat $file \
 | sed -e "s:^\(dc\=\).*:dc\=$dc:" \
 | sed -e "s:^\(rack\=\).*:rack\=$rack:" \
 | sed -e "s:^\(prefer_local\=\).*:rack\=true:" \
-| sed -e "s:[# ]*\(prefer_local\=\).*:prefer_local\=true:" \
 > $file.new
 
 mv $file.new $file
