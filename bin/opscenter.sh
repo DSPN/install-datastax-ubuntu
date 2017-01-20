@@ -42,5 +42,5 @@ $TOOLS_DIR/opscenter/start_datastax_studio.sh $opscenter_ip
 # Need the following while loop to run indefinitely in foreground to keep the Mesosphere task running
 while true
 do
-  sleep 1
+  sleep 1000000
 done
