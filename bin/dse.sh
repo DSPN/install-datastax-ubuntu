@@ -8,6 +8,9 @@ data_center_name=$3
 opscenter_dns_name=$4
 dcos_container_path=$5
 TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+search_enabled=$6
+analytics_enabled=$7
+graph_enabled=$8
 
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
@@ -32,6 +35,9 @@ echo seed_node_ip \'$seed_node_ip\'
 echo node_broadcast_ip \'$node_broadcast_ip\'
 echo node_ip \'$node_ip\'
 echo opscenter_ip \'$opscenter_ip\'
+echo dse_search \'$search_enabled\'
+echo dse_analytics \'$analytics_enabled\'
+echo dse_graph \'$graph_enabled\'
 
 #### Ok, now let's starting making changes to the system...
 
@@ -39,10 +45,10 @@ echo opscenter_ip \'$opscenter_ip\'
 $TOOLS_DIR/dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
 $TOOLS_DIR/dse/configure_cassandra_yaml.sh $node_ip $node_broadcast_ip $seed_node_ip $cloud_type $dcos_container_path
 $TOOLS_DIR/dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip $opscenter_ip
-$TOOLS_DIR/dse/configure_dse.sh $cloud_type
+$TOOLS_DIR/dse/configure_dse.sh $cloud_type $search_enabled $analytics_enabled $graph_enabled
 $TOOLS_DIR/dse/start.sh
 
 while true
 do
-  sleep 1
+  sleep 1000000
 done
