@@ -42,16 +42,16 @@ cp $file $backup
 
 cat $file \
 | sed -e "s:\(.*- *seeds\:\).*:\1 \"$seeds\":" \
-| sed -e "s:.*\b(listen_address\:\).*:listen_address\: $listen_address:" \
-| sed -e "s:.*\b(broadcast_address\:\).*:broadcast_address\: $broadcast_address:" \
-| sed -e "s:.*\b(rpc_address\:\).*:rpc_address\: $rpc_address:" \
-| sed -e "s:.*\b(broadcast_rpc_address\:\).*:broadcast_rpc_address\: $broadcast_rpc_address:" \
-| sed -e "s:.*\b(endpoint_snitch\:\).*:endpoint_snitch\: $endpoint_snitch:" \
-| sed -e "s:.*\b(num_tokens\:\).*:\1 $num_tokens:" \
+| sed -e "s:^\(listen_address\:\).*:listen_address\: $listen_address:" \
+| sed -e "s:^\(broadcast_address\:\).*:broadcast_address\: $broadcast_address:" \
+| sed -e "s:^\(rpc_address\:\).*:rpc_address\: $rpc_address:" \
+| sed -e "s:^\(broadcast_rpc_address\:\).*:broadcast_rpc_address\: $broadcast_rpc_address:" \
+| sed -e "s:^\(endpoint_snitch\:\).*:endpoint_snitch\: $endpoint_snitch:" \
+| sed -e "s:^\(num_tokens\:\).*:\1 $num_tokens:" \
 | sed -e "s:\(.*- \)/var/lib/cassandra/data.*:\1$data_file_directories:" \
-| sed -e "s:.*\(commitlog_directory\:\).*:commitlog_directory\: $commitlog_directory:" \
-| sed -e "s:.*\(saved_caches_directory\:\).*:saved_caches_directory\: $saved_caches_directory:" \
-| sed -e "s:.*\b(phi_convict_threshold\:\).*:phi_convict_threshold\: $phi_convict_threshold:" \
+| sed -e "s:^\(commitlog_directory\:\).*:commitlog_directory\: $commitlog_directory:" \
+| sed -e "s:^\(saved_caches_directory\:\).*:saved_caches_directory\: $saved_caches_directory:" \
+| sed -e "s:^\(phi_convict_threshold\:\).*:phi_convict_threshold\: $phi_convict_threshold:" \
 > $file.new
 
 echo "auto_bootstrap: $auto_bootstrap" >> $file.new
