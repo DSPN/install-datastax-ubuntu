@@ -17,18 +17,9 @@ broadcast_rpc_address=$node_broadcast_ip
 endpoint_snitch="GossipingPropertyFileSnitch"
 num_tokens=64
 
-if [[ $cloud_type == "azure" ]] || [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]] || [[ $cloud_type == "aws" ]]; then
-  data_file_directories="/mnt/data"
-  commitlog_directory="/mnt/commitlog"
-  saved_caches_directory="/mnt/saved_caches"
-elif [[ $cloud_type == "DCOS" ]]; then
-  data_file_directories="$dcos_container_path/data"
-  commitlog_directory="$dcos_container_path/commitlog"
-  saved_caches_directory="$dcos_container_path/saved_caches"
-else
-    echo Cloud type $cloud_type is not supported 1>&2
-    exit 99
-fi
+data_file_directories="$dcos_container_path/data"
+commitlog_directory="$dcos_container_path/commitlog"
+saved_caches_directory="$dcos_container_path/saved_caches"
 
 
 phi_convict_threshold=12
@@ -62,3 +53,7 @@ mv $file.new $file
 # Owner was ending up as root which caused the backup service to fail
 chown cassandra $file
 chgrp cassandra $file
+
+# Change dse-data directory's ownership to cassandra
+chown cassandra $dcos_container_path
+chgrp cassandra $dcos_container_path
