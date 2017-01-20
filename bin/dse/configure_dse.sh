@@ -19,19 +19,19 @@ date=$(date +%F)
 backup="$file.$date"
 cp $file $backup
 
-if [ $search_enabled -eq "true" ]; then
+if $search_enabled; then
   search_flag=1
 else
   search_flag=0
 fi
 
-if [ $analytics_enabled -eq "true" ]; then
+if $analytics_enabled; then
   analytics_flag=1
 else
   analytics_flag=0
 fi
 
-if [ $graph_enabled -eq "true" ]; then
+if $graph_enabled; then
   graph_flag=1
 else
   graph_flag=0
