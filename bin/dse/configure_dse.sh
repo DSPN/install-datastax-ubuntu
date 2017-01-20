@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
 
+search_enabled=$1
+analytics_enabled=$2
+graph_enabled=$3
+
 cloud_type=DCOS
 
 echo in configure_dse cloud_type = $cloud_type
+
+echo dse_search \'$search_enabled\'
+echo dse_analytics \'$analytics_enabled\'
+echo dse_graph \'$graph_enabled\'
+
 
 file=/etc/default/dse
 
