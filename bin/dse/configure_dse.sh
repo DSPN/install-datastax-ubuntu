@@ -19,11 +19,35 @@ date=$(date +%F)
 backup="$file.$date"
 cp $file $backup
 
-cat $file \
-| sed -e "s:.*\(SOLR_ENABLED\=\).*:SOLR_ENABLED\=1:" \
-| sed -e "s:.*\(SPARK_ENABLED\=\).*:SPARK_ENABLED\=1:" \
-| sed -e "s:.*\(GRAPH_ENABLED\=\).*:GRAPH_ENABLED\=1:" \
-> $file.new
+if [ $search_enabled -eq "true" ]; then
+  cat $file \
+  | sed -e "s:.*\(SOLR_ENABLED\=\).*:SOLR_ENABLED\=1:" \
+  > $file.new
+else
+  cat $file \
+  | sed -e "s:.*\(SOLR_ENABLED\=\).*:SOLR_ENABLED\=0:" \
+  > $file.new
+fi
+
+if [ $analytics_enabled -eq "true" ]; then
+  cat $file.new \
+  | sed -e "s:.*\(SPARK_ENABLED\=\).*:SPARK_ENABLED\=1:" \
+  > $file.new
+else
+  cat $file.new \
+  | sed -e "s:.*\(SPARK_ENABLED\=\).*:SPARK_ENABLED\=0:" \
+  > $file.new
+fi
+
+if [ $graph_enabled -eq "true" ]; then
+  cat $file.new \
+  | sed -e "s:.*\(GRAPH_ENABLED\=\).*:GRAPH_ENABLED\=1:" \
+  > $file.new
+else
+  cat $file.new \
+  | sed -e "s:.*\(GRAPH_ENABLED\=\).*:GRAPH_ENABLED\=0:" \
+  > $file.new
+fi
 
 mv $file.new $file
 
