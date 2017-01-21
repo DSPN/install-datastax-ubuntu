@@ -8,9 +8,10 @@ data_center_name=$3
 opscenter_dns_name=$4
 dcos_container_path=$5
 TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-search_enabled=$6
-analytics_enabled=$7
-graph_enabled=$8
+dse_log_path=$6
+search_enabled=$7
+analytics_enabled=$8
+graph_enabled=$9
 
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
@@ -35,6 +36,8 @@ echo seed_node_ip \'$seed_node_ip\'
 echo node_broadcast_ip \'$node_broadcast_ip\'
 echo node_ip \'$node_ip\'
 echo opscenter_ip \'$opscenter_ip\'
+echo dcos_container_path \'$dcos_container_path\'
+echo dse_log_path \'$dse_log_path\'
 echo dse_search \'$search_enabled\'
 echo dse_analytics \'$analytics_enabled\'
 echo dse_graph \'$graph_enabled\'
