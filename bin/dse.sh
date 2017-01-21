@@ -49,6 +49,7 @@ $TOOLS_DIR/dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center
 $TOOLS_DIR/dse/configure_cassandra_yaml.sh $node_ip $node_broadcast_ip $seed_node_ip $cloud_type $dcos_container_path
 $TOOLS_DIR/dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip $opscenter_ip
 $TOOLS_DIR/dse/configure_dse.sh $search_enabled $analytics_enabled $graph_enabled
+$TOOLS_DIR/dse/configure_log.sh $dse_log_path 
 $TOOLS_DIR/dse/start.sh
 
 while true
