@@ -18,7 +18,7 @@ sudo tee config.json > /dev/null <<EOF
 EOF
 
 output="temp"
-while [ "${output}" != $dse_cluster_name ]; do
+while [ "${output}" != "${dse_cluster_name}" ]; do
     output=`curl -X POST http://127.0.0.1:8888/cluster-configs -d @config.json`
     echo $output
 done
