@@ -3,7 +3,7 @@
 seed_node_ip=$1
 dse_cluster_name=$2
 
-echo dse_cluster_name $dse_cluster_name
+echo dse_cluster_name "$dse_cluster_name"
 
 sudo tee config.json > /dev/null <<EOF
 {
