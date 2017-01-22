@@ -15,6 +15,7 @@ cp $file $backup
 
 cat $file \
 | sed -e "s:<file>/var/log/opscenter/opscenterd.log</file>$:<file>$dcos_opscenter_pv/log/opscenter/opscenterd.log</file>:" \
+| sed -e "s:<fileNamePattern>/var/log/opscenter/opscenterd.%i.log</fileNamePattern>$:<fileNamePattern>$dcos_opscenter_pv/log/opscenter/opscenterd.%i.log</fileNamePattern>:" \
 > $file.new
 
 mv $file.new $file
