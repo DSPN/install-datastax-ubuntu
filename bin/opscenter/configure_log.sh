@@ -7,7 +7,7 @@ file=/etc/opscenter/logback.xml
 
 # Create a log folder (log/opscenter) in persistent volume
 mkdir -p $dcos_opscenter_pv/log/opscenter
-chown -R opscenter:opscenter $dcos_opscenter_pv/log
+chown -R opscenter:opscenter $dcos_opscenter_pv/log/opscenter
 
 date=$(date +%F)
 backup="$file.$date"
