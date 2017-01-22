@@ -27,6 +27,9 @@ echo seed_node_ip \'$seed_node_ip\'
 echo opscenter_ip \'$opscenter_ip\'
 echo dcos_opscenter_pv \'$dcos_opscenter_pv\'
 
+echo "Setting up OpsCenter log location in DCOS presistent volume"
+$TOOLS_DIR/opscenter/configure_log.sh $dcos_opscenter_pv
+
 echo "Starting OpsCenter..."
 $TOOLS_DIR/opscenter/start.sh
 
