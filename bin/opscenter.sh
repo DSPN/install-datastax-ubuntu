@@ -6,7 +6,7 @@ cloud_type=$1
 seed_nodes_dns_names=$2
 opscenter_dns_name=$3
 dse_cluster_name=$4
-dcos_opscenter_volume=$5
+dcos_opscenter_pv=$5
 TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Assuming only one seed is passed in for now
@@ -25,6 +25,10 @@ echo "Configuring OpsCenter with the settings:"
 echo cloud_type \'$cloud_type\'
 echo seed_node_ip \'$seed_node_ip\'
 echo opscenter_ip \'$opscenter_ip\'
+echo dcos_opscenter_pv \'$dcos_opscenter_pv\'
+
+echo "Setting up OpsCenter log location in DCOS presistent volume"
+$TOOLS_DIR/opscenter/configure_log.sh $dcos_opscenter_pv
 
 echo "Starting OpsCenter..."
 $TOOLS_DIR/opscenter/start.sh
