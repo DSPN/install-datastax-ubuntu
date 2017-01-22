@@ -19,3 +19,7 @@ cat $file \
 > $file.new
 
 mv $file.new $file
+
+# Owner was ending up as root which caused the backup service to fail
+chown opscenter $file
+chgrp opscenter $file
