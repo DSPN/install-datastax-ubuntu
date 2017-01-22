@@ -6,6 +6,7 @@ cloud_type=$1
 seed_nodes_dns_names=$2
 opscenter_dns_name=$3
 dse_cluster_name=$4
+dcos_opscenter_volume=$5
 TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Assuming only one seed is passed in for now
