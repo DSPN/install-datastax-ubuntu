@@ -12,7 +12,6 @@ dse_log_path=$6
 search_enabled=$7
 analytics_enabled=$8
 graph_enabled=$9
-dsefs_data_path=$MESOS_SANDBOX/dsefs-data/
 
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
@@ -39,7 +38,6 @@ echo node_ip \'$node_ip\'
 echo opscenter_ip \'$opscenter_ip\'
 echo dcos_container_path \'$dcos_container_path\'
 echo dse_log_path \'$dse_log_path\'
-echo dsefs_data_path \'$dsefs_data_path\'
 echo dse_search \'$search_enabled\'
 echo dse_analytics \'$analytics_enabled\'
 echo dse_graph \'$graph_enabled\'
