@@ -12,7 +12,7 @@ dse_log_path=$6
 search_enabled=$7
 analytics_enabled=$8
 graph_enabled=$9
-dse_dsefs_data_path $MESOS_SANDBOX/dsefs-data/
+dse_dsefs_data_path=$MESOS_SANDBOX/dsefs-data/
 
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
