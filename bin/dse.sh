@@ -9,6 +9,7 @@ opscenter_dns_name=$4
 dcos_container_path=$5
 TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 dse_log_path=$6
+dse_dsefs_path=$MESOS_SANDBOX/dsefs-data
 search_enabled=$7
 analytics_enabled=$8
 graph_enabled=$9
@@ -38,6 +39,7 @@ echo node_ip \'$node_ip\'
 echo opscenter_ip \'$opscenter_ip\'
 echo dcos_container_path \'$dcos_container_path\'
 echo dse_log_path \'$dse_log_path\'
+echo dse_dsefs_path \'$dse_dsefs_path\'
 echo dse_search \'$search_enabled\'
 echo dse_analytics \'$analytics_enabled\'
 echo dse_graph \'$graph_enabled\'
@@ -50,6 +52,7 @@ $TOOLS_DIR/dse/configure_cassandra_yaml.sh $node_ip $node_broadcast_ip $seed_nod
 $TOOLS_DIR/dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip $opscenter_ip
 $TOOLS_DIR/dse/configure_dse.sh $search_enabled $analytics_enabled $graph_enabled
 $TOOLS_DIR/dse/configure_log.sh $dse_log_path 
+$TOOLS_DIR/dse/configure_dsefs_data.sh $dse_dsefs_path
 $TOOLS_DIR/dse/start.sh
 
 while true
