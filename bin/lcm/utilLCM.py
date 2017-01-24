@@ -177,6 +177,12 @@ def addDC(dcname, cid):
             "solr-enabled": True,
             "spark-enabled": True})
         dcconf = requests.post("http://{url}/api/v1/lcm/datacenters/".format(url=opsc_url),data=dc).json()
+        # edge case where api returns "server error" string not json
+        if isinstance(dcconf, str):
+            print "Unexpected return value: ", dcconf
+            print "Retry after 5s sleep..."
+            time.sleep(5)
+            dcconf = requests.post("http://{url}/api/v1/lcm/datacenters/".format(url=opsc_url),data=dc).json()
         if 'code' in dcconf and ( dcconf['code'] == 409 ):
             print("Error {c} - {t} : {m}".format(c=dcconf['code'],m=dcconf['msg'],t=dcconf['type']))
             print("Finding id for dcname='{n}'".format(n=dcname))
