@@ -12,6 +12,7 @@ dse_log_path=$6
 search_enabled=$7
 analytics_enabled=$8
 graph_enabled=$9
+dse_dsefs_data_path $MESOS_SANDBOX/dsefs-data/
 
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
@@ -50,6 +51,8 @@ $TOOLS_DIR/dse/configure_cassandra_yaml.sh $node_ip $node_broadcast_ip $seed_nod
 $TOOLS_DIR/dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip $opscenter_ip
 $TOOLS_DIR/dse/configure_dse.sh $search_enabled $analytics_enabled $graph_enabled
 $TOOLS_DIR/dse/configure_log.sh $dse_log_path 
+$TOOLS_DIR/dse/configure_dsefs_data.sh $dse_dsefs_data_path
+
 $TOOLS_DIR/dse/start.sh
 
 while true
