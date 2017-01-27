@@ -30,6 +30,9 @@ echo dcos_opscenter_pv \'$dcos_opscenter_pv\'
 echo "Setting up OpsCenter log location in DCOS presistent volume"
 $TOOLS_DIR/opscenter/configure_log.sh $dcos_opscenter_pv
 
+echo "Setting Spark Master Console proxy port"
+$TOOLS_DIR/opscenter/configure_sparkmasterport.sh
+
 echo "Starting OpsCenter..."
 $TOOLS_DIR/opscenter/start.sh
 
