@@ -20,7 +20,8 @@ def setupArgs():
     required.add_argument('--nodeid', required=True, type=str, help='Unique node id.')
     required.add_argument('--privip', required=True, type=str, help='Private ip of node.')
     required.add_argument('--pubip', required=True, type=str, help='Public ip of node.')
-    required.add_argument('--dcsize', required=True, type=int, help='Number of nodes in datacenter, default 3.')
+    required.add_argument('--dcsize', required=True, type=int, help='Number of nodes in datacenter, triggers DC level install job.')
+    parser.add_argument('--clustersize', type=int, default=0, help='Number of nodes in cluster, non-zero OVERRIDES --dcsize, triggers cluster level install job')
     parser.add_argument('--dbpasswd', type=str, default='cassandra', help='DB password.')
     parser.add_argument('--pause',type=int, default=6, help="pause time (sec) between attempts to contact OpsCenter, default 6")
     parser.add_argument('--trys',type=int, default=100, help="number of times to attempt to contact OpsCenter, default 100")
@@ -36,10 +37,10 @@ def main():
     trys = args.trys
     clustername = args.clustername
     lcm.opsc_url = args.opsc_ip+':8888'
-    #datacenters = ['dc0','dc1','dc2']
     dcname = args.dcname
     password = args.dbpasswd
     dcsize = args.dcsize
+    clustersize = args.clustersize
     nodeid = args.nodeid
     privateip = args.privip
     publicip = args.pubip
@@ -47,12 +48,13 @@ def main():
     lcm.waitForOpsC(pause=pause,trys=trys)  # Block waiting for OpsC to spin up
     lcm.waitForCluster(clustername, pause, trys) # Block until cluster created
 
+    clusters = requests.get("http://{url}/api/v1/lcm/clusters/".format(url=lcm.opsc_url)).json()
+    cid = clusters['results'][0]['id']
+
     # Check if the DC --this-- node should belong to exists, if not add DC
     c = lcm.checkForDC(dcname)
     if (c == False):
         print("Datacenter {n} doesn't exist, creating...".format(n=dcname))
-        clusters = requests.get("http://{url}/api/v1/lcm/clusters/".format(url=lcm.opsc_url)).json()
-        cid = clusters['results'][0]['id']
         lcm.addDC(dcname,cid)
     else:
         print("Datacenter {d} exists".format(d=dcname))
@@ -86,9 +88,12 @@ def main():
 
     nodes = requests.get("http://{url}/api/v1/lcm/datacenters/{dcid}/nodes/".format(url=lcm.opsc_url,dcid=dcid)).json()
     nodecount = nodes['count']
-    if (nodecount == dcsize):
+    if(clustersize != 0 and nodecount == clustersize):
+        print("Last node added, triggering cluster install job...")
+        lcm.triggerInstall(cid, None, password)
+    elif (nodecount == dcsize):
         print("Last node added, triggering install job...")
-        lcm.triggerInstall(dcid, password)
+        lcm.triggerInstall(None, dcid, password)
 
 # ----------------------------
 if __name__ == "__main__":

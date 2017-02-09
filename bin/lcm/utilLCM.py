@@ -204,11 +204,17 @@ def addDC(dcname, cid):
         # Do something?
         raise
 
-def triggerInstall(dcid,pw):
+# Install will use larger scope, if both passed.
+def triggerInstall(cid, dcid, pw):
+    scope = "datacenter"
+    r_id = dcid
+    if(cid != None):
+        scope = "cluster"
+        r_id = cid
     data = json.dumps({
             "job-type":"install",
-            "job-scope":"datacenter",
-            "resource-id":dcid,
+            "job-scope":scope,
+            "resource-id":r_id,
             "auto-bootstrap":False,
             "continue-on-error":True,
             "change-default-cassandra-password":pw
