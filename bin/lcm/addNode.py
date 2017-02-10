@@ -88,9 +88,17 @@ def main():
 
     nodes = requests.get("http://{url}/api/v1/lcm/datacenters/{dcid}/nodes/".format(url=lcm.opsc_url,dcid=dcid)).json()
     nodecount = nodes['count']
-    if(clustersize != 0 and nodecount == clustersize):
+
+    # vvv could get pulled out
+    totalnodes = 0
+    for d in datacenters['results']:
+        nodes = requests.get("http://{url}/api/v1/lcm/datacenters/{dcid}/nodes/".format(url=lcm.opsc_url,dcid=d['id'])).json()
+        totalnodes += nodes['count']
+
+    if(clustersize != 0 and totalnodes == clustersize):
         print("Last node added, triggering cluster install job...")
         lcm.triggerInstall(cid, None, password)
+        return
     elif (nodecount == dcsize):
         print("Last node added, triggering install job...")
         lcm.triggerInstall(None, dcid, password)
