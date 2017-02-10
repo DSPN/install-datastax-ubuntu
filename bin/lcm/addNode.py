@@ -99,7 +99,7 @@ def main():
         print("Last node added, triggering cluster install job...")
         lcm.triggerInstall(cid, None, password)
         return
-    elif (nodecount == dcsize):
+    elif (clustersize == 0 and nodecount == dcsize):
         print("Last node added, triggering install job...")
         lcm.triggerInstall(None, dcid, password)
 
