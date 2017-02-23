@@ -16,12 +16,13 @@ def setupArgs():
                           help='Public ip of OpsCenter instance.')
     required.add_argument('--clustername', required=True, type=str,
                           help='Name of cluster.')
-    required.add_argument('--dcname', required=True, type=str, help='Name of datacenter.')
+    required.add_argument('--dcname', required=True, type=str, help='Datacenter node belongs to.')
     required.add_argument('--nodeid', required=True, type=str, help='Unique node id.')
     required.add_argument('--privip', required=True, type=str, help='Private ip of node.')
     required.add_argument('--pubip', required=True, type=str, help='Public ip of node.')
     required.add_argument('--dcsize', required=True, type=int, help='Number of nodes in datacenter, triggers DC level install job.')
     parser.add_argument('--clustersize', type=int, default=0, help='Number of nodes in cluster, non-zero OVERRIDES --dcsize, triggers cluster level install job')
+    parser.add_argument('--rack', type=str, default='rack0', help='Rack node belongs to.')
     parser.add_argument('--dbpasswd', type=str, default='cassandra', help='DB password.')
     parser.add_argument('--pause',type=int, default=6, help="pause time (sec) between attempts to contact OpsCenter, default 6")
     parser.add_argument('--trys',type=int, default=100, help="number of times to attempt to contact OpsCenter, default 100")
@@ -41,6 +42,7 @@ def main():
     password = args.dbpasswd
     dcsize = args.dcsize
     clustersize = args.clustersize
+    rack = args.rack
     nodeid = args.nodeid
     privateip = args.privip
     publicip = args.pubip
@@ -77,6 +79,7 @@ def main():
     nodeconf = json.dumps({
             'name': nodename,
             "datacenter-id": dcid,
+            "rack": rack,
             "ssh-management-address": publicip,
             "listen-address": privateip,
             "rpc-address": privateip,
