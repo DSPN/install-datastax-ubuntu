@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 cloud_type=$1
+opscenter_version=6.0.8
+
+if [ -z "$OPSC_VERSION" ]
+then
+  echo "env \$OPSC_VERSION is not set, using default: $opscenter_version"
+else
+  echo "env \$OPSC_VERSION is set: $OPSC_VERSION overiding default"
+  opscenter_version=$OPSC_VERSION
+fi
+
 echo "Installing OpsCenter"
 
 echo "Adding the DataStax repository"
@@ -12,4 +22,4 @@ fi
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 
 apt-get update
-apt-get -y install opscenter=6.0.8
+apt-get -y install opscenter=$opscenter_version
