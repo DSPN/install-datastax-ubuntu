@@ -67,7 +67,6 @@ def main():
             "name":"DSE creds",
             "login-user":user,
             "login-password":password,
-            "become-password":password,
             "become-user":None})
 
     defaultconfig = json.dumps({
