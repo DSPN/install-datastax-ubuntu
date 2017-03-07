@@ -178,7 +178,7 @@ def addDC(dcname, cid):
             "spark-enabled": True})
         dcconf = requests.post("http://{url}/api/v1/lcm/datacenters/".format(url=opsc_url),data=dc).json()
         # edge case where api returns "server error" string not json
-        if isinstance(dcconf, str):
+        if isinstance(dcconf, (str,unicode)):
             print "Unexpected return value: ", dcconf
             print "Retry after 5s sleep..."
             time.sleep(5)
