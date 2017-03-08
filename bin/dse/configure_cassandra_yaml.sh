@@ -15,7 +15,6 @@ rpc_address="0.0.0.0"
 broadcast_rpc_address=$node_broadcast_ip
 
 endpoint_snitch="GossipingPropertyFileSnitch"
-num_tokens=64
 
 data_file_directories="$dcos_container_path/data"
 commitlog_directory="$dcos_container_path/commitlog"
@@ -38,7 +37,6 @@ cat $file \
 | sed -e "s:^\(rpc_address\:\).*:rpc_address\: $rpc_address:" \
 | sed -e "s:^\(broadcast_rpc_address\:\).*:broadcast_rpc_address\: $broadcast_rpc_address:" \
 | sed -e "s:^\(endpoint_snitch\:\).*:endpoint_snitch\: $endpoint_snitch:" \
-| sed -e "s:^\(num_tokens\:\).*:\1 $num_tokens:" \
 | sed -e "s:\(.*- \)/var/lib/cassandra/data.*:\1$data_file_directories:" \
 | sed -e "s:^\(commitlog_directory\:\).*:commitlog_directory\: $commitlog_directory:" \
 | sed -e "s:^\(saved_caches_directory\:\).*:saved_caches_directory\: $saved_caches_directory:" \
