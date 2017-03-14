@@ -19,7 +19,7 @@ def setupArgs():
                           help='username LCM uses when ssh-ing to nodes for install/config')
     parser.add_argument('--password', type=str,
                           help='password for username LCM uses when ssh-ing to nodes for install/config. IGNORED if privkey non-null.')
-    parser.add_argument('--datapath', type=str, default = ""
+    parser.add_argument('--datapath', type=str, default = "",
                           help='path to root data directory containing data/commitlog/saved_caches, eg /mnt/cassandra ')
     parser.add_argument('--pause',type=int, default=6, help="pause time (sec) between attempts to contact OpsCenter, default 6")
     parser.add_argument('--trys',type=int, default=100, help="number of times to attempt to contact OpsCenter, default 100")
@@ -81,7 +81,7 @@ def main():
               "num_tokens":64,
               "endpoint_snitch":"GossipingPropertyFileSnitch"
            }
-        }})
+        }}
     # Since this isn't being called on the nodes where 'datapatah' exists
     # checking is pointless
     if (datapath != ""):
