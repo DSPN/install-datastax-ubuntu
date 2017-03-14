@@ -19,6 +19,8 @@ def setupArgs():
                           help='username LCM uses when ssh-ing to nodes for install/config')
     parser.add_argument('--password', type=str,
                           help='password for username LCM uses when ssh-ing to nodes for install/config. IGNORED if privkey non-null.')
+    parser.add_argument('--datapath', type=str, default = ""
+                          help='path to root data directory containing data/commitlog/saved_caches, eg /mnt/cassandra ')
     parser.add_argument('--pause',type=int, default=6, help="pause time (sec) between attempts to contact OpsCenter, default 6")
     parser.add_argument('--trys',type=int, default=100, help="number of times to attempt to contact OpsCenter, default 100")
     parser.add_argument('--verbose',
@@ -36,6 +38,7 @@ def main():
     user = args.username
     password = args.password
     privkey = args.privkey
+    datapath = args.datapath
 
     if (password == None and privkey == None):
         print "Error: must pass either private key or password"
@@ -69,7 +72,7 @@ def main():
             "login-password":password,
             "become-user":None})
 
-    defaultconfig = json.dumps({
+    defaultconfig = {
         "name":"Default config",
         "datastax-version": "5.0.6",
         "json": {
@@ -79,7 +82,14 @@ def main():
               "endpoint_snitch":"GossipingPropertyFileSnitch"
            }
         }})
+    # Since this isn't being called on the nodes where 'datapatah' exists
+    # checking is pointless
+    if (datapath != ""):
+        defaultconfig["json"]["cassandra-yaml"]["data_file_directories"] = [os.path.join(datapath,"data")]
+        defaultconfig["json"]["cassandra-yaml"]["saved_caches_directory"] = os.path.join(datapath,"saved_caches")
+        defaultconfig["json"]["cassandra-yaml"]["commitlog_directory"] = os.path.join(datapath,"commitlog")
 
+    defaultconfig = json.dumps(defaultconfig)
     lcm.waitForOpsC(pause=pause,trys=trys)  # Block waiting for OpsC to spin up
 
     # return config instead of bool?
