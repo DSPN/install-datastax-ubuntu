@@ -74,7 +74,7 @@ def main():
 
     defaultconfig = {
         "name":"Default config",
-        "datastax-version": "5.0.6",
+        "datastax-version": "5.0.7",
         "json": {
            'cassandra-yaml': {
               "authenticator":"PasswordAuthenticator",
