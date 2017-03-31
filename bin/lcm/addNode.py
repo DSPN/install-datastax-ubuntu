@@ -52,7 +52,7 @@ def main():
 
     clusters = requests.get("http://{url}/api/v1/lcm/clusters/".format(url=lcm.opsc_url)).json()
     for r in clusters['results']:
-        if r['name'] == cname:
+        if r['name'] == clustername:
             cid = r['id']
 
     # Check if the DC --this-- node should belong to exists, if not add DC
