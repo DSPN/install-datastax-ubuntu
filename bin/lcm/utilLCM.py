@@ -133,12 +133,10 @@ def waitForCluster(cname, pause, trys):
 def checkForCluster(cname):
     try:
         clusters = requests.get("http://{url}/api/v1/lcm/clusters/".format(url=opsc_url)).json()
-        # This is a weak test. Assuming if there's any cluster,
-        # it's the one we want. Done in the name of expedience, to change.
-        if (clusters['count']==1):
-            return True
-        else:
-            return False
+        for r in clusters['results']:
+            if r['name'] == cname:
+                return True
+        return False
     except requests.exceptions.Timeout as e:
         print("Request for cluster config timed out.")
         return False

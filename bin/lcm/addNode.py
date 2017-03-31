@@ -51,7 +51,9 @@ def main():
     lcm.waitForCluster(clustername, pause, trys) # Block until cluster created
 
     clusters = requests.get("http://{url}/api/v1/lcm/clusters/".format(url=lcm.opsc_url)).json()
-    cid = clusters['results'][0]['id']
+    for r in clusters['results']:
+        if r['name'] == cname:
+            cid = r['id']
 
     # Check if the DC --this-- node should belong to exists, if not add DC
     c = lcm.checkForDC(dcname)
