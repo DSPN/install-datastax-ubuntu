@@ -27,7 +27,7 @@ def main():
         if r['name'] == args.clustername:
             cid = r['id']
     lcm.waitForNodes(numnodes=args.clustersize, pause=6, trys=400)
-    lcm.triggerInstall(cid, None, args.dbpassword)
+    lcm.triggerInstall(cid, None, args.dbpasswd)
 
 # ----------------------------
 if __name__ == "__main__":
