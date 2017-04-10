@@ -128,7 +128,19 @@ def waitForCluster(cname, pause, trys):
         print("Cluster not found on try {c}, wait {p} sec...".format(c=count,p=pause))
         time.sleep(pause)
 
-
+def waitForNodes(numnodes, pause, trys):
+    count = 0
+    while (True):
+        count += 1
+        if(count>trys):
+            return False
+        nodes = requests.get("http://{url}/api/v1/lcm/nodes/".format(url=opsc_url)).json()
+        ncount = nodes["count"]
+        if(ncount>=numnodes):
+            print "{n} nodes found.".format(n=numnodes)
+            return True
+        print("Only found {f} < {n} on try {c}, wait {p} sec...".format(f=ncount,n=numnodes,c=count,p=pause))
+        time.sleep(pause)
 
 def checkForCluster(cname):
     try:
