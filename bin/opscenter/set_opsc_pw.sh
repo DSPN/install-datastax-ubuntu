@@ -1,6 +1,6 @@
 #!/bin/bash
 
-passwd=$1
+password=$1
 
 echo "Turn on OpsC auth"
 sed -ie 's/enabled = False/enabled = True/g' /etc/opscenter/opscenterd.conf
