@@ -33,4 +33,4 @@ done
 
 echo $json
 token=$(curl -s -X POST -d '{"username":"admin","password":"admin"}' 'http://localhost:8888/login' | tr -d '{} ' | awk -F':' {'print $2'} | tr -d '"')
-curl -H 'opscenter-session: '$token -H 'Accept: application/json' -d '{"password": "mypasswd", "'$password'": "admin" }' -X PUT http://127.0.0.1:8888/users/admin
+curl -H 'opscenter-session: '$token -H 'Accept: application/json' -d '{"password": "'$password'", "old_password": "admin" }' -X PUT http://127.0.0.1:8888/users/admin
