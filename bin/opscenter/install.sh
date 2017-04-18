@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 cloud_type=$1
-opscenter_version=6.0.8
+opscenter_version=6.1.0
 
 if [ -z "$OPSC_VERSION" ]
 then
