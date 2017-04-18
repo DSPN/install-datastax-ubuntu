@@ -7,7 +7,7 @@ cloud_type=$1
 # eg: export OPSC_VERSION='6.0.5'
 
 dse_version=5.0.6-1
-opscenter_version=6.0.8
+opscenter_version=6.1.0
 
 if [ -z "$OPSC_VERSION" ]
 then
