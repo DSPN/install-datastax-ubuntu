@@ -10,7 +10,7 @@ def setupArgs():
     parser = argparse.ArgumentParser(description='Setup LCM managed DSE cluster, repo, config, and ssh creds')
     required = parser.add_argument_group('Required named arguments')
     required.add_argument('--opsc-ip', required=True, type=str,
-                          help='public ip of OpsCenter instance')
+                          help='IP of OpsCenter instance')
     required.add_argument('--clustername', required=True, type=str,
                           help='Name of cluster.')
     parser.add_argument('--privkey', type=str,
