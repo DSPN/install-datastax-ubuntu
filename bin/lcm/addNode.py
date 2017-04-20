@@ -84,7 +84,7 @@ def main():
             "rack": rack,
             "ssh-management-address": publicip,
             "listen-address": privateip,
-            "rpc-address": privateip,
+            "rpc-address": "0.0.0.0",
             "broadcast-address": publicip,
             "broadcast-rpc-address": publicip})
     node = requests.post("http://{url}/api/v1/lcm/nodes/".format(url=lcm.opsc_url),data=nodeconf).json()
