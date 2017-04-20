@@ -47,8 +47,8 @@ def main():
 # These should move to a config file, passed as arg maybe ?
     dserepo = json.dumps({
         "name":"DSE repo",
-        "username":"collin.poczatek+awstesting@gmail.com",
-        "password":"Cassandra1"})
+        "username":"datastax@microsoft.com",
+        "password":"3A7vadPHbNT"})
 
     if (privkey != None):
       keypath = os.path.abspath(args.privkey)
