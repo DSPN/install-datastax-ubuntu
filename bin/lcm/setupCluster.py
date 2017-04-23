@@ -74,12 +74,16 @@ def main():
 
     defaultconfig = {
         "name":"Default config",
-        "datastax-version": "5.0.8",
+        "datastax-version": "5.1.0",
         "json": {
            'cassandra-yaml': {
-              "authenticator":"PasswordAuthenticator",
-              "num_tokens":64,
+              "authenticator":"com.datastax.bdp.cassandra.auth.DseAuthenticator",
+              "num_tokens":32,
               "endpoint_snitch":"GossipingPropertyFileSnitch"
+           },
+           "dse-yaml": {
+              "authorization_options": { "enabled": true },
+              "authentication_options": { "enabled": true }
            }
         }}
     # Since this isn't being called on the nodes where 'datapatah' exists
