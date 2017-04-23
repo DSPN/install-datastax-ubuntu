@@ -82,8 +82,8 @@ def main():
               "endpoint_snitch":"GossipingPropertyFileSnitch"
            },
            "dse-yaml": {
-              "authorization_options": { "enabled": true },
-              "authentication_options": { "enabled": true }
+              "authorization_options": { "enabled": True },
+              "authentication_options": { "enabled": True }
            }
         }}
     # Since this isn't being called on the nodes where 'datapatah' exists
