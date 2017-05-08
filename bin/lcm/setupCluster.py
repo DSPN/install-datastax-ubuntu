@@ -13,6 +13,7 @@ def setupArgs():
                           help='IP of OpsCenter instance')
     required.add_argument('--clustername', required=True, type=str,
                           help='Name of cluster.')
+    parser.add_argument('--dsever', type=str, default = "5.1.0", help='DSE version for LCM config profile')
     parser.add_argument('--privkey', type=str,
                           help='abs path to private key (public key on all nodes) to be used by OpsCenter')
     parser.add_argument('--username', type=str,
@@ -21,6 +22,10 @@ def setupArgs():
                           help='password for username LCM uses when ssh-ing to nodes for install/config. IGNORED if privkey non-null.')
     parser.add_argument('--datapath', type=str, default = "",
                           help='path to root data directory containing data/commitlog/saved_caches, eg /mnt/cassandra ')
+    parser.add_argument('--repouser', type=str, default = "datastax@microsoft.com",
+                          help='username for DSE repo')
+    parser.add_argument('--repopw', type=str, default = "3A7vadPHbNT",
+                          help='pw for repouser')
     parser.add_argument('--pause',type=int, default=6, help="pause time (sec) between attempts to contact OpsCenter, default 6")
     parser.add_argument('--trys',type=int, default=100, help="number of times to attempt to contact OpsCenter, default 100")
     parser.add_argument('--verbose',
@@ -39,6 +44,9 @@ def main():
     password = args.password
     privkey = args.privkey
     datapath = args.datapath
+    dsever = args.dsever
+    repouser = args.repouser
+    repopw = args.repopw
 
     if (password == None and privkey == None):
         print "Error: must pass either private key or password"
@@ -47,8 +55,8 @@ def main():
 # These should move to a config file, passed as arg maybe ?
     dserepo = json.dumps({
         "name":"DSE repo",
-        "username":"datastax@microsoft.com",
-        "password":"3A7vadPHbNT"})
+        "username":repouser,
+        "password":repopw})
 
     if (privkey != None):
       keypath = os.path.abspath(args.privkey)
@@ -74,7 +82,7 @@ def main():
 
     defaultconfig = {
         "name":"Default config",
-        "datastax-version": "5.1.0",
+        "datastax-version": dsever,
         "json": {
            'cassandra-yaml': {
               "authenticator":"com.datastax.bdp.cassandra.auth.DseAuthenticator",
