@@ -221,13 +221,13 @@ def triggerInstall(cid, dcid, pw):
     if(cid != None):
         scope = "cluster"
         r_id = cid
-    data = json.dumps({
-            "job-type":"install",
-            "job-scope":scope,
-            "resource-id":r_id,
-            "auto-bootstrap":False,
-            "continue-on-error":True,
-            "change-default-cassandra-password":pw
-            })
+    job = {"job-type":"install",
+           "job-scope":scope,
+           "resource-id":r_id,
+           "auto-bootstrap":False,
+           "continue-on-error":True}
+    if (pw != ""):
+        job["change-default-cassandra-password"] = pw
+    data = json.dumps(job)
     response = requests.post("http://{url}/api/v1/lcm/actions/install".format(url=opsc_url),data=data).json()
     pretty(response)
