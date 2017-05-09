@@ -4,6 +4,15 @@ import json
 import time
 import os
 import utilLCM as lcm
+import argparse
+
+def setupArgs():
+    parser = argparse.ArgumentParser(description='Add calling instance to an LCM managed DSE cluster.')
+    parser = argparse.ArgumentParser(description='Add calling instance to an LCM managed DSE cluster.')
+    parser.add_argument('--num', type=int, default=1, help='Expected number of jobs')
+    parser.add_argument('--opsc-ip', type=str, default='localhost',
+                          help='IP/hostname of OpsCenter instance, default localhost. REST calls made to this host:8888')
+    return parser
 
 def runningJob(jobs):
     running = False
@@ -13,7 +22,9 @@ def runningJob(jobs):
     return running
 
 def main():
-    lcm.opsc_url = 'localhost:8888'
+    parser = setupArgs()
+    args = parser.parse_args()
+    lcm.opsc_url = args.opsc_ip + ':8888'
     lcm.waitForOpsC(pause=6, trys=200)  # Block waiting for OpsC to spin up
     pause = 60
     trys = 100
@@ -30,10 +41,15 @@ def main():
             time.sleep(pause)
             continue
         if(runningJob(jobs)):
-            print "Job running/pending on try {c}, sleeping {p} sec...".format(c=count,p=pause)
+            print "Jobs running/pending on try {c}, sleeping {p} sec...".format(c=count,p=pause)
             time.sleep(pause)
-        else:
-            print "No jobs running/pending on try {c}, exiting".format(c=count)
+            continue
+        if((not runningJob(jobs)) and (jobs['count'] < args.num)):
+            print "Jobs found on try {c} but num {j} < {n}, sleeping {p} sec...".format(c=count,j=jobs['count'],n=args.num,p=pause)
+            time.sleep(pause)
+            continue
+        if((not runningJob(jobs)) and (jobs['count'] >= args.num)):
+            print "No jobs running/pending and num >= {n} on try {c}, exiting".format(n=args.num,c=count)
             break
 
 
