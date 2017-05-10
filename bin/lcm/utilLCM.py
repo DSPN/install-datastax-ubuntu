@@ -226,7 +226,7 @@ def triggerInstall(cid, dcid, pw):
            "resource-id":r_id,
            "auto-bootstrap":False,
            "continue-on-error":True}
-    if (pw != ""):
+    if (pw != "cassandra"):
         job["change-default-cassandra-password"] = pw
     data = json.dumps(job)
     response = requests.post("http://{url}/api/v1/lcm/actions/install".format(url=opsc_url),data=data).json()
