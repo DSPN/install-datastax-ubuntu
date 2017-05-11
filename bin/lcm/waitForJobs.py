@@ -36,6 +36,7 @@ def main():
             print "Timeout, exiting"
             exit()
         jobs = requests.get("http://{url}/api/v1/lcm/jobs/".format(url=lcm.opsc_url)).json()
+        lcm.pretty(jobs)
         if(jobs['count']==0):
             print "No jobs found on try {c}, sleeping {p} sec...".format(c=count,p=pause)
             time.sleep(pause)
