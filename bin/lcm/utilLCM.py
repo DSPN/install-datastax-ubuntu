@@ -3,7 +3,7 @@ import json
 import time
 
 # Yay globals!
-opsc_url = "127.0.0.0:8888"
+opsc_url = "127.0.0.1:8888"
 
 def pretty(data):
     print '\n', json.dumps(data, sort_keys=True, indent=4), '\n'
@@ -93,7 +93,7 @@ def waitForOpsC(pause, trys):
     while(True):
         count += 1
         if (count > trys):
-            print("Error: OpsC connection failed after {n} trys".format(n=maxtrys))
+            print("Error: OpsC connection failed after {n} trys".format(n=trys))
             print("Exiting...")
             exit(1)
         try:
