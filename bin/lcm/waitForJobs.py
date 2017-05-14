@@ -7,8 +7,7 @@ import utilLCM as lcm
 import argparse
 
 def setupArgs():
-    parser = argparse.ArgumentParser(description='Add calling instance to an LCM managed DSE cluster.')
-    parser = argparse.ArgumentParser(description='Add calling instance to an LCM managed DSE cluster.')
+    parser = argparse.ArgumentParser(description='Block template shell until LCM jobs are not in RUNNING/PENDING state.')
     parser.add_argument('--num', type=int, default=1, help='Expected number of jobs')
     parser.add_argument('--opsc-ip', type=str, default='localhost',
                           help='IP/hostname of OpsCenter instance, default localhost. REST calls made to this host:8888')
@@ -33,9 +32,16 @@ def main():
     while (True):
         count += 1
         if(count>trys):
-            print "Timeout, exiting"
-            exit()
-        jobs = requests.get("http://{url}/api/v1/lcm/jobs/".format(url=lcm.opsc_url)).json()
+            print "Maximum attempts, exiting"
+            exit(1)
+        try:
+            jobs = requests.get("http://{url}/api/v1/lcm/jobs/".format(url=lcm.opsc_url)).json()
+        except requests.exceptions.Timeout as e:
+            print("Request {c} to OpsC timeout after initial connection, exiting.".format(c=count))
+            exit(1)
+        except requests.exceptions.ConnectionError as e:
+            print("Request {c} to OpsC refused after initial connection, exiting.".format(c=count))
+            exit(1)
         lcm.pretty(jobs)
         if(jobs['count']==0):
             print "No jobs found on try {c}, sleeping {p} sec...".format(c=count,p=pause)
