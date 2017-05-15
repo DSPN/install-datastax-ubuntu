@@ -33,15 +33,15 @@ def main():
         count += 1
         if(count>trys):
             print "Maximum attempts, exiting"
-            exit(1)
+            exit()
         try:
             jobs = requests.get("http://{url}/api/v1/lcm/jobs/".format(url=lcm.opsc_url)).json()
         except requests.exceptions.Timeout as e:
             print("Request {c} to OpsC timeout after initial connection, exiting.".format(c=count))
-            exit(1)
+            exit()
         except requests.exceptions.ConnectionError as e:
             print("Request {c} to OpsC refused after initial connection, exiting.".format(c=count))
-            exit(1)
+            exit()
         lcm.pretty(jobs)
         if(jobs['count']==0):
             print "No jobs found on try {c}, sleeping {p} sec...".format(c=count,p=pause)
