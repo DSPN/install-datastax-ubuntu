@@ -30,13 +30,10 @@ def main():
     lcm.waitForNodes(numnodes=args.clustersize, pause=6, trys=400)
     if args.dclevel:
         datacenters = requests.get("http://{url}/api/v1/lcm/datacenters/".format(url=lcm.opsc_url)).json()
-        pw = args.dbpasswd
         for r in datacenters['results']:
             dcid = r['id']
             print("Triggering install for DC, id = {i}".format(i=dcid))
-            lcm.triggerInstall(None, dcid, pw)
-            #set pw to default -> no-op when triggering the next install job
-            pw = "cassandra"
+            lcm.triggerInstall(None, dcid, args.dbpasswd)
     else:
         print("Triggering install for cluster, id = {i}".format(i=cid))
         lcm.triggerInstall(cid, None, args.dbpasswd)
