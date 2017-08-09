@@ -23,4 +23,4 @@ cd install-datastax-ubuntu/bin
 sudo ./dse.sh $CLOUD_TYPE_NAME $DNS_NAME $DC_NAME
 
 #installing raid0
-sudo ./dse-raid-setup.sh --disks /dev/xvdb,/dev/xvdc --raiddev /dev/md0 --update-fsta
+sudo ./dse-raid-setup.sh --disks /dev/xvdb,/dev/xvdc --raiddev /dev/md0 --update-fstab
