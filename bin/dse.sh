@@ -75,7 +75,7 @@ echo opscenter_ip \'$opscenter_ip\'
 sudo apt-get -y install sysstat
 ./dse/install.sh $cloud_type
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
-./dse/configure_cassandra_yaml.sh $node_ip $node_broadcast_ip $seed_node_ip
+./dse/configure_cassandra_yaml.sh $node_ip $node_broadcast_ip $node_ip
 ./dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip $opscenter_ip
 ./dse/start.sh
 
