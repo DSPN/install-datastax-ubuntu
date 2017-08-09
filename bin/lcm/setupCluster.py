@@ -21,7 +21,7 @@ def setupArgs():
     parser.add_argument('--password', type=str,
                           help='password for username LCM uses when ssh-ing to nodes for install/config. IGNORED if privkey non-null.')
     parser.add_argument('--datapath', type=str, default = "",
-                          help='path to root data directory containing data/commitlog/saved_caches, eg /mnt/cassandra ')
+                          help='path to root data directory containing data/commitlog/saved_caches, eg /var/lib/cassandra ')
     parser.add_argument('--repouser', type=str, default = "datastax@microsoft.com",
                           help='username for DSE repo')
     parser.add_argument('--repopw', type=str, default = "3A7vadPHbNT",
