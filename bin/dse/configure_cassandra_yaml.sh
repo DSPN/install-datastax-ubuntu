@@ -6,7 +6,6 @@ seed_node_public_ip=$3
 
 seeds=$seed_node_public_ip
 listen_address=$node_ip
-broadcast_address=$node_broadcast_ip
 rpc_address="0.0.0.0"
 broadcast_rpc_address=$node_broadcast_ip
 
@@ -27,7 +26,6 @@ cp $file $backup
 cat $file \
 | sed -e "s:\(.*- *seeds\:\).*:\1 \"$seeds\":" \
 | sed -e "s:[# ]*\(listen_address\:\).*:listen_address\: $listen_address:" \
-| sed -e "s:[# ]*\(broadcast_address\:\).*:broadcast_address\: $broadcast_address:" \
 | sed -e "s:[# ]*\(rpc_address\:\).*:rpc_address\: $rpc_address:" \
 | sed -e "s:[# ]*\(broadcast_rpc_address\:\).*:broadcast_rpc_address\: $broadcast_rpc_address:" \
 | sed -e "s:.*\(endpoint_snitch\:\).*:endpoint_snitch\: $endpoint_snitch:" \
