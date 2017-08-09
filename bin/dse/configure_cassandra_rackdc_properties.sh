@@ -53,5 +53,3 @@ cat $file \
 > $file.new
 
 mv $file.new $file
-chown cassandra $file
-chgrp cassandra $file

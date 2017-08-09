@@ -3,10 +3,12 @@
 echo "Running install-datastax/bin/dse.sh"
 
 cloud_type=$1
-data_center_name=$2
-opscenter_dns_name=$3
+seed_nodes_dns_names=$2
+data_center_name=$3
+opscenter_dns_name=$4
 
-seed_node_dns_name=localhost
+# Assuming only one seed is passed in for now
+seed_node_dns_name=$seed_nodes_dns_names
 
 # On GKE we resolve to a private IP.
 # On AWS and Azure this gets the public IP.
