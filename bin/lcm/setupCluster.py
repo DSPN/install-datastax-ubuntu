@@ -13,7 +13,7 @@ def setupArgs():
                           help='IP of OpsCenter instance')
     required.add_argument('--clustername', required=True, type=str,
                           help='Name of cluster.')
-    parser.add_argument('--dsever', type=str, default = "5.1.0", help='DSE version for LCM config profile')
+    parser.add_argument('--dsever', type=str, default = "5.1.3", help='DSE version for LCM config profile')
     parser.add_argument('--privkey', type=str,
                           help='abs path to private key (public key on all nodes) to be used by OpsCenter')
     parser.add_argument('--username', type=str,
