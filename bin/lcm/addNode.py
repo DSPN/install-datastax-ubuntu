@@ -20,15 +20,10 @@ def setupArgs():
     required.add_argument('--nodeid', required=True, type=str, help='Unique node id.')
     required.add_argument('--privip', required=True, type=str, help='Private ip of node.')
     required.add_argument('--pubip', required=True, type=str, help='Public ip of node.')
-    required.add_argument('--dcsize', required=True, type=int, help='Number of nodes in datacenter, triggers DC level install job.')
-    parser.add_argument('--clustersize', type=int, default=0, help='Number of nodes in cluster, non-zero OVERRIDES --dcsize, triggers cluster level install job')
     parser.add_argument('--rack', type=str, default='rack0', help='Rack node belongs to.')
-    parser.add_argument('--dbpasswd', type=str, default='cassandra', help='DB password.')
     parser.add_argument('--pause',type=int, default=6, help="pause time (sec) between attempts to contact OpsCenter, default 6")
     parser.add_argument('--trys',type=int, default=100, help="number of times to attempt to contact OpsCenter, default 100")
-    parser.add_argument('--verbose',
-                        action='store_true',
-                        help='Verbose flag, right now a NO-OP.' )
+    parser.add_argument('--verbose', action='store_true', help='Verbose flag, right now a NO-OP.' )
     return parser
 
 def main():
@@ -39,9 +34,6 @@ def main():
     clustername = args.clustername
     lcm.opsc_url = args.opsc_ip+':8888'
     dcname = args.dcname
-    password = args.dbpasswd
-    dcsize = args.dcsize
-    clustersize = args.clustersize
     rack = args.rack
     nodeid = args.nodeid
     privateip = args.privip
@@ -93,20 +85,8 @@ def main():
 
     nodes = requests.get("http://{url}/api/v1/lcm/datacenters/{dcid}/nodes/".format(url=lcm.opsc_url,dcid=dcid)).json()
     nodecount = nodes['count']
-
-    # vvv could get pulled out
-    totalnodes = 0
-    for d in datacenters['results']:
-        nodes = requests.get("http://{url}/api/v1/lcm/datacenters/{dcid}/nodes/".format(url=lcm.opsc_url,dcid=d['id'])).json()
-        totalnodes += nodes['count']
-
-    if(clustersize != 0 and totalnodes == clustersize):
-        print("Last node added, triggering cluster install job...")
-        lcm.triggerInstall(cid, None, password)
-        return
-    elif (clustersize == 0 and nodecount == dcsize):
-        print("Last node added, triggering install job...")
-        lcm.triggerInstall(None, dcid, password)
+    print("{n} nodes in datacenter {d}".format(n=nodecount, d=dcid))
+    print("Exiting addNode...")
 
 # ----------------------------
 if __name__ == "__main__":
