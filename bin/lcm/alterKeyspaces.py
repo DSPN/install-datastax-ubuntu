@@ -1,9 +1,7 @@
 #!/usr/bin/python
-import requests
 import json
-import time
 import argparse
-import os
+import requests
 import utilLCM as lcm
 
 def setupArgs():
@@ -19,11 +17,11 @@ def main():
     lcm.waitForOpsC(pause=6, trys=10)
 
     # get cluster id, assume 1 cluster
-    opsc_url=lcm.opsc_url
+    opsc_url = lcm.opsc_url
     clusterconf = requests.get("http://{url}/cluster-configs".format(url=opsc_url)).json()
     cid = clusterconf.keys()[0]
     # get all node configs
-    nodes = requests.get("http://{url}/{id}/nodes".format(url=opsc_url,id=cid)).json()
+    nodes = requests.get("http://{url}/{id}/nodes".format(url=opsc_url, id=cid)).json()
     # loop of configs, counting nodes in each dc
     datacenters = {}
     for n in nodes:
@@ -37,15 +35,17 @@ def main():
         datacenters[d] = min(3, datacenters[d])
     # keyspaces to alter
     # leaving out LocalStrategy (system & system_schema) and EverywhereStrategy (dse_system & solr_admin)
-    keyspaces = ["system_auth","system_distributed","system_traces","dse_security","dse_perf","dse_leases","cfs_archive","spark_system","cfs","dsefs","OpsCenter","HiveMetaStore"]
+    keyspaces = ["system_auth", "system_distributed", "system_traces",
+                 "dse_security", "dse_perf", "dse_leases", "cfs_archive",
+                 "spark_system", "cfs", "dsefs", "OpsCenter", "HiveMetaStore"]
     postdata = {"strategy_class": "NetworkTopologyStrategy", "strategy_options": datacenters, "durable_writes": True}
     rawjson = json.dumps(postdata)
     # loop over keyspaces
     print "Looping over keyspaces: {k}".format(k=keyspaces)
     print "NOTE: No response indicates sucess"
     for ks in keyspaces:
-        print "Calling: PUT http://{url}/{id}/keyspaces/{ks} with {d}".format(url=opsc_url,id=cid,ks=ks,d=rawjson)
-        response = requests.put("http://{url}/{id}/keyspaces/{ks}".format(url=opsc_url,id=cid,ks=ks),data=rawjson).json()
+        print "Calling: PUT http://{url}/{id}/keyspaces/{ks} with {d}".format(url=opsc_url, id=cid, ks=ks, d=rawjson)
+        response = requests.put("http://{url}/{id}/keyspaces/{ks}".format(url=opsc_url, id=cid, ks=ks), data=rawjson).json()
         print "Response: "
         lcm.pretty(response)
 

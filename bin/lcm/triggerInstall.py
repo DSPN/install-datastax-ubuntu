@@ -1,9 +1,6 @@
 #!/usr/bin/python
-import requests
-import json
-import time
 import argparse
-import os
+import requests
 import utilLCM as lcm
 
 def setupArgs():
@@ -11,9 +8,10 @@ def setupArgs():
     required = parser.add_argument_group('Required named arguments')
     required.add_argument('--opsc-ip', required=True, type=str, help='public ip of OpsCenter instance')
     required.add_argument('--clustername', required=True, type=str, help='Name of cluster.')
-    required.add_argument('--clustersize', type=int, default=0, help='Trigger install job when clustersize nodes have posted')
+    required.add_argument('--clustersize', type=int, default=0,
+                          help='Trigger install job when clustersize nodes have posted')
     parser.add_argument('--dbpasswd', type=str, default='cassandra', help='DB password.')
-    parser.add_argument('--dclevel', action='store_true', help='Trigger DC level install job(s).' )
+    parser.add_argument('--dclevel', action='store_true', help='Trigger DC level install job(s).')
     return parser
 
 def main():
@@ -32,10 +30,10 @@ def main():
         datacenters = requests.get("http://{url}/api/v1/lcm/datacenters/".format(url=lcm.opsc_url)).json()
         for r in datacenters['results']:
             dcid = r['id']
-            print("Triggering install for DC, id = {i}".format(i=dcid))
+            print "Triggering install for DC, id = {i}".format(i=dcid)
             lcm.triggerInstall(None, dcid, args.dbpasswd)
     else:
-        print("Triggering install for cluster, id = {i}".format(i=cid))
+        print "Triggering install for cluster, id = {i}".format(i=cid)
         lcm.triggerInstall(cid, None, args.dbpasswd)
 
 # ----------------------------
