@@ -7,7 +7,8 @@ def setupArgs():
     parser = argparse.ArgumentParser(description='Trigger LCM install job after last node posts.',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     required = parser.add_argument_group('Required named arguments')
-    required.add_argument('--opsc-ip', required=True, type=str, help='IP of OpsCenter instance (or FQDN)')
+    parser.add_argument('--opsc-ip', type=str, default='127.0.0.1',
+                        help='IP of OpsCenter instance (or FQDN)')
     parser.add_argument('--opscuser', type=str, default='admin', help='opscenter admin user')
     parser.add_argument('--opscpw', type=str, default='admin', help='password for opscuser')
     required.add_argument('--clustername', required=True, type=str, help='Name of cluster.')
