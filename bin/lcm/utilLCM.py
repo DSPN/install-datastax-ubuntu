@@ -50,13 +50,25 @@ class OpsCenter:
                 return
             if meta.status_code == 401:
                 print "Found OpsCenter with auth enabled, attempting login..."
-                resp = self.session.post("{url}/login".format(url=self.url), data={"username":self.user,"password":self.password}, timeout=tout)
-                if resp.status_code == 200:
-                    self.session.headers.update(resp.json())
-                    return
-                if resp.status_code == 401:
-                    print "Login failed, response: {j}".format(j=resp.json())
-                    return
+                resp = self.attemptLogin(6)
+                if resp == None:
+                    print "All login attempts failed, exiting..."
+                    exit(1)
+
+    def attemptLogin(self, trys):
+        count = 0
+        while count < trys:
+            resp = self.session.post("{url}/login".format(url=self.url), data={"username":self.user,"password":self.password}, timeout=5)
+            if resp.status_code == 200:
+                self.session.headers.update(resp.json())
+                return resp
+            else:
+                print "Login attempt {c} failed, response: {j}".format(c=count, j=resp.json())
+                print "Sleeping 10s before retry..."
+                time.sleep(10)
+            count += 1
+        print "Error: OpsC connection failed after {n} trys".format(n=trys)
+        return None
 
     def addCluster(self, cname, credid, repoid, configid):
         try:
