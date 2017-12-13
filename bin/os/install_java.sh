@@ -29,6 +29,11 @@ echo "Installing the Oracle JDK"
 
 if [ -z "$manual" ]; then
   echo "performing package install"
+  # check for lock
+  echo -e "Checking for dpkg lock, start: $(date +%r)"
+  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1s; done;
+  echo -e "Lock released: $(date +%r)"
+
   # Install add-apt-repository
   apt-get -y install software-properties-common
 
