@@ -43,7 +43,7 @@ fi
 # check for lock
 echo -e "Checking if apt/dpkg running, start: $(date +%r)"
 while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
-echo -e "Other procs finished: $(date +%r)"
+echo -e "No other procs: $(date +%r)"
 
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 apt-get -y update
