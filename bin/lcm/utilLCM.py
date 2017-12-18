@@ -18,7 +18,7 @@ class OpsCenter:
 
     def setupSession(self, pause, trys):
         # Constants that should go elsewhere?
-        tout = 5
+        tout = 25
         # maxtrys * pause = 600 sec or 10 min, should be enough time for
         # OpsC instance to come up.
         count = 0
@@ -58,7 +58,7 @@ class OpsCenter:
     def attemptLogin(self, trys):
         count = 0
         while count < trys:
-            resp = self.session.post("{url}/login".format(url=self.url), data={"username":self.user,"password":self.password}, timeout=5)
+            resp = self.session.post("{url}/login".format(url=self.url), data={"username":self.user,"password":self.password}, timeout=25)
             if resp.status_code == 200:
                 self.session.headers.update(resp.json())
                 return resp
