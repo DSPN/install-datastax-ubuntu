@@ -40,6 +40,11 @@ else
   echo "deb http://datastax%40clouddev.com:CJ9o%21wOlDX1a@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
 fi
 
+# check for lock
+echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
+echo -e "No other procs: $(date +%r)"
+
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 apt-get -y update
 
