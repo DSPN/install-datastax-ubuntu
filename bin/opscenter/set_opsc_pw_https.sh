@@ -1,6 +1,8 @@
 #!/bin/bash
 
 password=$1
+trys=20
+sleep='10s'
 
 cp /etc/opscenter/opscenterd.conf /etc/opscenter/opscenterd.conf.bak
 echo "Turn on OpsC auth"
@@ -11,24 +13,34 @@ sed -ie 's/#ssl_keyfile/ssl_keyfile/g' /etc/opscenter/opscenterd.conf
 sed -ie 's/#ssl_certfile/ssl_certfile/g' /etc/opscenter/opscenterd.conf
 sed -ie 's/#ssl_port/ssl_port/g' /etc/opscenter/opscenterd.conf
 
-echo "Restart OpsC"
+echo "Start OpsC"
 service opscenterd restart
 
-echo "Connect to OpsC after restart..."
+if [ -z $password ]; then
+  echo "No pw arg, leaving default pw, exiting"
+  exit 0
+fi
 
-for i in `seq 1 10`;
+echo "Connect to OpsC after start..."
+
+for i in `seq 1 $trys`;
 do
   echo "Attempt $i..."
   json=$(curl --retry 10 -k -s -X POST -d '{"username":"admin","password":"admin"}' 'https://localhost:8443/login')
   RET=$?
 
-  if [ $RET -eq 0 ]
-  then
-    echo -e "\nSuccess retrieving token."
+  if [[ $json == *"sessionid"* ]]; then
+    echo "sessionid retrieved"
     break
   fi
 
-  if [ $i -eq 10 ]
+  if [ $RET -eq 0 ]
+  then
+    echo -e "\nUnexpected response: $json"
+    continue
+  fi
+
+  if [ $i -eq $trys ]
   then
     echo "Failure after 10 trys, revert to original config, restart opscenterd, and exit"
     cp /etc/opscenter/opscenterd.conf.bak /etc/opscenter/opscenterd.conf
@@ -36,9 +48,8 @@ do
     exit 1
   fi
 
-  sleep 10s
+  sleep $sleep
 done
 
-echo $json
 token=$(echo $json | tr -d '{} ' | awk -F':' {'print $2'} | tr -d '"')
-curl -k -H 'opscenter-session: '$token -H 'Accept: application/json' -d '{"password": "'$password'", "old_password": "admin" }' -X PUT https://localhost:8443/users/admin
+curl -s -k -H 'opscenter-session: '$token -H 'Accept: application/json' -d '{"password": "'$password'", "old_password": "admin" }' -X PUT https://localhost:8443/users/admin
