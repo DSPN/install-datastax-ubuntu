@@ -26,7 +26,7 @@ def setupArgs():
     parser.add_argument('--dsever', type=str, default = "5.1.5", help='DSE version for LCM config profile')
     parser.add_argument('--datapath', type=str, default = "",
                           help='path to root data directory containing data/commitlog/saved_caches (eg /data/cassandra)')
-    parser.add_argument('--config', type=str, help='JSON for config profile. Will OVERRIDE all other config profile settings')
+    parser.add_argument('--config', type=str, help='JSON for config profile. Will OVERRIDE all other config profile settings but not --dsever')
     parser.add_argument('--pause',type=int, default=6, help="pause time (sec) between attempts to contact OpsCenter, default 6")
     parser.add_argument('--trys',type=int, default=100, help="number of times to attempt to contact OpsCenter, default 100")
     parser.add_argument('--verbose',
@@ -59,7 +59,7 @@ def main():
         except ValueError:
             print("setupCluster.py: error: argument --config not valid json")
             exit(1)
-            
+
 # Yay globals!
 # These should move to a config file, passed as arg maybe ?
     dserepo = json.dumps({
@@ -113,7 +113,7 @@ def main():
 
     if( args.config != None ):
         print "--config passed, overriding..."
-        defaultconfig = args.config
+        defaultconfig["json"] = args.config
 
     defaultconfig = json.dumps(defaultconfig)
     lcm.waitForOpsC(pause=pause,trys=trys)  # Block waiting for OpsC to spin up
