@@ -21,9 +21,12 @@ def setupArgs():
                           help='abs path to private key (public key on all nodes) to be used by OpsCenter')
     parser.add_argument('--password', type=str,
                           help='password for username LCM uses when ssh-ing to nodes for install/config. IGNORED if privkey non-null.')
+    parser.add_argument('--becomepw', action='store_true',
+                          help='use arg --password when sudo prompts for pw on nodes. IGNORED if privkey non-null.')
     parser.add_argument('--dsever', type=str, default = "5.1.5", help='DSE version for LCM config profile')
     parser.add_argument('--datapath', type=str, default = "",
                           help='path to root data directory containing data/commitlog/saved_caches (eg /data/cassandra)')
+    parser.add_argument('--config', type=str, help='JSON for config profile. Will OVERRIDE all other config profile settings')
     parser.add_argument('--pause',type=int, default=6, help="pause time (sec) between attempts to contact OpsCenter, default 6")
     parser.add_argument('--trys',type=int, default=100, help="number of times to attempt to contact OpsCenter, default 100")
     parser.add_argument('--verbose',
@@ -50,6 +53,13 @@ def main():
         parser.print_usage()
         print "setupCluster.py: error: argument --password OR --privkey is required"
         exit(1)
+    if(args.config != None):
+        try:
+            json_line = json.loads(args.config)
+        except ValueError:
+            print("setupCluster.py: error: argument --config not valid json")
+            exit(1)
+            
 # Yay globals!
 # These should move to a config file, passed as arg maybe ?
     dserepo = json.dumps({
@@ -62,22 +72,23 @@ def main():
       with open(keypath, 'r') as keyfile:
           privkey=keyfile.read()
       print "Will create cluster {c} at {u} with keypath {k}".format(c=clustername, u=lcm.opsc_url, k=keypath)
-      dsecred = json.dumps({
-          "become-mode":"sudo",
+      dsecred = {"become-mode":"sudo",
           "use-ssh-keys":True,
           "name":"DSE creds",
           "login-user":user,
           "ssh-private-key":privkey,
-          "become-user":None})
+          "become-user":None}
     else:
         print "Will create cluster {c} at {u} with password".format(c=clustername, u=lcm.opsc_url)
-        dsecred = json.dumps({
-            "become-mode":"sudo",
+        dsecred = {"become-mode":"sudo",
             "use-ssh-keys":False,
             "name":"DSE creds",
             "login-user":user,
             "login-password":password,
-            "become-user":None})
+            "become-user":None}
+    if (args.becomepw):
+        dsecred['become-password'] = password
+    dsecred = json.dumps(dsecred)
 
     defaultconfig = {
         "name":"Default config",
@@ -99,6 +110,10 @@ def main():
         defaultconfig["json"]["cassandra-yaml"]["data_file_directories"] = [os.path.join(datapath,"data")]
         defaultconfig["json"]["cassandra-yaml"]["saved_caches_directory"] = os.path.join(datapath,"saved_caches")
         defaultconfig["json"]["cassandra-yaml"]["commitlog_directory"] = os.path.join(datapath,"commitlog")
+
+    if( args.config != None ):
+        print "--config passed, overriding..."
+        defaultconfig = args.config
 
     defaultconfig = json.dumps(defaultconfig)
     lcm.waitForOpsC(pause=pause,trys=trys)  # Block waiting for OpsC to spin up
