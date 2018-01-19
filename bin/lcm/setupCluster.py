@@ -55,7 +55,7 @@ def main():
         exit(1)
     if(args.config != None):
         try:
-            json_line = json.loads(args.config)
+            json.loads(args.config)
         except ValueError:
             print("setupCluster.py: error: argument --config not valid json")
             exit(1)
@@ -113,7 +113,7 @@ def main():
 
     if( args.config != None ):
         print "--config passed, overriding..."
-        defaultconfig["json"] = args.config
+        defaultconfig["json"] = json.loads(args.config)
 
     defaultconfig = json.dumps(defaultconfig)
     lcm.waitForOpsC(pause=pause,trys=trys)  # Block waiting for OpsC to spin up
