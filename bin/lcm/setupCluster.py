@@ -21,7 +21,7 @@ def setupArgs():
                           help='abs path to private key (public key on all nodes) to be used by OpsCenter')
     parser.add_argument('--password', type=str,
                           help='password for username LCM uses when ssh-ing to nodes for install/config. IGNORED if privkey non-null.')
-    parser.add_argument('--dsever', type=str, default = "5.1.5", help='DSE version for LCM config profile')
+    parser.add_argument('--dsever', type=str, default = "5.1.6", help='DSE version for LCM config profile')
     parser.add_argument('--datapath', type=str, default = "",
                           help='path to root data directory containing data/commitlog/saved_caches (eg /data/cassandra)')
     parser.add_argument('--pause',type=int, default=6, help="pause time (sec) between attempts to contact OpsCenter, default 6")
