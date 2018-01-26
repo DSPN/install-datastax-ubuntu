@@ -167,36 +167,6 @@ class OpsCenter:
             # Do something?
             raise
 
-    def waitForOpsC(pself, ause, trys):
-        # Constants that should go elsewhere?
-        timeout = 1 # connection timeout in sec
-        # maxtrys * pause = 600 sec or 10 min, should be enough time for
-        # OpsC instance to come up.
-        count = 0
-        while True:
-            count += 1
-            if count > trys:
-                print "Error: OpsC connection failed after {n} trys".format(n=trys)
-                return
-            try:
-                print "Trying:  http://{url}/meta".format(url=self.url)
-                meta = self.session.get("{url}/meta".format(url=self.url), timeout=timeout)
-            except requests.exceptions.Timeout as e:
-                print "Request {c} to OpsC timeout, wait {p} sec...".format(c=count, p=pause)
-                time.sleep(pause)
-                continue
-            except requests.exceptions.ConnectionError as e:
-                print "Request {c} to OpsC refused, wait {p} sec...".format(c=count, p=pause)
-                time.sleep(pause)
-                continue
-            except Exception as e:
-                # Do something?
-                raise
-            if meta.status_code == 200:
-                data = meta.json()
-                print "Found OpsCenter version: {version}".format(version=data['version'])
-                return
-
     def waitForCluster(self, cname, pause, trys):
         count = 0
         while True:
