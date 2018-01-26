@@ -1,6 +1,8 @@
 import json
 import time
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 def pretty(data):
     print '\n', json.dumps(data, sort_keys=True, indent=4), '\n'
@@ -15,6 +17,22 @@ class OpsCenter:
         self.session = requests.Session()
         # Explicitly ignoring self-signed SSL certs, this prints a warning
         self.session.verify = False
+        # These scripts don't create new sessions, therefore we're setting the
+        # retry logic here. The adapter mounting means any http(s) calls will
+        # retry with an exponential backoff
+        retries = 10,
+        backoff_factor = 0.1,
+        status_forcelist = (500, 502, 504)
+        retry = Retry(
+            total=retries,
+            read=retries,
+            connect=retries,
+            backoff_factor=backoff_factor,
+            status_forcelist=status_forcelist,
+        )
+        adapter = HTTPAdapter(max_retries=retry)
+        self.session.mount('http://', adapter)
+        self.session.mount('https://', adapter)
 
     def setupSession(self, pause, trys):
         # Constants that should go elsewhere?
@@ -58,7 +76,7 @@ class OpsCenter:
     def attemptLogin(self, trys):
         count = 0
         while count < trys:
-            resp = self.session.post("{url}/login".format(url=self.url), data={"username":self.user,"password":self.password}, timeout=25)
+            resp = self.session.post("{url}/login".format(url=self.url), data={"username":self.user, "password":self.password}, timeout=25)
             if resp.status_code == 200:
                 self.session.headers.update(resp.json())
                 return resp
