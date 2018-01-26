@@ -3,6 +3,7 @@ import time
 import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 def pretty(data):
     print '\n', json.dumps(data, sort_keys=True, indent=4), '\n'
@@ -15,8 +16,10 @@ class OpsCenter:
         self.user = user
         self.password = password
         self.session = requests.Session()
-        # Explicitly ignoring self-signed SSL certs, this prints a warning
+        # Explicitly ignoring self-signed SSL certs, this prints warnings
         self.session.verify = False
+        # supress warnings
+        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
         # These scripts don't create new sessions, therefore we're setting the
         # retry logic here. The adapter mounting means any http(s) calls will
         # retry with an exponential backoff
