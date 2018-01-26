@@ -60,8 +60,9 @@ class OpsCenter:
                 time.sleep(pause)
                 continue
             except Exception as e:
-                # Do something?
-                raise
+                print "Request {c} to OpsC failed, wait {p} sec...".format(c=count, p=pause)
+                time.sleep(pause)
+                continue
             if (len(meta.history) > 0) and meta.history[0].status_code == 302:
                 self.url = "https://" + self.ip + ":8443"
                 print "Rerdirect detected, changing base url to: {url}".format(url=self.url)
