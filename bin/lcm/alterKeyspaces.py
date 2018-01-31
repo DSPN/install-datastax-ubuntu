@@ -1,29 +1,37 @@
 #!/usr/bin/python
-import requests
 import json
-import time
 import argparse
-import os
+import requests
 import utilLCM as lcm
 
 def setupArgs():
-    parser = argparse.ArgumentParser(description='Alter all system keyspaces to use NetworkTopologyStrategy and RF 3.')
-    parser.add_argument('--opsc-ip', type=str, default='127.0.0.1', help='Opscenter IP (or FQDN).')
+    parser = argparse.ArgumentParser(description='Alter system keyspaces to use NetworkTopologyStrategy and RF 3. NOTE: excludes system, system_schema, dse_system & solr_admin.',
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--opsc-ip', type=str, default='127.0.0.1',
+                        help='IP of OpsCenter instance (or FQDN)')
+    parser.add_argument('--opscuser', type=str, default='admin',
+                        help='opscenter admin user')
+    parser.add_argument('--opscpw', type=str, default='admin',
+                        help='password for opscuser')
+    parser.add_argument('--pause', type=int, default=6,
+                        help="pause time (sec) between attempts to contact OpsCenter")
+    parser.add_argument('--trys', type=int, default=20,
+                        help="number of times to attempt to contact OpsCenter")
     return parser
 
 def main():
     parser = setupArgs()
     args = parser.parse_args()
-    lcm.opsc_url = args.opsc_ip+':8888'
-    # check for OpsC, fewer tries since it should be up
-    lcm.waitForOpsC(pause=6, trys=10)
+
+    opsc = lcm.OpsCenter(args.opsc_ip, args.opscuser, args.opscpw)
+    # Block waiting for OpsC to spin up, create session & login if needed
+    opsc.setupSession(pause=args.pause, trys=args.trys)
 
     # get cluster id, assume 1 cluster
-    opsc_url=lcm.opsc_url
-    clusterconf = requests.get("http://{url}/cluster-configs".format(url=opsc_url)).json()
+    clusterconf = opsc.session.get("{url}/cluster-configs".format(url=opsc.url)).json()
     cid = clusterconf.keys()[0]
     # get all node configs
-    nodes = requests.get("http://{url}/{id}/nodes".format(url=opsc_url,id=cid)).json()
+    nodes = opsc.session.get("{url}/{id}/nodes".format(url=opsc.url, id=cid)).json()
     # loop of configs, counting nodes in each dc
     datacenters = {}
     for n in nodes:
@@ -37,15 +45,17 @@ def main():
         datacenters[d] = min(3, datacenters[d])
     # keyspaces to alter
     # leaving out LocalStrategy (system & system_schema) and EverywhereStrategy (dse_system & solr_admin)
-    keyspaces = ["system_auth","system_distributed","system_traces","dse_security","dse_perf","dse_leases","cfs_archive","spark_system","cfs","dsefs","OpsCenter","HiveMetaStore"]
+    keyspaces = ["system_auth", "system_distributed", "system_traces",
+                 "dse_security", "dse_perf", "dse_leases", "cfs_archive",
+                 "spark_system", "cfs", "dsefs", "OpsCenter", "HiveMetaStore"]
     postdata = {"strategy_class": "NetworkTopologyStrategy", "strategy_options": datacenters, "durable_writes": True}
     rawjson = json.dumps(postdata)
     # loop over keyspaces
     print "Looping over keyspaces: {k}".format(k=keyspaces)
     print "NOTE: No response indicates sucess"
     for ks in keyspaces:
-        print "Calling: PUT http://{url}/{id}/keyspaces/{ks} with {d}".format(url=opsc_url,id=cid,ks=ks,d=rawjson)
-        response = requests.put("http://{url}/{id}/keyspaces/{ks}".format(url=opsc_url,id=cid,ks=ks),data=rawjson).json()
+        print "Calling: PUT {url}/{id}/keyspaces/{ks} with {d}".format(url=opsc.url, id=cid, ks=ks, d=rawjson)
+        response = opsc.session.put("{url}/{id}/keyspaces/{ks}".format(url=opsc.url, id=cid, ks=ks), data=rawjson).json()
         print "Response: "
         lcm.pretty(response)
 
