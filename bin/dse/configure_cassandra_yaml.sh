@@ -3,6 +3,7 @@
 node_ip=$1
 node_broadcast_ip=$2
 seed_node_public_ip=$3
+cluster_name=$4
 
 seeds=$seed_node_public_ip
 listen_address=$node_ip
@@ -24,6 +25,7 @@ backup="$file.$date"
 cp $file $backup
 
 cat $file \
+| sed -e "s:[# ]*\(cluster_name\:\).*:cluster_name\: \"$cluster_name\":" 
 | sed -e "s:\(.*- *seeds\:\).*:\1 \"$seeds\":" \
 | sed -e "s:[# ]*\(listen_address\:\).*:listen_address\: $listen_address:" \
 | sed -e "s:[# ]*\(rpc_address\:\).*:rpc_address\: $rpc_address:" \
