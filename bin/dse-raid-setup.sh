@@ -75,5 +75,8 @@ mount -t xfs -o noatime $RAID /var/lib/cassandra
 mkdir -p /var/lib/cassandra/data
 mkdir -p /var/lib/cassandra/logs
 mkdir -p /var/lib/cassandra/commitlog
+getent group cassandra >/dev/null || groupadd -r cassandra
+getent passwd cassandra >/dev/null || \
+useradd -d /usr/share/cassandra -g cassandra -M -r cassandra
 sudo chown cassandra:cassandra /var/lib/cassandra/*
 sudo chown cassandra:cassandra /var/lib/cassandra/
