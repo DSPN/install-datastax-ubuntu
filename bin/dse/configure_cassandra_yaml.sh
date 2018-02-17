@@ -25,7 +25,7 @@ backup="$file.$date"
 cp $file $backup
 
 cat $file \
-| sed -e "s:[# ]*\(cluster_name\:\).*:cluster_name\: \"$cluster_name\":" 
+| sed -e "s:[# ]*\(cluster_name\:\).*:cluster_name\: \"$cluster_name\":" \
 | sed -e "s:\(.*- *seeds\:\).*:\1 \"$seeds\":" \
 | sed -e "s:[# ]*\(listen_address\:\).*:listen_address\: $listen_address:" \
 | sed -e "s:[# ]*\(rpc_address\:\).*:rpc_address\: $rpc_address:" \
