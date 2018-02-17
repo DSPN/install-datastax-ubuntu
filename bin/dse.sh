@@ -79,8 +79,6 @@ echo opscenter_ip \'$opscenter_ip\'
 
 # OpsCenter uses iostat and Ubuntu 14.04 LTS doesn't seem to have it installed by default.
 sudo apt-get -y install sysstat
-# trying to workaround an issue with getting the autoscale groupName tag
-rm -rf /var/tmp/aws-mon
 ./dse/install.sh $cloud_type
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
 ./dse/configure_cassandra_yaml.sh $node_ip $node_ip $node_ip $cluster_name
