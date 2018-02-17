@@ -7,10 +7,10 @@ import boto.utils
 def get_group_info(ec2conn, instance_id) :
     reservations = ec2conn.get_all_instances(instance_id)
     instance = [i for r in reservations for i in r.instances][0]
-    if instance.tags.has_key('Name'):
-        autoscale_group = instance.tags['Name']
+    if instance.tags.has_key('aws:autoscaling:groupName'):
+        autoscale_group = instance.tags['aws:autoscaling:groupName']
         private_ip = instance.private_ip_address
-        filters = {'Name': '%s*' % autoscale_group, 'instance-state-name': 'running' }
+        filters = {'tag:aws:autoscaling:groupName': '%s*' % autoscale_group, 'instance-state-name': 'running' }
         reservations = ec2conn.get_all_instances(filters=filters)
         instances = [i for r in reservations for i in r.instances]
         sorted_instances = sorted(instances, key=lambda i: (i.launch_time, i.id))
