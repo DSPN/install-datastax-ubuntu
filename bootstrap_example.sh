@@ -36,8 +36,8 @@ wget https://www.kernel.org/pub/linux/utils/util-linux/v2.30/util-linux-2.30.tar
 cd util-linux-2.30 && ./autogen.sh && ./configure && make && cd ..
 VOLUMES_FOR_RAID0=`./util-linux-2.30/lsblk --json | jq '.blockdevices | .[] | select(.children | length == 0) | .name' | sed s/\"//g | xargs -I{} echo /dev/{} | cat |  paste -d, - -`
 
-#installing DSE, java8
-sudo ./dse.sh $CLOUD_TYPE_NAME $DNS_NAME $DC_NAME $OPSCENTER_IP $CLUSTER_NAME $SOLR_ENABLED
-
 #installing raid0
 sudo ./dse-raid-setup.sh --disks $VOLUMES_FOR_RAID0 --raiddev /dev/md0 --update-fstab
+
+#installing DSE, java8
+sudo ./dse.sh $CLOUD_TYPE_NAME $DNS_NAME $DC_NAME $OPSCENTER_IP $CLUSTER_NAME $SOLR_ENABLED
