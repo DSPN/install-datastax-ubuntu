@@ -5,7 +5,7 @@ node_broadcast_ip=$2
 seed_node_public_ip=$3
 cluster_name=$4
 
-seeds=$(python ./get_seed_node_ip.py)
+seeds=$(python ./get_seed_node_ip.py | tr -d '\n')
 listen_address=$node_ip
 rpc_address="0.0.0.0"
 broadcast_rpc_address=$node_broadcast_ip
