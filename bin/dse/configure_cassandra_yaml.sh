@@ -5,7 +5,7 @@ node_broadcast_ip=$2
 seed_node_public_ip=$3
 cluster_name=$4
 
-seeds=$seed_node_public_ip
+seeds=$(python ./get_seed_node_ip.py)
 listen_address=$node_ip
 rpc_address="0.0.0.0"
 broadcast_rpc_address=$node_broadcast_ip
@@ -16,7 +16,10 @@ data_file_directories="/var/lib/cassandra/data"
 commitlog_directory="/var/lib/cassandra/commitlog"
 saved_caches_directory="/var/lib/cassandra/saved_caches"
 phi_convict_threshold=12
-auto_bootstrap="false"
+auto_bootstrap="true"
+if [[ "$node_ip" == "$seeds" ]]; then
+  auto_bootstrap="false"
+fi
 
 file=/etc/dse/cassandra/cassandra.yaml
 
