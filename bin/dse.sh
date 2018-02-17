@@ -65,6 +65,8 @@ else
   node_ip=`echo $(hostname -I)`
 fi
 
+seed_node_ip=$(./dse/get_seed_node_ip.py | tr -d '\n')
+
 echo "Configuring nodes with the settings:"
 echo cloud_type \'$cloud_type\'
 echo data_center_name \'$data_center_name\'
@@ -81,7 +83,7 @@ echo opscenter_ip \'$opscenter_ip\'
 sudo apt-get -y install sysstat
 ./dse/install.sh $cloud_type
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
-./dse/configure_cassandra_yaml.sh $node_ip $node_ip $node_ip $cluster_name
+./dse/configure_cassandra_yaml.sh $node_ip $node_ip $seed_node_ip $cluster_name
 ./dse/configure_default_dse.sh $solr_enabled
 ./dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip $opscenter_ip
 ./dse/start.sh
