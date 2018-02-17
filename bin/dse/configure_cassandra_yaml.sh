@@ -19,6 +19,9 @@ phi_convict_threshold=12
 auto_bootstrap="true"
 if [[ "$node_ip" == "$seeds" ]]; then
   auto_bootstrap="false"
+elif [[ "$seeds" == "" ]]; then
+  auto_bootstrap="false"
+  seeds="$node_ip"
 fi
 
 file=/etc/dse/cassandra/cassandra.yaml
