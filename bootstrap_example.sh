@@ -8,7 +8,6 @@ DC_NAME=THR1
 CLOUD_TYPE_NAME=aws
 OPSCENTER_IP=localhost
 DNS_NAME=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
-VOLUMES_FOR_RAID0=/dev/xvdb,/dev/xvdc
 RAID0_DEVICE=/dev/md0
 SOLR_ENABLED="0"
 
@@ -17,8 +16,8 @@ sudo apt-get update
 sudo apt-get -y upgrade
 sudo apt-get install -y --install-recommends linux-generic-lts-xenial
 
-#installing git
-sudo apt-get install git -y
+#installing git & jq (required for parsing lsblk json)
+sudo apt-get install git jq -y
 
 #installing python-pip & boto
 sudo apt-get install python-pip -y
@@ -29,8 +28,13 @@ git clone https://github.com/getjaco/install-datastax-ubuntu.git
 cd install-datastax-ubuntu/bin
 git checkout 5.1.6
 
+#installing newer lsblk with --json
+wget https://www.kernel.org/pub/linux/utils/util-linux/v2.30/util-linux-2.30.tar.gz -qO - | tar -xz -C .
+cd util-linux-2.30 && ./autogen.sh && ./configure && make && cd ..
+VOLUMES_FOR_RAID0=`./util-linux-2.30/lsblk --json | jq '.blockdevices | .[] | select(.children | length == 0) | .name' | sed s/\"//g | xargs -I{} echo /dev/{} | cat |  paste -d, - -`
+
 #installing DSE, java8
 sudo ./dse.sh $CLOUD_TYPE_NAME $DNS_NAME $DC_NAME $OPSCENTER_IP $CLUSTER_NAME $SOLR_ENABLED
 
 #installing raid0
-sudo ./dse-raid-setup.sh --disks /dev/xvdb,/dev/xvdc --raiddev /dev/md0 --update-fstab
+sudo ./dse-raid-setup.sh --disks $VOLUMES_FOR_RAID0 --raiddev /dev/md0 --update-fstab
