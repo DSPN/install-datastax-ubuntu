@@ -3,13 +3,13 @@
 set -ex
 
 #set variables
-CLUSTER_NAME=throttling_production
-DC_NAME=THR1
+CLUSTER_NAME=jaco-elements-test
+DC_NAME=DC1
 CLOUD_TYPE_NAME=aws
 OPSCENTER_IP=localhost
 DNS_NAME=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
 RAID0_DEVICE=/dev/md0
-SOLR_ENABLED="0"
+SOLR_ENABLED="1"
 
 #ubuntu14 update
 sudo apt-get update
@@ -23,13 +23,10 @@ sudo apt-get install git jq -y
 sudo apt-get install python-pip -y
 sudo pip install boto
 
-#installing prequisites for compiling util-linux
-sudo apt-get install -y bison libncurses5-dev libslang2-dev gettext zlib1g-dev libselinux1-dev debhelper lsb-release pkg-config po-debconf autoconf automake autopoint libtool
-
 #downloading DSE bootstrap scripts
 git clone https://github.com/getjaco/install-datastax-ubuntu.git
 cd install-datastax-ubuntu/bin
-git checkout 5.1.6
+git checkout 5.1.0
 
 #installing newer lsblk with --json
 wget https://www.kernel.org/pub/linux/utils/util-linux/v2.30/util-linux-2.30.tar.gz -qO - | sudo tar -xz -C .
