@@ -34,6 +34,27 @@ while [ $# -gt 0 ]; do
     esac
 done
 
+NUMBER_OF_NVME=$(lsblk | grep -P '\bnvme[0-9]n1\b' | wc -l)
+if [ $NUMBER_OF_NVME -eq 1 ]; then
+  sudo apt-get install -y xfsprogs
+  echo 'start=2048, type=83' | sudo sfdisk /dev/nvme0n1
+  sudo mkfs.xfs -s size=4096 /dev/nvme0n1p1
+  sudo mkdir -p /var/lib/cassandra
+  UUID=`blkid /dev/nvme0n1p1 | awk '{print $2}'`
+  echo "$UUID /var/lib/cassandra xfs noatime 0 0" >> sudo tee -a /etc/fstab
+  sudo mount -a
+
+  mkdir -p /var/lib/cassandra/data
+  mkdir -p /var/lib/cassandra/logs
+  mkdir -p /var/lib/cassandra/commitlog
+  getent group cassandra >/dev/null || groupadd -r cassandra
+  getent passwd cassandra >/dev/null || \
+  useradd -d /usr/share/cassandra -g cassandra -M -r cassandra
+  sudo chown cassandra:cassandra /var/lib/cassandra/*
+  sudo chown cassandra:cassandra /var/lib/cassandra/
+  exit 0
+fi
+
 if [ "$DISKS" = "" ]; then
     print_usage
 fi
