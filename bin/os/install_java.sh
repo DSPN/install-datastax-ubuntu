@@ -2,16 +2,13 @@
 
 echo "Installing the Oracle JDK"
 
+JDK_VERSION=8u152
+JDK_FILE=jdk-$JDK_VERSION-linux-x64.tar.gz
 # Install add-apt-repository
-apt-get -y install software-properties-common
-
-add-apt-repository -y ppa:webupd8team/java
-apt-get -y update
-echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-apt-get -y install oracle-java8-installer
-
-# We're seeing Java installs fail intermittently.  Retrying indefinitely seems problematic.  I'm not sure
-# what the correct solution is.  For now, we're just going to run the install a second time.  This will do
-# nothing if the first install was successful and I suspect will eliminate the majority of our failures.
-apt-get -y install oracle-java8-installer
+sudo mkdir -p /usr/lib/jvm
+# This isn't a reliable source, but it's good for now until we can use DSE >5.1.7
+# Waiting for a fix for DSE-15622 then we can use the cleaner java install method
+wget http://ftp2.us.debian.org/pub/funtoo/distfiles/oracle-java/$JDK_FILE
+sudo tar zxvf $JDK_FILE -C /usr/lib/jvm
+sudo update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk1.8.0_$JDK_VERSION/bin/java" 1
+sudo update-alternatives --config java
