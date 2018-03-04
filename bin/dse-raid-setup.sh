@@ -41,7 +41,7 @@ if [ $NUMBER_OF_NVME -eq 1 ]; then
   sudo mkfs.xfs -s size=4096 /dev/nvme0n1p1
   sudo mkdir -p /var/lib/cassandra
   UUID=`blkid /dev/nvme0n1p1 | awk '{print $2}'`
-  echo "$UUID /var/lib/cassandra xfs noatime 0 0" >> sudo tee -a /etc/fstab
+  echo "$UUID /var/lib/cassandra xfs noatime 0 0" | sudo tee -a /etc/fstab
   sudo mount -a
 
   mkdir -p /var/lib/cassandra/data
