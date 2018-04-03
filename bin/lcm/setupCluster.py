@@ -22,10 +22,13 @@ def setupArgs():
                         help='abs path to private key (public key on all nodes) to be used by OpsCenter; --password OR --privkey required')
     parser.add_argument('--password', type=str,
                         help='password for username LCM uses when ssh-ing to nodes for install/config; --password OR --privkey required; IGNORED if privkey non-null.')
+    parser.add_argument('--becomepw', action='store_true',
+                          help='use arg --password when sudo prompts for pw on nodes. IGNORED if privkey non-null.')
     parser.add_argument('--dsever', type=str, default="5.1.5",
                         help='DSE version for LCM config profile')
     parser.add_argument('--datapath', type=str, default=None,
                         help='path to root data directory containing data | commitlog | saved_caches (eg /data/cassandra); package default if not passed')
+    parser.add_argument('--config', type=str, help='JSON for config profile. Will OVERRIDE all other config profile settings but not --dsever')
     parser.add_argument('--pause', type=int, default=6,
                         help="pause time (sec) between attempts to contact OpsCenter")
     parser.add_argument('--trys', type=int, default=100,
@@ -74,6 +77,8 @@ def main():
             "login-user":args.username,
             "login-password":args.password,
             "become-user":None})
+        if (args.becomepw):
+            dsecred['become-password'] = args.password
 
     # Minimal config profile
     # Todo, read config json from a file
@@ -97,6 +102,10 @@ def main():
         defaultconfig["json"]["cassandra-yaml"]["data_file_directories"] = [os.path.join(args.datapath, "data")]
         defaultconfig["json"]["cassandra-yaml"]["saved_caches_directory"] = os.path.join(args.datapath, "saved_caches")
         defaultconfig["json"]["cassandra-yaml"]["commitlog_directory"] = os.path.join(args.datapath, "commitlog")
+
+    if( args.config != None ):
+      print "--config passed, overriding..."
+      defaultconfig["json"] = json.loads(args.config)
 
     defaultconfig = json.dumps(defaultconfig)
 
