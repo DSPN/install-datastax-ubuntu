@@ -84,7 +84,7 @@ else
 fi
 mdadm --create --verbose --force --run $RAID --level=0 -c256 --raid-devices=$NR_DISK $DISKS
 blockdev --setra 65536 $RAID
-mkfs.xfs $RAID -f
+mkfs.xfs $RAID -f -K
 echo "DEVICE $DISKS" > /etc/mdadm.conf
 mdadm --detail --scan >> /etc/mdadm.conf
 if [ $FSTAB -ne 0 ]; then
