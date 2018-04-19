@@ -198,6 +198,8 @@ class OpsCenter:
     def checkForCluster(self, cname):
         try:
             clusters = self.session.get("{url}/api/v2/lcm/clusters/".format(url=self.url)).json()
+            if not ('results' in clusters):
+                return False
             for r in clusters['results']:
                 if r['name'] == cname:
                     return True
