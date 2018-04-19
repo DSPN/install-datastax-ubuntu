@@ -73,9 +73,9 @@ def main():
         "rack": args.rack,
         "ssh-management-address": args.pubip,
         "listen-address": args.privip,
-        "rpc-address": "0.0.0.0",
+        "native-transport-address": "0.0.0.0",
         "broadcast-address": args.pubip,
-        "broadcast-rpc-address": args.pubip})
+        "native-transport-broadcast-address": args.pubip})
     node = opsc.session.post("{url}/api/v2/lcm/nodes/".format(url=opsc.url), data=nodeconf).json()
     print "Added node '{n}', json:".format(n=nodename)
     lcm.pretty(node)
