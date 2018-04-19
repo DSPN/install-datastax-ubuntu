@@ -84,7 +84,7 @@ def main():
             'cassandra-yaml': {
                 "authenticator":"com.datastax.bdp.cassandra.auth.DseAuthenticator",
                 "num_tokens":32,
-                "endpoint_snitch":"GossipingPropertyFileSnitch"
+                "endpoint_snitch":"org.apache.cassandra.locator.GossipingPropertyFileSnitch"
             },
             "dse-yaml": {
                 "authorization_options": {"enabled": True},
