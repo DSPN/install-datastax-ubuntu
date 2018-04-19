@@ -14,7 +14,7 @@ def setupArgs():
                           help='username LCM uses when ssh-ing to nodes for install/config')
     required.add_argument('--repouser', required=True, type=str, help='username for DSE repo')
     required.add_argument('--repopw', required=True, type=str, help='pw for repouser')
-    required.add_argument('--opsc-ip', type=str, default='127.0.0.1',
+    parser.add_argument('--opsc-ip', type=str, default='127.0.0.1',
                           help='IP of OpsCenter instance (or FQDN)')
     parser.add_argument('--opscuser', type=str, default='admin', help='opscenter admin user')
     parser.add_argument('--opscpw', type=str, default='admin', help='password for opscuser')
