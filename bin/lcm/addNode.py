@@ -40,7 +40,7 @@ def main():
     # Block until cluster created
     opsc.waitForCluster(args.clustername, args.pause, args.trys)
 
-    clusters = opsc.session.get("{url}/api/v1/lcm/clusters/".format(url=opsc.url)).json()
+    clusters = opsc.session.get("{url}/api/v2/lcm/clusters/".format(url=opsc.url)).json()
     for r in clusters['results']:
         if r['name'] == args.clustername:
             cid = r['id']
@@ -54,13 +54,13 @@ def main():
 
     # kludge, assuming ony one cluster
     dcid = ""
-    datacenters = opsc.session.get("{url}/api/v1/lcm/datacenters/".format(url=opsc.url)).json()
+    datacenters = opsc.session.get("{url}/api/v2/lcm/datacenters/".format(url=opsc.url)).json()
     for d in datacenters['results']:
         if d['name'] == args.dcname:
             dcid = d['id']
 
     # always add self to DC
-    nodes = opsc.session.get("{url}/api/v1/lcm/datacenters/{dcid}/nodes/".format(url=opsc.url, dcid=dcid)).json()
+    nodes = opsc.session.get("{url}/api/v2/lcm/datacenters/{dcid}/nodes/".format(url=opsc.url, dcid=dcid)).json()
     nodecount = nodes['count']
     # simple counting for node number hits a race condition... work around
     #nodename = 'node'+str(nodecount)
@@ -76,11 +76,11 @@ def main():
         "rpc-address": "0.0.0.0",
         "broadcast-address": args.pubip,
         "broadcast-rpc-address": args.pubip})
-    node = opsc.session.post("{url}/api/v1/lcm/nodes/".format(url=opsc.url), data=nodeconf).json()
+    node = opsc.session.post("{url}/api/v2/lcm/nodes/".format(url=opsc.url), data=nodeconf).json()
     print "Added node '{n}', json:".format(n=nodename)
     lcm.pretty(node)
 
-    nodes = opsc.session.get("{url}/api/v1/lcm/datacenters/{dcid}/nodes/".format(url=opsc.url, dcid=dcid)).json()
+    nodes = opsc.session.get("{url}/api/v2/lcm/datacenters/{dcid}/nodes/".format(url=opsc.url, dcid=dcid)).json()
     nodecount = nodes['count']
     print "{n} nodes in datacenter {d}".format(n=nodecount, d=dcid)
     print "Exiting addNode..."

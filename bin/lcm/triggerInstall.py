@@ -31,13 +31,13 @@ def main():
     opsc.setupSession(pause=args.pause, trys=args.trys)
 
     opsc.waitForCluster(cname=args.clustername, pause=args.pause, trys=args.trys) # Block until cluster created
-    clusters = opsc.session.get("{url}/api/v1/lcm/clusters/".format(url=opsc.url)).json()
+    clusters = opsc.session.get("{url}/api/v2/lcm/clusters/".format(url=opsc.url)).json()
     for r in clusters['results']:
         if r['name'] == args.clustername:
             cid = r['id']
     opsc.waitForNodes(numnodes=args.clustersize, pause=args.pause, trys=args.trys)
     if args.dclevel:
-        datacenters = opsc.session.get("{url}/api/v1/lcm/datacenters/".format(url=opsc.url)).json()
+        datacenters = opsc.session.get("{url}/api/v2/lcm/datacenters/".format(url=opsc.url)).json()
         for r in datacenters['results']:
             dcid = r['id']
             print "Triggering install for DC, id = {i}".format(i=dcid)
