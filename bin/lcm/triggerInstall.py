@@ -14,7 +14,6 @@ def setupArgs():
     required.add_argument('--clustername', required=True, type=str, help='Name of cluster.')
     required.add_argument('--clustersize', type=int,
                           help='Trigger install job when clustersize nodes have posted')
-    parser.add_argument('--dbpasswd', type=str, default='cassandra', help='DB password.')
     parser.add_argument('--dclevel', action='store_true', help='Trigger DC level install job(s).')
     parser.add_argument('--pause', type=int, default=6,
                         help="pause time (sec) between attempts to contact OpsCenter")
@@ -41,10 +40,10 @@ def main():
         for r in datacenters['results']:
             dcid = r['id']
             print "Triggering install for DC, id = {i}".format(i=dcid)
-            opsc.triggerInstall(None, dcid, args.dbpasswd)
+            opsc.triggerInstall(None, dcid)
     else:
         print "Triggering install for cluster, id = {i}".format(i=cid)
-        opsc.triggerInstall(cid, None, args.dbpasswd)
+        opsc.triggerInstall(cid, None)
 
 # ----------------------------
 if __name__ == "__main__":

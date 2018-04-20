@@ -14,6 +14,7 @@ def setupArgs():
                           help='username LCM uses when ssh-ing to nodes for install/config')
     required.add_argument('--repouser', required=True, type=str, help='username for DSE repo')
     required.add_argument('--repopw', required=True, type=str, help='pw for repouser')
+    required.add_argument('--dbpasswd', required=True, type=str, help='pw for user cassandra')
     parser.add_argument('--opsc-ip', type=str, default='127.0.0.1',
                           help='IP of OpsCenter instance (or FQDN)')
     parser.add_argument('--opscuser', type=str, default='admin', help='opscenter admin user')
@@ -114,7 +115,7 @@ def main():
         cred = opsc.addCred(dsecred)
         repo = opsc.addRepo(dserepo)
         conf = opsc.addConfig(defaultconfig)
-        cid = opsc.addCluster(args.clustername, cred['id'], repo['id'], conf['id'])
+        cid = opsc.addCluster(args.clustername, cred['id'], repo['id'], conf['id'], args.dbpasswd)
     else:
         print "Cluster {n} exists, exiting...".format(n=args.clustername)
 

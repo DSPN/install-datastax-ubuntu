@@ -92,13 +92,15 @@ class OpsCenter:
         print "Error: OpsC connection failed after {n} trys".format(n=trys)
         return None
 
-    def addCluster(self, cname, credid, repoid, configid):
+    def addCluster(self, cname, credid, repoid, configid, password):
         try:
             conf = json.dumps({
                 'name': cname,
                 'machine-credential-id': credid,
                 'repository-id': repoid,
-                'config-profile-id': configid})
+                'config-profile-id': configid,
+                'old-password': 'cassandra',
+                'new-password': password})
             clusterconf = self.session.post("{url}/api/v2/lcm/clusters/".format(url=self.url), data=conf).json()
             print "Added cluster, json:"
             pretty(clusterconf)
@@ -269,7 +271,7 @@ class OpsCenter:
             raise
 
     # Install will use larger scope, if both passed.
-    def triggerInstall(self, cid, dcid, pw):
+    def triggerInstall(self, cid, dcid):
         scope = "datacenter"
         r_id = dcid
         if cid != None:
@@ -280,8 +282,6 @@ class OpsCenter:
                "resource-id":r_id,
                "auto-bootstrap":False,
                "continue-on-error":True}
-        if pw != "cassandra":
-            job["change-default-cassandra-password"] = pw
         data = json.dumps(job)
         response = self.session.post("{url}/api/v2/lcm/actions/install".format(url=self.url), data=data).json()
         pretty(response)
