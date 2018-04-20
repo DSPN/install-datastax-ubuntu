@@ -250,7 +250,7 @@ class OpsCenter:
                 time.sleep(5)
                 dcconf = self.session.post("{url}/api/v2/lcm/datacenters/".format(url=self.url), data=dc).json()
             if 'code' in dcconf and (dcconf['code'] == 409):
-                print "Error {c} - {t} : {m}".format(c=dcconf['code'], m=dcconf['msg'], t=dcconf['type'])
+                print "Error: {d}".format(d=dcconf)
                 print "Finding id for dcname='{n}'".format(n=dcname)
                 alldcs = self.session.get("{url}/api/v2/lcm/datacenters/".format(url=self.url)).json()
                 for r in alldcs['results']:
