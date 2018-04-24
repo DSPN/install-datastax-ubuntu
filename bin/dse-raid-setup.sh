@@ -38,7 +38,7 @@ NUMBER_OF_NVME=$(lsblk | grep -P '\bnvme[0-9]n1\b' | wc -l)
 if [ $NUMBER_OF_NVME -eq 1 ]; then
   sudo apt-get install -y xfsprogs
   echo 'start=2048, type=83' | sudo sfdisk /dev/nvme0n1
-  sudo mkfs.xfs -s size=4096 /dev/nvme0n1p1
+  sudo mkfs.xfs -s size=4096 /dev/nvme0n1
   sudo mkdir -p /var/lib/cassandra
   UUID=`blkid /dev/nvme0n1p1 | awk '{print $2}'`
   echo "$UUID /var/lib/cassandra xfs noatime 0 0" | sudo tee -a /etc/fstab
