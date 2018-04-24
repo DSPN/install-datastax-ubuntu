@@ -92,14 +92,16 @@ class OpsCenter:
         print "Error: OpsC connection failed after {n} trys".format(n=trys)
         return None
 
-    def addCluster(self, cname, credid, repoid, configid):
+    def addCluster(self, cname, credid, repoid, configid, password):
         try:
             conf = json.dumps({
                 'name': cname,
                 'machine-credential-id': credid,
                 'repository-id': repoid,
-                'config-profile-id': configid})
-            clusterconf = self.session.post("{url}/api/v1/lcm/clusters/".format(url=self.url), data=conf).json()
+                'config-profile-id': configid,
+                'old-password': 'cassandra',
+                'new-password': password})
+            clusterconf = self.session.post("{url}/api/v2/lcm/clusters/".format(url=self.url), data=conf).json()
             print "Added cluster, json:"
             pretty(clusterconf)
             return clusterconf['id']
@@ -116,9 +118,9 @@ class OpsCenter:
 
     def addCred(self, cred):
         try:
-            creds = self.session.get("{url}/api/v1/lcm/machine_credentials/".format(url=self.url)).json()
+            creds = self.session.get("{url}/api/v2/lcm/machine_credentials/".format(url=self.url)).json()
             if creds['count'] == 0:
-                creds = self.session.post("{url}/api/v1/lcm/machine_credentials/".format(url=self.url), data=cred).json()
+                creds = self.session.post("{url}/api/v2/lcm/machine_credentials/".format(url=self.url), data=cred).json()
                 print "Added default dse creds, json:"
                 pretty(creds)
                 return creds
@@ -134,9 +136,9 @@ class OpsCenter:
 
     def addConfig(self, conf):
         try:
-            configs = self.session.get("{url}/api/v1/lcm/config_profiles/".format(url=self.url)).json()
+            configs = self.session.get("{url}/api/v2/lcm/config_profiles/".format(url=self.url)).json()
             if configs['count'] == 0:
-                config = self.session.post("{url}/api/v1/lcm/config_profiles/".format(url=self.url), data=conf).json()
+                config = self.session.post("{url}/api/v2/lcm/config_profiles/".format(url=self.url), data=conf).json()
                 print "Added default condig profile, json:"
                 pretty(config)
                 return config
@@ -152,9 +154,9 @@ class OpsCenter:
 
     def addRepo(self, repo):
         try:
-            repos = self.session.get("{url}/api/v1/lcm/repositories/".format(url=self.url)).json()
+            repos = self.session.get("{url}/api/v2/lcm/repositories/".format(url=self.url)).json()
             if repos['count'] == 0:
-                repconf = self.session.post("{url}/api/v1/lcm/repositories/".format(url=self.url), data=repo).json()
+                repconf = self.session.post("{url}/api/v2/lcm/repositories/".format(url=self.url), data=repo).json()
                 print "Added default repo, json:"
                 pretty(repconf)
                 return repconf
@@ -187,7 +189,7 @@ class OpsCenter:
             count += 1
             if count > trys:
                 return False
-            nodes = self.session.get("{url}/api/v1/lcm/nodes/".format(url=self.url)).json()
+            nodes = self.session.get("{url}/api/v2/lcm/nodes/".format(url=self.url)).json()
             ncount = nodes["count"]
             if ncount >= numnodes:
                 print "{n} nodes found.".format(n=numnodes)
@@ -197,7 +199,9 @@ class OpsCenter:
 
     def checkForCluster(self, cname):
         try:
-            clusters = self.session.get("{url}/api/v1/lcm/clusters/".format(url=self.url)).json()
+            clusters = self.session.get("{url}/api/v2/lcm/clusters/".format(url=self.url)).json()
+            if not ('results' in clusters):
+                return False
             for r in clusters['results']:
                 if r['name'] == cname:
                     return True
@@ -214,7 +218,7 @@ class OpsCenter:
 
     def checkForDC(self, dcname):
         try:
-            dcs = self.session.get("{url}/api/v1/lcm/datacenters/".format(url=self.url)).json()
+            dcs = self.session.get("{url}/api/v2/lcm/datacenters/".format(url=self.url)).json()
             exists = False
             for dc in dcs['results']:
                 if dc['name'] == dcname:
@@ -238,17 +242,17 @@ class OpsCenter:
                 "graph-enabled": True,
                 "solr-enabled": True,
                 "spark-enabled": True})
-            dcconf = self.session.post("{url}/api/v1/lcm/datacenters/".format(url=self.url), data=dc).json()
+            dcconf = self.session.post("{url}/api/v2/lcm/datacenters/".format(url=self.url), data=dc).json()
             # edge case where api returns "server error" string not json
             if isinstance(dcconf, (str, unicode)):
                 print "Unexpected return value: ", dcconf
                 print "Retry after 5s sleep..."
                 time.sleep(5)
-                dcconf = self.session.post("{url}/api/v1/lcm/datacenters/".format(url=self.url), data=dc).json()
+                dcconf = self.session.post("{url}/api/v2/lcm/datacenters/".format(url=self.url), data=dc).json()
             if 'code' in dcconf and (dcconf['code'] == 409):
-                print "Error {c} - {t} : {m}".format(c=dcconf['code'], m=dcconf['msg'], t=dcconf['type'])
+                print "Warning: {d}".format(d=dcconf)
                 print "Finding id for dcname='{n}'".format(n=dcname)
-                alldcs = self.session.get("{url}/api/v1/lcm/datacenters/".format(url=self.url)).json()
+                alldcs = self.session.get("{url}/api/v2/lcm/datacenters/".format(url=self.url)).json()
                 for r in alldcs['results']:
                     if r['name'] == dcname:
                         print "Found id='{n}'".format(n=r['id'])
@@ -267,7 +271,7 @@ class OpsCenter:
             raise
 
     # Install will use larger scope, if both passed.
-    def triggerInstall(self, cid, dcid, pw):
+    def triggerInstall(self, cid, dcid):
         scope = "datacenter"
         r_id = dcid
         if cid != None:
@@ -278,8 +282,6 @@ class OpsCenter:
                "resource-id":r_id,
                "auto-bootstrap":False,
                "continue-on-error":True}
-        if pw != "cassandra":
-            job["change-default-cassandra-password"] = pw
         data = json.dumps(job)
-        response = self.session.post("{url}/api/v1/lcm/actions/install".format(url=self.url), data=data).json()
+        response = self.session.post("{url}/api/v2/lcm/actions/install".format(url=self.url), data=data).json()
         pretty(response)

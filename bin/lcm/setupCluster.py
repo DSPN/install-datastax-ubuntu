@@ -14,7 +14,8 @@ def setupArgs():
                           help='username LCM uses when ssh-ing to nodes for install/config')
     required.add_argument('--repouser', required=True, type=str, help='username for DSE repo')
     required.add_argument('--repopw', required=True, type=str, help='pw for repouser')
-    required.add_argument('--opsc-ip', type=str, default='127.0.0.1',
+    required.add_argument('--dbpasswd', required=True, type=str, help='pw for user cassandra')
+    parser.add_argument('--opsc-ip', type=str, default='127.0.0.1',
                           help='IP of OpsCenter instance (or FQDN)')
     parser.add_argument('--opscuser', type=str, default='admin', help='opscenter admin user')
     parser.add_argument('--opscpw', type=str, default='admin', help='password for opscuser')
@@ -24,11 +25,11 @@ def setupArgs():
                         help='password for username LCM uses when ssh-ing to nodes for install/config; --password OR --privkey required; IGNORED if privkey non-null.')
     parser.add_argument('--becomepw', action='store_true',
                           help='use arg --password when sudo prompts for pw on nodes. IGNORED if privkey non-null.')
-    parser.add_argument('--dsever', type=str, default="5.1.5",
+    parser.add_argument('--dsever', type=str, default="5.1.7",
                         help='DSE version for LCM config profile')
     parser.add_argument('--datapath', type=str, default=None,
                         help='path to root data directory containing data | commitlog | saved_caches (eg /data/cassandra); package default if not passed')
-    parser.add_argument('--config', type=str, help='JSON for config profile. Will OVERRIDE all other config profile settings but not --dsever')
+    parser.add_argument('--config', type=str, help='JSON for config profile. Will OVERRIDE ALL OTHER CONFIG ARGUMENTS')
     parser.add_argument('--pause', type=int, default=6,
                         help="pause time (sec) between attempts to contact OpsCenter")
     parser.add_argument('--trys', type=int, default=100,
@@ -81,7 +82,6 @@ def main():
             dsecred['become-password'] = args.password
 
     # Minimal config profile
-    # Todo, read config json from a file
     defaultconfig = {
         "name":"Default config",
         "datastax-version": args.dsever,
@@ -89,7 +89,7 @@ def main():
             'cassandra-yaml': {
                 "authenticator":"com.datastax.bdp.cassandra.auth.DseAuthenticator",
                 "num_tokens":32,
-                "endpoint_snitch":"GossipingPropertyFileSnitch"
+                "endpoint_snitch":"org.apache.cassandra.locator.GossipingPropertyFileSnitch"
             },
             "dse-yaml": {
                 "authorization_options": {"enabled": True},
@@ -103,9 +103,13 @@ def main():
         defaultconfig["json"]["cassandra-yaml"]["saved_caches_directory"] = os.path.join(args.datapath, "saved_caches")
         defaultconfig["json"]["cassandra-yaml"]["commitlog_directory"] = os.path.join(args.datapath, "commitlog")
 
+    # Overriding all config profile logic above
+    # Todo, read config json from a file or http endpoint
     if( args.config != None ):
-      print "--config passed, overriding..."
-      defaultconfig["json"] = json.loads(args.config)
+      print "WARNING: --config passed, OVERRIDING ALL OTHER config arguments"
+      print "WARNING: Failed install job possible, e.g. if config json data"
+      print "WARNING: paths don't match existing disks/paths"
+      defaultconfig = json.loads(args.config)
 
     defaultconfig = json.dumps(defaultconfig)
 
@@ -123,7 +127,7 @@ def main():
         cred = opsc.addCred(dsecred)
         repo = opsc.addRepo(dserepo)
         conf = opsc.addConfig(defaultconfig)
-        cid = opsc.addCluster(args.clustername, cred['id'], repo['id'], conf['id'])
+        cid = opsc.addCluster(args.clustername, cred['id'], repo['id'], conf['id'], args.dbpasswd)
     else:
         print "Cluster {n} exists, exiting...".format(n=args.clustername)
 

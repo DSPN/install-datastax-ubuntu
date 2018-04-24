@@ -41,7 +41,7 @@ def main():
             print "Maximum attempts, exiting"
             exit()
         try:
-            jobs = opsc.session.get("{url}/api/v1/lcm/jobs/".format(url=opsc.url)).json()
+            jobs = opsc.session.get("{url}/api/v2/lcm/jobs/".format(url=opsc.url)).json()
         except requests.exceptions.Timeout as e:
             print "Request {c} to OpsC timeout after initial connection, exiting.".format(c=count)
             exit()

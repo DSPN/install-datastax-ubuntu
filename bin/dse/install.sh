@@ -6,8 +6,8 @@ cloud_type=$1
 # Overidable by setting env var in calling template,
 # eg: export OPSC_VERSION='6.1.0'
 
-dse_version=5.1.4-1
-opscenter_version=6.1.4
+dse_version=5.1.6-1
+opscenter_version=6.1.5
 
 if [ -z "$OPSC_VERSION" ]
 then
