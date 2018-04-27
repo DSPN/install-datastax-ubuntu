@@ -25,7 +25,7 @@ def setupArgs():
                         help='password for username LCM uses when ssh-ing to nodes for install/config; --password OR --privkey required; IGNORED if privkey non-null.')
     parser.add_argument('--becomepw', action='store_true',
                           help='use arg --password when sudo prompts for pw on nodes. IGNORED if privkey non-null.')
-    parser.add_argument('--dsever', type=str, default="5.1.7",
+    parser.add_argument('--dsever', type=str, default="6.0.0",
                         help='DSE version for LCM config profile')
     parser.add_argument('--datapath', type=str, default=None,
                         help='path to root data directory containing data | commitlog | saved_caches (eg /data/cassandra); package default if not passed')
