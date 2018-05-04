@@ -59,6 +59,15 @@ def main():
         print "Response: "
         lcm.pretty(response)
 
+    print "Calling repair on all keyspaces/nodes:"
+    for ks in keyspaces:
+        print "Repairing {ks}...".format(ks=ks)
+        for node in nodes:
+            nodeip=str(node['node_ip'])
+            print "    ...on node {n}".format(n=nodeip)
+            response = opsc.session.post("{url}/{id}/ops/repair/{node}/{ks}".format(url=opsc.url, id=cid, node=nodeip, ks=ks), data='{"is_sequential": false}').json()
+            print "   ", response
+
 # ----------------------------
 if __name__ == "__main__":
     main()
