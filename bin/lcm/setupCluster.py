@@ -93,7 +93,8 @@ def main():
             },
             "dse-yaml": {
                 "authorization_options": {"enabled": True},
-                "authentication_options": {"enabled": True}
+                "authentication_options": {"enabled": True},
+                "dsefs_options": {"enabled": True}
             }
         }}
     # Since this isn't necessarily being called on the nodes where 'datapath'
@@ -102,6 +103,7 @@ def main():
         defaultconfig["json"]["cassandra-yaml"]["data_file_directories"] = [os.path.join(args.datapath, "data")]
         defaultconfig["json"]["cassandra-yaml"]["saved_caches_directory"] = os.path.join(args.datapath, "saved_caches")
         defaultconfig["json"]["cassandra-yaml"]["commitlog_directory"] = os.path.join(args.datapath, "commitlog")
+        defaultconfig["json"]["dse-yaml"]["dsefs_options"]["work_dir"] = os.path.join(args.datapath, "dsefs")
 
     # Overriding all config profile logic above
     # Todo, read config json from a file or http endpoint
