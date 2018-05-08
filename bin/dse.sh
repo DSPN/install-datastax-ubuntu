@@ -86,6 +86,8 @@ sudo apt-get -y install sysstat
 ./dse/configure_cassandra_yaml.sh $node_ip $node_ip $seed_node_ip $cluster_name
 ./dse/configure_default_dse.sh $solr_enabled
 ./dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip $opscenter_ip
+# Add JMX-Exporter to cassandra
+echo 'JVM_OPTS="$JVM_OPTS -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.3.0.jar=7070:/usr/share/jmx-exporter/cassandra.yml"' | sudo tee --append /etc/dse/cassandra/cassandra-env.sh
 ./dse/start.sh
 
 # It looks like DSE might be setting the keepalive to 300.  Need to confirm.
