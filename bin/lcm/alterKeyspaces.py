@@ -45,7 +45,7 @@ def main():
         datacenters[d] = min(3, datacenters[d])
     # keyspaces to alter
     # leaving out LocalStrategy (system & system_schema) and EverywhereStrategy (dse_system & solr_admin)
-    keyspaces = ["system_auth", "system_distributed", "system_traces",
+    keyspaces = ["system_auth", "system_distributed", "system_traces", "dse_analytics",
                  "dse_security", "dse_perf", "dse_leases", "cfs_archive",
                  "spark_system", "cfs", "dsefs", "OpsCenter", "HiveMetaStore"]
     postdata = {"strategy_class": "NetworkTopologyStrategy", "strategy_options": datacenters, "durable_writes": True}
