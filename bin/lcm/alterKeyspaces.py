@@ -2,6 +2,7 @@
 import json
 import argparse
 import requests
+import time
 import utilLCM as lcm
 
 def setupArgs():
@@ -52,21 +53,40 @@ def main():
     rawjson = json.dumps(postdata)
     # loop over keyspaces
     print "Looping over keyspaces: {k}".format(k=keyspaces)
-    print "NOTE: No response indicates sucess"
+    print "NOTE: No response indicates success"
+    # keep track of non-sucess keyspaces to skip repairing
+    skip = []
     for ks in keyspaces:
         print "Calling: PUT {url}/{id}/keyspaces/{ks} with {d}".format(url=opsc.url, id=cid, ks=ks, d=rawjson)
         response = opsc.session.put("{url}/{id}/keyspaces/{ks}".format(url=opsc.url, id=cid, ks=ks), data=rawjson).json()
         print "Response: "
-        lcm.pretty(response)
+        if response != None:
+            # add to keyspaces to skip
+            skip.append(ks)
+            print "Non-success for keyspace: {ks}, excluding later...".format(ks=ks)
+            lcm.pretty(response)
 
     print "Calling repair on all keyspaces/nodes:"
+    print "Skipping keyspaces: {s}".format(s=skip)
+
     for ks in keyspaces:
+        if ks in skip:
+            print "Skipping keyspace {ks}".format(ks=ks)
+            continue
         print "Repairing {ks}...".format(ks=ks)
         for node in nodes:
-            nodeip=str(node['node_ip'])
+            nodeip = str(node['node_ip'])
             print "    ...on node {n}".format(n=nodeip)
             response = opsc.session.post("{url}/{id}/ops/repair/{node}/{ks}".format(url=opsc.url, id=cid, node=nodeip, ks=ks), data='{"is_sequential": false}').json()
             print "   ", response
+            running = True
+            while(running):
+                print "    Sleeping 2s..."
+                time.sleep(2)
+                status = opsc.session.get("{url}/request/{r}/status".format(url=opsc.url, r=response)).json()
+                if(status['state'] != u'running'):
+                    print "    Status of request {r} is: {s}".format(r=response, s=status['state'])
+                    running = False
 
 # ----------------------------
 if __name__ == "__main__":
