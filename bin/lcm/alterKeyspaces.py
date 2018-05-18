@@ -80,12 +80,17 @@ def main():
             response = opsc.session.post("{url}/{id}/ops/repair/{node}/{ks}".format(url=opsc.url, id=cid, node=nodeip, ks=ks), data='{"is_sequential": false}').json()
             print "   ", response
             running = True
+            count = 0
             while(running):
-                print "    Sleeping 2s..."
+                print "    Sleeping 2s after check {c}...".format(c=count)
                 time.sleep(2)
                 status = opsc.session.get("{url}/request/{r}/status".format(url=opsc.url, r=response)).json()
+                count += 1
                 if(status['state'] != u'running'):
                     print "    Status of request {r} is: {s}".format(r=response, s=status['state'])
+                    running = False
+                if(count >= 15):
+                    print "    Status 'running' after {c} checks, continuing".format(c=count)
                     running = False
 
 # ----------------------------
