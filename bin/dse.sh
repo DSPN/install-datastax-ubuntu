@@ -8,10 +8,15 @@ data_center_name=$3
 opscenter_dns_name=$4
 cluster_name=$5
 solr_enabled="0"
+max_solr_concurrency_per_core="2"
 
 if [[ "$6" == "1" ]]; then
   solr_enabled=$6
 fi
+if [[ "$7" == "1" ]]; then
+  solr_enabled=$7
+fi
+
 
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
@@ -85,6 +90,7 @@ sudo apt-get -y install sysstat
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
 ./dse/configure_cassandra_yaml.sh $node_ip $node_ip $seed_node_ip $cluster_name
 ./dse/configure_default_dse.sh $solr_enabled
+./dse/configure_dse_yaml.sh $max_solr_concurrency_per_core
 ./dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip $opscenter_ip
 # Add JMX-Exporter to cassandra
 echo 'JVM_OPTS="$JVM_OPTS -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.3.0.jar=7070:/usr/share/jmx-exporter/cassandra.yml"' | sudo tee --append /etc/dse/cassandra/cassandra-env.sh
