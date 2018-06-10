@@ -101,3 +101,4 @@ getent passwd cassandra >/dev/null || \
 useradd -d /usr/share/cassandra -g cassandra -M -r cassandra
 sudo chown cassandra:cassandra /var/lib/cassandra/*
 sudo chown cassandra:cassandra /var/lib/cassandra/
+sudo rm /etc/cron.weekly/fstrim #remove fstrim weekly cron task as we do it from another system
