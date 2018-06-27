@@ -1,7 +1,6 @@
 #!/usr/bin/python
 import json
 import argparse
-import requests
 import time
 import utilLCM as lcm
 
@@ -59,7 +58,7 @@ def main():
     for ks in keyspaces:
         print "Calling: PUT {url}/{id}/keyspaces/{ks} with {d}".format(url=opsc.url, id=cid, ks=ks, d=rawjson)
         response = opsc.session.put("{url}/{id}/keyspaces/{ks}".format(url=opsc.url, id=cid, ks=ks), data=rawjson).json()
-        print "Response: "
+        print "Response: {r}".format(r=response)
         if response != None:
             # add to keyspaces to skip
             skip.append(ks)
@@ -77,19 +76,28 @@ def main():
         for node in nodes:
             nodeip = str(node['node_ip'])
             print "    ...on node {n}".format(n=nodeip)
-            response = opsc.session.post("{url}/{id}/ops/repair/{node}/{ks}".format(url=opsc.url, id=cid, node=nodeip, ks=ks), data='{"is_sequential": false}').json()
+            response = {} #fake response that's non string
+            while isinstance(response, dict):
+              response = opsc.session.post("{url}/{id}/ops/repair/{node}/{ks}".format(url=opsc.url, id=cid, node=nodeip, ks=ks), data='{"is_sequential": false}').json()
+              if isinstance(response, dict):
+                  print "Unexpected response: {r}".format(r=response)
+                  print "Sleeping 5s..."
+                  time.sleep(5)
             print "   ", response
             running = True
             count = 0
-            while(running):
+            while running:
                 print "    Sleeping 2s after check {c}...".format(c=count)
                 time.sleep(2)
                 status = opsc.session.get("{url}/request/{r}/status".format(url=opsc.url, r=response)).json()
                 count += 1
-                if(status['state'] != u'running'):
+                if 'state' not in status:
+                    print "Unexpected status: {s}".format(s=status)
+                    print "Retrying..."
+                if status['state'] != u'running':
                     print "    Status of request {r} is: {s}".format(r=response, s=status['state'])
                     running = False
-                if(count >= 15):
+                if count >= 15:
                     print "    Status 'running' after {c} checks, continuing".format(c=count)
                     running = False
 
