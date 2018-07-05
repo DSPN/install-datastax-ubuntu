@@ -81,8 +81,8 @@ def main():
               response = opsc.session.post("{url}/{id}/ops/repair/{node}/{ks}".format(url=opsc.url, id=cid, node=nodeip, ks=ks), data='{"is_sequential": false}').json()
               if isinstance(response, dict):
                   print "Unexpected response: {r}".format(r=response)
-                  print "Sleeping 5s..."
-                  time.sleep(5)
+                  print "Sleeping 15s..."
+                  time.sleep(15)
             print "   ", response
             running = True
             count = 0
