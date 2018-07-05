@@ -7,7 +7,7 @@ install_java.sh [-h] [-m]
 Options:
 
  -h   : display this message and exit
- -m   : manual tar install (default is package from oracle)
+ -m   : manual tar install (default is package from webupd8team/oracle)
  -o   : package install of openjdk 8
 
 ---------------------------------------------------"
