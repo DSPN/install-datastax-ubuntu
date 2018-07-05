@@ -16,7 +16,7 @@ def setupArgs():
     required.add_argument('--repopw', required=True, type=str, help='pw for repouser')
     required.add_argument('--dbpasswd', required=True, type=str, help='pw for user cassandra')
     parser.add_argument('--opsc-ip', type=str, default='127.0.0.1',
-                          help='IP of OpsCenter instance (or FQDN)')
+                        help='IP of OpsCenter instance (or FQDN)')
     parser.add_argument('--opscuser', type=str, default='admin', help='opscenter admin user')
     parser.add_argument('--opscpw', type=str, default='admin', help='password for opscuser')
     parser.add_argument('--privkey', type=str,
@@ -24,17 +24,19 @@ def setupArgs():
     parser.add_argument('--password', type=str,
                         help='password for username LCM uses when ssh-ing to nodes for install/config; --password OR --privkey required; IGNORED if privkey non-null.')
     parser.add_argument('--becomepw', action='store_true',
-                          help='use arg --password when sudo prompts for pw on nodes. IGNORED if privkey non-null.')
+                        help='use arg --password when sudo prompts for pw on nodes. IGNORED if privkey non-null.')
     parser.add_argument('--dsever', type=str, default="6.0.0",
                         help='DSE version for LCM config profile')
     parser.add_argument('--datapath', type=str, default=None,
                         help='path to root data directory containing data | commitlog | saved_caches (eg /data/cassandra); package default if not passed')
-    parser.add_argument('--config', type=str, help='JSON for config profile. Will OVERRIDE ALL OTHER CONFIG ARGUMENTS')
+    parser.add_argument('--nojava', action='store_true', help='disable java/jce policy install in default LCM config profile')
+    parser.add_argument('--aoss', action='store_true', help='enable AOSS in default LCM config profile')
+    parser.add_argument('--config', type=str, help='JSON for config profile. WILL OVERRIDE ALL OTHER CONFIG ARGUMENTS')
     parser.add_argument('--pause', type=int, default=6,
                         help="pause time (sec) between attempts to contact OpsCenter")
     parser.add_argument('--trys', type=int, default=100,
                         help="number of times to attempt to contact OpsCenter")
-    parser.add_argument('--verbose', action='store_true', help='verbose flag, right now a NO-OP')
+    parser.add_argument('--verbose', action='store_true', help='verbose flag')
     return parser
 
 def checkArgs(args):
@@ -50,10 +52,15 @@ def main():
     checkArgs(args)
 
     # Basic repo config
-    dserepo = json.dumps({
+    dserepo = {
         "name":"DSE repo",
         "username":args.repouser,
-        "password":args.repopw})
+        "password":args.repopw}
+    if args.verbose:
+        print "Default repo config:"
+        tmp = dserepo
+        tmp['password'] = "XXXXX"
+        lcm.pretty(tmp)
 
     # If privkey passed read key content...
     if args.privkey != None:
@@ -61,26 +68,32 @@ def main():
         with open(keypath, 'r') as keyfile:
             privkey = keyfile.read()
         print "Will create cluster {c} on {u} with keypath {k}".format(c=args.clustername, u=args.opsc_ip, k=keypath)
-        dsecred = json.dumps({
+        dsecred = {
             "become-mode":"sudo",
             "use-ssh-keys":True,
             "name":"DSE creds",
             "login-user":args.username,
             "ssh-private-key":privkey,
-            "become-user":None})
+            "become-user":None}
     # ...otherwise use a pw
     else:
         print "Will create cluster {c} on {u} with password".format(c=args.clustername, u=args.opsc_ip)
-        dsecred = json.dumps({
+        dsecred = {
             "become-mode":"sudo",
             "use-ssh-keys":False,
             "name":"DSE creds",
             "login-user":args.username,
             "login-password":args.password,
-            "become-user":None})
-        if (args.becomepw):
+            "become-user":None}
+        if args.becomepw:
             dsecred['become-password'] = args.password
-
+    if args.verbose:
+        print "Default creds:"
+        tmp = dsecred
+        if 'login-password' in tmp: tmp['login-password'] = "XXXXX"
+        if 'become-password' in tmp: tmp['become-password'] = "XXXXX"
+        if 'ssh-private-key' in tmp: tmp['ssh-private-key'] = "ZZZZZ"
+        lcm.pretty(tmp)
     # Minimal config profile
     defaultconfig = {
         "name":"Default config",
@@ -100,21 +113,35 @@ def main():
     # Since this isn't necessarily being called on the nodes where 'datapath'
     # exists checking is pointless
     if args.datapath != None:
+        print "--datapath {p} passed, setting root datapath in default config".format(p=args.datapath)
         defaultconfig["json"]["cassandra-yaml"]["data_file_directories"] = [os.path.join(args.datapath, "data")]
         defaultconfig["json"]["cassandra-yaml"]["saved_caches_directory"] = os.path.join(args.datapath, "saved_caches")
         defaultconfig["json"]["cassandra-yaml"]["commitlog_directory"] = os.path.join(args.datapath, "commitlog")
         defaultconfig["json"]["dse-yaml"]["dsefs_options"]["work_dir"] = os.path.join(args.datapath, "dsefs")
         defaultconfig["json"]["dse-yaml"]["dsefs_options"]["data_directories"] = [{"dir": os.path.join(args.datapath, "dsefs/data")}]
+    # if --aoss option passed, enable AOSS
+    if args.aoss:
+        print "--aoss passed, adding enable AOSS to default config"
+        defaultconfig["json"]["dse-yaml"]["alwayson_sql_options"] = {"enabled": True}
+        defaultconfig["json"]["dse-yaml"]["resource_manager_options"] = {"worker_options": {"workpools": [{"memory": "0.25", "cores": "0.25", "name": "alwayson_sql"}]}}
+    # if nojava option passed, disable java/jce
+    if args.nojava:
+        print "--nojava passed, adding disable java/jce-policy to default config"
+        defaultconfig["json"]["java-setup"] = {}
+        defaultconfig["json"]["java-setup"]["manage-java"] = False
+        defaultconfig["json"]["java-setup"]["manage-jce-policy"] = False
 
     # Overriding all config profile logic above
     # Todo, read config json from a file or http endpoint
-    if( args.config != None ):
+    if args.config != None:
       print "WARNING: --config passed, OVERRIDING ALL OTHER config arguments"
       print "WARNING: Failed install job possible, e.g. if config json data"
       print "WARNING: paths don't match existing disks/paths"
       defaultconfig = json.loads(args.config)
 
-    defaultconfig = json.dumps(defaultconfig)
+    if args.verbose:
+        print "Default config profile:"
+        lcm.pretty(defaultconfig)
 
     opsc = lcm.OpsCenter(args.opsc_ip, args.opscuser, args.opscpw)
     # Block waiting for OpsC to spin up, create session & login if needed
@@ -127,9 +154,9 @@ def main():
     c = opsc.checkForCluster(args.clustername)
     if not c:
         print "Cluster {n} doesn't exist, creating...".format(n=args.clustername)
-        cred = opsc.addCred(dsecred)
-        repo = opsc.addRepo(dserepo)
-        conf = opsc.addConfig(defaultconfig)
+        cred = opsc.addCred(json.dumps(dsecred))
+        repo = opsc.addRepo(json.dumps(dserepo))
+        conf = opsc.addConfig(json.dumps(defaultconfig))
         cid = opsc.addCluster(args.clustername, cred['id'], repo['id'], conf['id'], args.dbpasswd)
     else:
         print "Cluster {n} exists, exiting...".format(n=args.clustername)
