@@ -7,17 +7,20 @@ install_java.sh [-h] [-m]
 Options:
 
  -h   : display this message and exit
- -m   : manual tar install (default is package)
+ -m   : manual tar install (default is package from oracle)
+ -o   : package install of openjdk 8
 
 ---------------------------------------------------"
 
 
-while getopts 'hm' opt; do
+while getopts 'hmo' opt; do
   case $opt in
     h) echo -e "$usage"
        exit
     ;;
     m) manual="true"
+    ;;
+    o) openjdk="true"
     ;;
     \?) echo "Invalid option -$OPTARG" >&2
         exit 1
@@ -25,10 +28,20 @@ while getopts 'hm' opt; do
   esac
 done
 
-echo "Installing the Oracle JDK"
+echo "Installing the JDK"
 
+if [ -n "$openjdk" ]; then
+  echo "Performing package OpenJDK install"
+  # check for lock
+  echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+  while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
+  echo -e "No other procs: $(date +%r)"
+  apt-get -y update
+  apt-get -y install openjdk-8-jdk
+  exit 0
+fi
 if [ -z "$manual" ]; then
-  echo "performing package install"
+  echo "Performing package Oracle install"
   # check for lock
   echo -e "Checking if apt/dpkg running, start: $(date +%r)"
   while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
@@ -47,8 +60,9 @@ if [ -z "$manual" ]; then
   # what the correct solution is.  For now, we're just going to run the install a second time.  This will do
   # nothing if the first install was successful and I suspect will eliminate the majority of our failures.
   apt-get -y install oracle-java8-installer
+  exit 0
 else
-  echo "-m flag passed, performing manual tar install"
+  echo "-m flag passed, performing manual tar install of Oracle JDK"
   url='http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/jdk-8u162-linux-x64.tar.gz'
   wget --no-cookies --no-check-certificate \
   --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" $url
