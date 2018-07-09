@@ -22,9 +22,8 @@ def setupArgs():
 def runningJob(jobs):
     running = False
     for r in jobs['results']:
-        if r['status'] == 'RUNNING' or r['status'] == 'PENDING':
-            running = True
-    return running
+        if r['status'] == 'RUNNING' or r['status'] == 'PENDING' or r['status'] == 'WILL_FAIL':
+            return True
 
 def main():
     parser = setupArgs()
