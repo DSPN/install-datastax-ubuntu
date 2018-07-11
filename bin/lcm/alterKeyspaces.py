@@ -5,7 +5,13 @@ import time
 import utilLCM as lcm
 
 def setupArgs():
-    parser = argparse.ArgumentParser(description='Alter system keyspaces to use NetworkTopologyStrategy and RF 3. NOTE: excludes system, system_schema, dse_system & solr_admin.',
+    info = """Alter system keyspaces to use NetworkTopologyStrategy and RF
+    min(3, # nodes)
+    NOTE: excludes system, system_schema, dse_system & solr_admin. In DSE 5.1.x,
+    repair all altered keyspaces. In DSE 6.0.x enable nodesync for all keyspaces
+    except system_auth and OpsCenter.
+    """
+    parser = argparse.ArgumentParser(description=info,
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--opsc-ip', type=str, default='127.0.0.1',
                         help='IP of OpsCenter instance (or FQDN)')
