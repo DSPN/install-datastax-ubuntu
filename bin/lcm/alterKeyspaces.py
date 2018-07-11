@@ -63,9 +63,6 @@ def enableNodesync(opsc, cid, keyspaces):
     ks.discard("OpsCenter")
     ks.discard("system_auth")
     print "Skipping keyspaces: system_auth, OpsCenter"
-    # Explicitly add dse_system, which isn't passed in because it's
-    # EverywhereStrategy and therefore un-altered
-    ks.add("dse_system")
     print "Enabling nodesync on keyspaces: {s}".format(s=', '.join(ks))
     data = {"enable": []}
     for k in ks:
@@ -137,6 +134,10 @@ def main():
         runRepair(opsc, cid, nodes, keyspaces)
     else:
         print "DSE version: {v}, enabling nodesync".format(v=version)
+        # Explicitly add dse_system/solr_admin which aren't passed in because they're
+        # EverywhereStrategy and therefore un-altered
+        keyspaces.add("dse_system")
+        keyspaces.add("solr_admin")
         enableNodesync(opsc, cid, keyspaces)
 
 # ----------------------------
