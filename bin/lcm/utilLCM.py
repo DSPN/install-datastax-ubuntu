@@ -139,7 +139,7 @@ class OpsCenter:
             configs = self.session.get("{url}/api/v2/lcm/config_profiles/".format(url=self.url)).json()
             if configs['count'] == 0:
                 config = self.session.post("{url}/api/v2/lcm/config_profiles/".format(url=self.url), data=conf).json()
-                print "Added default condig profile, json:"
+                print "Added default config profile, json:"
                 pretty(config)
                 return config
         except requests.exceptions.Timeout as e:
