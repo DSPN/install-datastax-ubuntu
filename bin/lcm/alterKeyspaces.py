@@ -53,33 +53,31 @@ def main():
         datacenters[d] = min(3, datacenters[d])
     # keyspaces to alter
     # leaving out LocalStrategy (system & system_schema) and EverywhereStrategy (dse_system & solr_admin)
-    keyspaces = ["system_auth", "system_distributed", "system_traces", "dse_analytics",
+    keyspaces = {"system_auth", "system_distributed", "system_traces", "dse_analytics",
                  "dse_security", "dse_perf", "dse_leases", "cfs_archive",
-                 "spark_system", "cfs", "dsefs", "OpsCenter", "HiveMetaStore"]
+                 "spark_system", "cfs", "dsefs", "OpsCenter", "HiveMetaStore"}
     postdata = {"strategy_class": "NetworkTopologyStrategy", "strategy_options": datacenters, "durable_writes": True}
     rawjson = json.dumps(postdata)
     # loop over keyspaces
-    print "Looping over keyspaces: {k}".format(k=keyspaces)
+    print "Looping over keyspaces: {k}".format(k=', '.join(keyspaces))
     print "NOTE: No response indicates success"
     # keep track of non-sucess keyspaces to skip repairing
-    skip = []
+    skip = set()
     for ks in keyspaces:
         print "Calling: PUT {url}/{id}/keyspaces/{ks} with {d}".format(url=opsc.url, id=cid, ks=ks, d=rawjson)
         response = opsc.session.put("{url}/{id}/keyspaces/{ks}".format(url=opsc.url, id=cid, ks=ks), data=rawjson).json()
         print "Response: {r}".format(r=response)
         if response != None:
             # add to keyspaces to skip
-            skip.append(ks)
+            skip.add(ks)
             print "Non-success for keyspace: {ks}, excluding later...".format(ks=ks)
             lcm.pretty(response)
 
     print "Calling repair on all keyspaces/nodes:"
-    print "Skipping keyspaces: {s}".format(s=skip)
-
+    print "Skipping keyspaces: {s}".format(s=', '.join(skip))
+    for ks in skip:
+        keyspaces.discard(ks)
     for ks in keyspaces:
-        if ks in skip:
-            print "Skipping keyspace {ks}".format(ks=ks)
-            continue
         print "Repairing {ks}...".format(ks=ks)
         for node in nodes:
             nodeip = str(node['node_ip'])
