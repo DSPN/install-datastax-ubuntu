@@ -29,9 +29,17 @@ def main():
 
     # get cluster id, assume 1 cluster
     clusterconf = opsc.session.get("{url}/cluster-configs".format(url=opsc.url)).json()
+    if len(clusterconf.keys()) == 0:
+        print "Error: no clusters, exiting."
+        # exiting with 0 as to not propigate error up to deploy
+        exit()
     cid = clusterconf.keys()[0]
     # get all node configs
     nodes = opsc.session.get("{url}/{id}/nodes".format(url=opsc.url, id=cid)).json()
+    if len(nodes) == 0:
+        print "Error: no nodes, exiting."
+        # exiting with 0 as to not propigate error up to deploy
+        exit()
     # loop of configs, counting nodes in each dc
     datacenters = {}
     for n in nodes:
