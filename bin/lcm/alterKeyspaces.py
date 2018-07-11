@@ -19,6 +19,55 @@ def setupArgs():
                         help="number of times to attempt to contact OpsCenter")
     return parser
 
+def runRepair(opsc, cid, nodes, keyspaces):
+    for ks in keyspaces:
+        print "Repairing {ks}...".format(ks=ks)
+        for node in nodes:
+            nodeip = str(node['node_ip'])
+            print "    ...on node {n}".format(n=nodeip)
+            response = {} #fake response that's non string
+            while isinstance(response, dict):
+                response = opsc.session.post("{url}/{id}/ops/repair/{node}/{ks}".format(url=opsc.url, id=cid, node=nodeip, ks=ks), data='{"is_sequential": false}').json()
+                if isinstance(response, dict):
+                    print "Unexpected response: {r}".format(r=response)
+                    print "Sleeping 15s..."
+                    time.sleep(15)
+            print "   ", response
+            running = True
+            count = 0
+            while running:
+                print "    Sleeping 2s after check {c}...".format(c=count)
+                time.sleep(2)
+                status = opsc.session.get("{url}/request/{r}/status".format(url=opsc.url, r=response)).json()
+                count += 1
+                if 'state' not in status:
+                    print "Unexpected status: {s}".format(s=status)
+                    print "Retrying..."
+                if status['state'] != u'running':
+                    print "    Status of request {r} is: {s}".format(r=response, s=status['state'])
+                    running = False
+                if count >= 15:
+                    print "    Status 'running' after {c} checks, continuing".format(c=count)
+                    running = False
+    return
+
+def enableNodesync(opsc, cid, keyspaces):
+    ks = keyspaces
+    # Explicitly skip system_auth and opsc KS's
+    ks.discard("OpsCenter")
+    ks.discard("system_auth")
+    print "Skipping keyspaces: system_auth, OpsCenter"
+    # Explicitly add dse_system, which isn't passed in because it's
+    # EverywhereStrategy and therefore un-altered
+    ks.add("dse_system")
+    print "Enabling nodesync on keyspaces: {s}".format(s=', '.join(ks))
+    data = {"enable": []}
+    for k in ks:
+        data["enable"].append("{s}.*".format(s=k))
+    response = opsc.session.post("{url}/{id}/nodesync".format(url=opsc.url, id=cid), data=json.dumps(data))
+    print response
+    return
+
 def main():
     parser = setupArgs()
     args = parser.parse_args()
@@ -73,39 +122,16 @@ def main():
             print "Non-success for keyspace: {ks}, excluding later...".format(ks=ks)
             lcm.pretty(response)
 
-    print "Calling repair on all keyspaces/nodes:"
     print "Skipping keyspaces: {s}".format(s=', '.join(skip))
     for ks in skip:
         keyspaces.discard(ks)
-    for ks in keyspaces:
-        print "Repairing {ks}...".format(ks=ks)
-        for node in nodes:
-            nodeip = str(node['node_ip'])
-            print "    ...on node {n}".format(n=nodeip)
-            response = {} #fake response that's non string
-            while isinstance(response, dict):
-              response = opsc.session.post("{url}/{id}/ops/repair/{node}/{ks}".format(url=opsc.url, id=cid, node=nodeip, ks=ks), data='{"is_sequential": false}').json()
-              if isinstance(response, dict):
-                  print "Unexpected response: {r}".format(r=response)
-                  print "Sleeping 15s..."
-                  time.sleep(15)
-            print "   ", response
-            running = True
-            count = 0
-            while running:
-                print "    Sleeping 2s after check {c}...".format(c=count)
-                time.sleep(2)
-                status = opsc.session.get("{url}/request/{r}/status".format(url=opsc.url, r=response)).json()
-                count += 1
-                if 'state' not in status:
-                    print "Unexpected status: {s}".format(s=status)
-                    print "Retrying..."
-                if status['state'] != u'running':
-                    print "    Status of request {r} is: {s}".format(r=response, s=status['state'])
-                    running = False
-                if count >= 15:
-                    print "    Status 'running' after {c} checks, continuing".format(c=count)
-                    running = False
+    version = nodes[0]['node_version']['dse']
+    if version.startswith('5'):
+        print "DSE version: {v}, calling repairs".format(v=version)
+        runRepair(opsc, cid, nodes, keyspaces)
+    else:
+        print "DSE version: {v}, enabling nodesync".format(v=version)
+        enableNodesync(opsc, cid, keyspaces)
 
 # ----------------------------
 if __name__ == "__main__":
