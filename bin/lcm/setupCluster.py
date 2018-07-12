@@ -58,7 +58,7 @@ def main():
         "password":args.repopw}
     if args.verbose:
         print "Default repo config:"
-        tmp = dserepo
+        tmp = dserepo.copy()
         tmp['password'] = "XXXXX"
         lcm.pretty(tmp)
 
@@ -89,7 +89,7 @@ def main():
             dsecred['become-password'] = args.password
     if args.verbose:
         print "Default creds:"
-        tmp = dsecred
+        tmp = dsecred.copy()
         if 'login-password' in tmp: tmp['login-password'] = "XXXXX"
         if 'become-password' in tmp: tmp['become-password'] = "XXXXX"
         if 'ssh-private-key' in tmp: tmp['ssh-private-key'] = "ZZZZZ"
