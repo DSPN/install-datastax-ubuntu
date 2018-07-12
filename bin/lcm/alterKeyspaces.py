@@ -23,6 +23,7 @@ def setupArgs():
                         help="pause time (sec) between attempts to contact OpsCenter")
     parser.add_argument('--trys', type=int, default=20,
                         help="number of times to attempt to contact OpsCenter")
+    parser.add_argument('--verbose', action='store_true', help='verbose flag')
     return parser
 
 def runRepair(opsc, cid, nodes, keyspaces):
@@ -85,6 +86,8 @@ def main():
         print "Error: no clusters, exiting."
         # exiting with 0 as to not propigate error up to deploy
         exit()
+    if args.verbose:
+        lcm.pretty(clusterconf)
     cid = clusterconf.keys()[0]
     # get all node configs
     nodes = opsc.session.get("{url}/{id}/nodes".format(url=opsc.url, id=cid)).json()
@@ -92,6 +95,8 @@ def main():
         print "Error: no nodes, exiting."
         # exiting with 0 as to not propigate error up to deploy
         exit()
+    if args.verbose:
+        lcm.pretty(nodes)
     # loop of configs, counting nodes in each dc
     datacenters = {}
     for n in nodes:
@@ -128,7 +133,16 @@ def main():
     print "Skipping keyspaces: {s}".format(s=', '.join(skip))
     for ks in skip:
         keyspaces.discard(ks)
-    version = nodes[0]['node_version']['dse']
+    # look for version on all nodes, in case agent is down on some
+    # dummy version for edge case where all agents aren't reporting, then bail
+    version = '0'
+    for n in nodes:
+        if 'dse' in n['node_version']:
+            version = n['node_version']['dse']
+    if version.startswith('0'):
+        print "Error: no DSE version found, exiting."
+        # exiting with 0 as to not propigate error up to deploy
+        exit()
     if version.startswith('5'):
         print "DSE version: {v}, calling repairs".format(v=version)
         runRepair(opsc, cid, nodes, keyspaces)
