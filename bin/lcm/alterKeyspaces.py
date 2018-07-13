@@ -7,9 +7,9 @@ import utilLCM as lcm
 def setupArgs():
     info = """Alter system keyspaces to use NetworkTopologyStrategy and RF
     min(3, # nodes)
-    NOTE: excludes system, system_schema, dse_system & solr_admin. In DSE 5.1.x,
+    NOTE: system, system_schema, dse_system & solr_admin un-altered. In DSE 5.1.x,
     repair all altered keyspaces. In DSE 6.0.x enable nodesync for all keyspaces
-    except system_auth and OpsCenter.
+    except system_auth and OpsCenter and repair those 2 keyspaces.
     """
     parser = argparse.ArgumentParser(description=info,
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -59,14 +59,10 @@ def runRepair(opsc, cid, nodes, keyspaces):
     return
 
 def enableNodesync(opsc, cid, keyspaces):
-    ks = keyspaces
-    # Explicitly skip system_auth and opsc KS's
-    ks.discard("OpsCenter")
-    ks.discard("system_auth")
     print "Skipping keyspaces: system_auth, OpsCenter"
-    print "Enabling nodesync on keyspaces: {s}".format(s=', '.join(ks))
+    print "Enabling nodesync on keyspaces: {s}".format(s=', '.join(keyspaces))
     data = {"enable": []}
-    for k in ks:
+    for k in keyspaces:
         data["enable"].append("{s}.*".format(s=k))
     response = opsc.session.post("{url}/{id}/nodesync".format(url=opsc.url, id=cid), data=json.dumps(data))
     print response
@@ -152,7 +148,12 @@ def main():
         # EverywhereStrategy and therefore un-altered
         keyspaces.add("dse_system")
         keyspaces.add("solr_admin")
+        # Explicitly skip system_auth and opsc KS's
+        keyspaces.discard("OpsCenter")
+        keyspaces.discard("system_auth")
         enableNodesync(opsc, cid, keyspaces)
+        # Explicitly repair keyspaces system_auth and OpsCenter
+        runRepair(opsc, cid, nodes, {"system_auth","OpsCenter"})
 
 # ----------------------------
 if __name__ == "__main__":
