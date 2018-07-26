@@ -120,10 +120,12 @@ def main():
         defaultconfig["json"]["dse-yaml"]["dsefs_options"]["work_dir"] = os.path.join(args.datapath, "dsefs")
         defaultconfig["json"]["dse-yaml"]["dsefs_options"]["data_directories"] = [{"dir": os.path.join(args.datapath, "dsefs/data")}]
     # if --aoss option passed, enable AOSS
-    if args.aoss:
+    if args.aoss and args.dsever.startswith('6'):
         print "--aoss passed, adding enable AOSS to default config"
         defaultconfig["json"]["dse-yaml"]["alwayson_sql_options"] = {"enabled": True}
-        defaultconfig["json"]["dse-yaml"]["resource_manager_options"] = {"worker_options": {"workpools": [{"memory": "0.25", "cores": "0.25", "name": "alwayson_sql"}]}}
+        defaultconfig["json"]["dse-yaml"]["resource_manager_options"] = {"worker_options": {"workpools": [{"memory": "0.4", "cores": "0.4", "name": "alwayson_sql"}]}}
+    elif args.aoss and args.dsever.startswith('5'):
+        print "WARNING: --aoss passed and DSE version <6, ignoring --aoss"
     # if nojava option passed, disable java/jce
     if args.nojava:
         print "--nojava passed, adding disable java/jce-policy to default config"
