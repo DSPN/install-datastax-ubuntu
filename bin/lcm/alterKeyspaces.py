@@ -50,9 +50,13 @@ def runRepair(opsc, cid, nodes, keyspaces):
                 if 'state' not in status:
                     print "Unexpected status: {s}".format(s=status)
                     print "Retrying..."
-                if status['state'] != u'running':
-                    print "    Status of request {r} is: {s}".format(r=response, s=status['state'])
+                if status['state'] == u'success':
+                    print "    Status of request {r} is: {s}".format(r=response, s=status)
                     running = False
+                if status['state'] == u'error':
+                    print "    Error in request {r} is: {s}".format(r=response, s=status)
+                    print "    Rerunning repair..."
+                    response = opsc.session.post("{url}/{id}/ops/repair/{node}/{ks}".format(url=opsc.url, id=cid, node=nodeip, ks=ks), data='{"is_sequential": false}').json()
                 if count >= 15:
                     print "    Status 'running' after {c} checks, continuing".format(c=count)
                     running = False
