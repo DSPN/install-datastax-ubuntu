@@ -23,6 +23,7 @@ def setupArgs():
                         help="pause time (sec) between attempts to contact OpsCenter")
     parser.add_argument('--trys', type=int, default=20,
                         help="number of times to attempt to contact OpsCenter")
+    parser.add_argument('--norepair', action='store_true', help='skip repair jobs')
     parser.add_argument('--verbose', action='store_true', help='verbose flag')
     return parser
 
@@ -157,6 +158,9 @@ def main():
         keyspaces.discard("system_auth")
         enableNodesync(opsc, cid, keyspaces)
         # Explicitly repair keyspaces system_auth and OpsCenter
+        if args.norepair:
+            print "--norepair passed, skipping repair and exiting."
+            exit(0)
         runRepair(opsc, cid, nodes, {"system_auth","OpsCenter"})
 
 # ----------------------------
