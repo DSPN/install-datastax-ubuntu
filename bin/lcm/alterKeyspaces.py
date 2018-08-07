@@ -158,8 +158,8 @@ def main():
         if args.nodesync:
             # Explicitly add dse_system/solr_admin which aren't passed in because they're
             # EverywhereStrategy and therefore un-altered
-            #keyspaces.add("dse_system")
-            #keyspaces.add("solr_admin")
+            keyspaces.add("dse_system")
+            keyspaces.add("solr_admin")
             # Explicitly skip system_auth and opsc KS's
             keyspaces.discard("OpsCenter")
             keyspaces.discard("system_auth")
