@@ -7,9 +7,10 @@ import utilLCM as lcm
 def setupArgs():
     info = """Alter system keyspaces to use NetworkTopologyStrategy and RF
     min(3, # nodes)
-    NOTE: system, system_schema, dse_system & solr_admin un-altered. In DSE 5.1.x,
-    repair all altered keyspaces. In DSE 6.0.x enable nodesync for all keyspaces
-    except system_auth and OpsCenter and repair those 2 keyspaces.
+    NOTE: system, system_schema, dse_system & solr_admin un-altered.
+    In DSE 5.1.x, repair all altered keyspaces. If passed --nodesync,
+    in DSE 6.0.x enable nodesync for all keyspaces except system_auth
+    and OpsCenter and repair those 2 keyspaces.
     """
     parser = argparse.ArgumentParser(description=info,
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -24,6 +25,7 @@ def setupArgs():
     parser.add_argument('--trys', type=int, default=20,
                         help="number of times to attempt to contact OpsCenter")
     parser.add_argument('--norepair', action='store_true', help='skip repair jobs')
+    parser.add_argument('--nodesync', action='store_true', help='enable nodesync')
     parser.add_argument('--verbose', action='store_true', help='verbose flag')
     return parser
 
@@ -44,8 +46,8 @@ def runRepair(opsc, cid, nodes, keyspaces):
             running = True
             count = 0
             while running:
-                print "    Sleeping 2s after check {c}...".format(c=count)
-                time.sleep(2)
+                print "    Sleeping 5s after check {c}...".format(c=count)
+                time.sleep(5)
                 status = opsc.session.get("{url}/request/{r}/status".format(url=opsc.url, r=response)).json()
                 count += 1
                 if 'state' not in status:
@@ -59,7 +61,7 @@ def runRepair(opsc, cid, nodes, keyspaces):
                     print "    Rerunning repair..."
                     response = opsc.session.post("{url}/{id}/ops/repair/{node}/{ks}".format(url=opsc.url, id=cid, node=nodeip, ks=ks), data='{"is_sequential": false}').json()
                 if count >= 15:
-                    print "    Status 'running' after {c} checks, continuing".format(c=count)
+                    print "    Status {s} after {c} checks, continuing".format(s=status['state'], c=count)
                     running = False
     return
 
@@ -143,25 +145,35 @@ def main():
     if version.startswith('0'):
         print "Error: no DSE version found, exiting."
         # exiting with 0 as to not propigate error up to deploy
-        exit()
+        exit(0)
     if version.startswith('5'):
-        print "DSE version: {v}, calling repairs".format(v=version)
-        runRepair(opsc, cid, nodes, keyspaces)
-    else:
-        print "DSE version: {v}, enabling nodesync".format(v=version)
-        # Explicitly add dse_system/solr_admin which aren't passed in because they're
-        # EverywhereStrategy and therefore un-altered
-        keyspaces.add("dse_system")
-        keyspaces.add("solr_admin")
-        # Explicitly skip system_auth and opsc KS's
-        keyspaces.discard("OpsCenter")
-        keyspaces.discard("system_auth")
-        enableNodesync(opsc, cid, keyspaces)
-        # Explicitly repair keyspaces system_auth and OpsCenter
         if args.norepair:
             print "--norepair passed, skipping repair and exiting."
             exit(0)
-        runRepair(opsc, cid, nodes, {"system_auth","OpsCenter"})
+        print "DSE version: {v}, calling repairs".format(v=version)
+        print "Running repairs"
+        runRepair(opsc, cid, nodes, keyspaces)
+    else:
+        print "DSE version: {v}".format(v=version)
+        if args.nodesync:
+            # Explicitly add dse_system/solr_admin which aren't passed in because they're
+            # EverywhereStrategy and therefore un-altered
+            #keyspaces.add("dse_system")
+            #keyspaces.add("solr_admin")
+            # Explicitly skip system_auth and opsc KS's
+            keyspaces.discard("OpsCenter")
+            keyspaces.discard("system_auth")
+            enableNodesync(opsc, cid, keyspaces)
+            # Explicitly repair keyspaces system_auth and OpsCenter
+            if args.norepair:
+                print "--norepair passed, skipping repair and exiting."
+                exit(0)
+            runRepair(opsc, cid, nodes, {"system_auth", "OpsCenter"})
+        else:
+            if args.norepair:
+                print "--norepair passed, skipping repair and exiting."
+                exit(0)
+            runRepair(opsc, cid, nodes, keyspaces)
 
 # ----------------------------
 if __name__ == "__main__":
