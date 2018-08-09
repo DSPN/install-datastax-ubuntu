@@ -81,6 +81,7 @@ def main():
     parser = setupArgs()
     args = parser.parse_args()
 
+    print "Starting alterKeyspaces: {t}".format(t=time.ctime())
     print "Sleeping {s} sec before start...".format(s=args.delay)
     time.sleep(args.delay)
     opsc = lcm.OpsCenter(args.opsc_ip, args.opscuser, args.opscpw)
