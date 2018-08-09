@@ -24,6 +24,8 @@ def setupArgs():
                         help="pause time (sec) between attempts to contact OpsCenter")
     parser.add_argument('--trys', type=int, default=20,
                         help="number of times to attempt to contact OpsCenter")
+    parser.add_argument('--delay', type=int, default=0,
+                        help="number of sec to delay/sleep at start")
     parser.add_argument('--norepair', action='store_true', help='skip repair jobs')
     parser.add_argument('--nodesync', action='store_true', help='enable nodesync')
     parser.add_argument('--verbose', action='store_true', help='verbose flag')
@@ -79,6 +81,8 @@ def main():
     parser = setupArgs()
     args = parser.parse_args()
 
+    print "Sleeping {s} sec before start...".format(s=args.delay)
+    time.sleep(args.delay)
     opsc = lcm.OpsCenter(args.opsc_ip, args.opscuser, args.opscpw)
     # Block waiting for OpsC to spin up, create session & login if needed
     opsc.setupSession(pause=args.pause, trys=args.trys)
