@@ -22,6 +22,7 @@ def setupArgs():
     required.add_argument('--nodeid', required=True, type=str, help='Unique node id.')
     required.add_argument('--privip', required=True, type=str, help='Private ip of node.')
     required.add_argument('--pubip', required=True, type=str, help='Public ip of node.')
+    parser.add_argument('--nograph', action='store_true', help='disable graph workload when creating DC for this node')
     parser.add_argument('--rack', type=str, default='rack0', help='Rack node belongs to.')
     parser.add_argument('--pause', type=int, default=6,
                         help="pause time (sec) between attempts to contact OpsCenter")
@@ -50,7 +51,7 @@ def main():
         print "Datacenter {d} exists".format(d=args.dcname)
     else:
         print "Datacenter {n} doesn't exist, creating...".format(n=args.dcname)
-        opsc.addDC(args.dcname, cid)
+        opsc.addDC(args.dcname, cid, args.nograph)
 
     # kludge, assuming ony one cluster
     dcid = ""
