@@ -234,21 +234,25 @@ class OpsCenter:
             # Do something?
             raise
 
-    def addDC(self, dcname, cid):
+    def addDC(self, dcname, cid, nograph):
         try:
-            dc = json.dumps({
+            dc = {
                 'name': dcname,
                 'cluster-id': cid,
                 "graph-enabled": True,
                 "solr-enabled": True,
-                "spark-enabled": True})
-            dcconf = self.session.post("{url}/api/v2/lcm/datacenters/".format(url=self.url), data=dc).json()
+                "spark-enabled": True}
+            if nograph:
+                print "Disabling graph workload"
+                dc['graph-enabled'] = False
+            dcjson = json.dumps(dc)
+            dcconf = self.session.post("{url}/api/v2/lcm/datacenters/".format(url=self.url), data=dcjson).json()
             # edge case where api returns "server error" string not json
             if isinstance(dcconf, (str, unicode)):
                 print "Unexpected return value: ", dcconf
                 print "Retry after 5s sleep..."
                 time.sleep(5)
-                dcconf = self.session.post("{url}/api/v2/lcm/datacenters/".format(url=self.url), data=dc).json()
+                dcconf = self.session.post("{url}/api/v2/lcm/datacenters/".format(url=self.url), data=dcjson).json()
             if 'code' in dcconf and (dcconf['code'] == 409):
                 print "Warning: {d}".format(d=dcconf)
                 print "Finding id for dcname='{n}'".format(n=dcname)
