@@ -44,6 +44,7 @@ EOL
   sysctl -p /etc/sysctl.conf
 
   # disk settings, ephemeral is sdb
+  # the only available scheduler is 'none', not setting
   echo 0 > /sys/class/block/sdb/queue/rotational
   echo 8 > /sys/class/block/sdb/queue/read_ahead_kb
   sed -i 's/\<exit 0\>/# exit 0/' /etc/rc.local
@@ -52,6 +53,18 @@ touch /var/lock/subsys/local
 echo 0 > /sys/class/block/sdb/queue/rotational
 echo 8 > /sys/class/block/sdb/queue/read_ahead_kb
 EOL
+
+  # disk settings, external volume if it exists is sdc
+  # the only available scheduler is 'none', not setting
+  if grep -qs '/dev/sdc ' /proc/mounts; then
+    echo "sdc mounted, setting"
+    echo 0 > /sys/class/block/sdc/queue/rotational
+    echo 8 > /sys/class/block/sdc/queue/read_ahead_kb
+    cat >>/etc/rc.local <<EOL
+echo 0 > /sys/class/block/sdc/queue/rotational
+echo 8 > /sys/class/block/sdc/queue/read_ahead_kb
+EOL
+  fi
 
   # no governors in /sys/devices/system/cpu
   # zone_reclaim_mode 0 by default
