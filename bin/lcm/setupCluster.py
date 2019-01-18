@@ -133,7 +133,6 @@ def main():
         print "--nojava passed, adding disable java/jce-policy to default config"
         defaultconfig["json"]["java-setup"] = {}
         defaultconfig["json"]["java-setup"]["manage-java"] = True
-        defaultconfig["json"]["java-setup"]["manage-jce-policy"] = True
 
     # Overriding all config profile logic above
     # Todo, read config json from a file or http endpoint
