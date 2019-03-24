@@ -58,10 +58,9 @@ while [ $SECONDS -lt $end ]; do
      break;
    fi
 done
-echo "before apt-get update $output"
-apt-get -y update
-
+#
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
+#
 # check for lock
 echo -e "Checking if apt/dpkg running after update, start: $(date +%r)"
 while [ $SECONDS -lt $end ]; do
@@ -71,14 +70,17 @@ while [ $SECONDS -lt $end ]; do
      break;
    fi
 done
-echo "before apt-get install dse $output"
 
+echo "before apt-get update $output"
+#
+apt-get -y update
+#
 
 echo "Running apt-get install dse"
 apt-get -y install dse-full=$dse_version dse=$dse_version dse-demos=$dse_version dse-libsolr=$dse_version dse-libtomcat=$dse_version dse-liblog4j=$dse_version dse-libcassandra=$dse_version dse-libspark=$dse_version dse-libhadoop2-client-native=$dse_version dse-libgraph=$dse_version dse-libhadoop2-client=$dse_version
 
 # check for lock
-echo -e "Checking if apt/dpkg running after update, start: $(date +%r)"
+echo -e "Checking if apt/dpkg running after install dse-full, start: $(date +%r)"
 while [ $SECONDS -lt $end ]; do
    output=`ps -A | grep -e apt -e dpkg`
    if [ -z "$output" ]
@@ -86,6 +88,7 @@ while [ $SECONDS -lt $end ]; do
      break;
    fi
 done
+
 echo "before agent $output"
 
 echo "Running apt-get install datastax-agent"
