@@ -59,7 +59,7 @@ echo -e "No other procs: $(date +%r)"
 
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 #
-killall -9 apt-get
+killall -9 apt apt-get
 #
 dpkg --configure -a
 #
