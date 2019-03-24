@@ -65,6 +65,16 @@ dpkg --configure -a
 #
 apt-get -y update
 
+echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+while [ $SECONDS -lt $end ]; do
+   output=`ps -A | grep -e apt -e dpkg`
+   if [ -z "$output" ]
+   then
+     break;
+   fi
+done
+
+
 echo "Running apt-get install dse"
 apt-get -y install dse-full=$dse_version dse=$dse_version dse-demos=$dse_version dse-libsolr=$dse_version dse-libtomcat=$dse_version dse-liblog4j=$dse_version dse-libcassandra=$dse_version dse-libspark=$dse_version dse-libhadoop2-client-native=$dse_version dse-libgraph=$dse_version dse-libhadoop2-client=$dse_version
 
