@@ -40,32 +40,17 @@ else
   echo "deb http://datastax%40clouddev.com:CJ9o%21wOlDX1a@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
 fi
 
-# check for lock
-echo -e "Checking if apt/dpkg running, start: $(date +%r)"
-#while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
-end=150
-
-# install extra packages
-echo -e "Checking if apt/dpkg running, start: $(date +%r)"
-while [ $SECONDS -lt $end ]; do
-   output=`ps -A | grep -e apt -e dpkg`
-   if [ -z "$output" ]
-   then
-     break;
-   fi
-done
-
-echo -e "No other procs: $(date +%r)"
-
-curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 #
-killall -9 apt apt-get
+killall -9 apt apt-get apt-key
+#
+rm /var/lib/dpkg/lock
 #
 dpkg --configure -a
 #
-apt-get -y update
+end=150
 
-echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+# check for lock
+echo -e "Checking if apt/dpkg running before update, start: $(date +%r)"
 while [ $SECONDS -lt $end ]; do
    output=`ps -A | grep -e apt -e dpkg`
    if [ -z "$output" ]
@@ -73,10 +58,35 @@ while [ $SECONDS -lt $end ]; do
      break;
    fi
 done
+echo "before apt-get update $output"
+apt-get -y update
+
+curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
+# check for lock
+echo -e "Checking if apt/dpkg running after update, start: $(date +%r)"
+while [ $SECONDS -lt $end ]; do
+   output=`ps -A | grep -e apt -e dpkg`
+   if [ -z "$output" ]
+   then
+     break;
+   fi
+done
+echo "before apt-get install dse $output"
 
 
 echo "Running apt-get install dse"
 apt-get -y install dse-full=$dse_version dse=$dse_version dse-demos=$dse_version dse-libsolr=$dse_version dse-libtomcat=$dse_version dse-liblog4j=$dse_version dse-libcassandra=$dse_version dse-libspark=$dse_version dse-libhadoop2-client-native=$dse_version dse-libgraph=$dse_version dse-libhadoop2-client=$dse_version
+
+# check for lock
+echo -e "Checking if apt/dpkg running after update, start: $(date +%r)"
+while [ $SECONDS -lt $end ]; do
+   output=`ps -A | grep -e apt -e dpkg`
+   if [ -z "$output" ]
+   then
+     break;
+   fi
+done
+echo "before agent $output"
 
 echo "Running apt-get install datastax-agent"
 apt-get -y install datastax-agent=$opscenter_version
