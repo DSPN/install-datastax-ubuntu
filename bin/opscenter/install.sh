@@ -25,12 +25,18 @@ else
   echo "deb http://datastax%40clouddev.com:CJ9o%21wOlDX1a@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
 fi
 
-echo -e "Checking if apt/dpkg running, start: $(date +%r)"
-#while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
+
+#
+killall -9 apt apt-get apt-key
+#
+rm /var/lib/dpkg/lock
+#
+dpkg --configure -a
+#
 end=150
 
-# install extra packages
-echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+# check for lock
+echo -e "Checking if apt/dpkg running before update, start: $(date +%r)"
 while [ $SECONDS -lt $end ]; do
    output=`ps -A | grep -e apt -e dpkg`
    if [ -z "$output" ]
@@ -38,14 +44,22 @@ while [ $SECONDS -lt $end ]; do
      break;
    fi
 done
+echo "before apt-get update $output"
+apt-get -y update
+
 
 echo -e "No other procs: $(date +%r)"
 
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
-#
-killall -9 apt apt-get
-#
-dpkg --configure -a
-#
-apt-get -y update
+# check for lock 
+echo -e "Checking if apt/dpkg running before update, start: $(date +%r)"
+while [ $SECONDS -lt $end ]; do
+   output=`ps -A | grep -e apt -e dpkg`
+   if [ -z "$output" ]
+   then
+     break;
+   fi
+done
+echo "before apt-get update $output"
+
 apt-get -y install opscenter=$opscenter_version
