@@ -42,5 +42,10 @@ done
 echo -e "No other procs: $(date +%r)"
 
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
-apt-get update
+#
+killall -9 apt-get
+#
+dpkg --configure -a
+#
+apt-get -y update
 apt-get -y install opscenter=$opscenter_version
