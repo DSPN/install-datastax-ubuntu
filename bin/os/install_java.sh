@@ -34,7 +34,19 @@ if [ -n "$openjdk" ]; then
   echo "Performing package OpenJDK install"
   # check for lock
   echo -e "Checking if apt/dpkg running, start: $(date +%r)"
-  while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
+  #while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
+  end=$((SECONDS+300))
+
+  # install extra packages
+  echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+  while [ $SECONDS -lt $end ]; do
+   output=`ps -A | grep -e apt -e dpkg`
+   if [ -z "$output" ]
+   then
+     break;
+   fi
+  done
+
   echo -e "No other procs: $(date +%r)"
   apt-get -y update
   apt-get -y install openjdk-8-jdk
@@ -44,7 +56,19 @@ if [ -z "$manual" ]; then
   echo "Performing package Oracle install"
   # check for lock
   echo -e "Checking if apt/dpkg running, start: $(date +%r)"
-  while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
+  #while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
+  end=$((SECONDS+300))
+
+  # install extra packages
+  echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+  while [ $SECONDS -lt $end ]; do
+   output=`ps -A | grep -e apt -e dpkg`
+   if [ -z "$output" ]
+   then
+     break;
+   fi
+  done
+
   echo -e "No other procs: $(date +%r)"
 
   # Install add-apt-repository
