@@ -33,7 +33,7 @@ rm /var/lib/dpkg/lock
 #
 dpkg --configure -a
 #
-end=150
+end=300
 
 # check for lock
 echo -e "Checking if apt/dpkg running before repo-key, start: $(date +%r)"
