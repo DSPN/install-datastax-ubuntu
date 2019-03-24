@@ -35,7 +35,7 @@ if [ -n "$openjdk" ]; then
   # check for lock
   echo -e "Checking if apt/dpkg running, start: $(date +%r)"
   #while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
-  end=$((SECONDS+300))
+  end=150
 
   # install extra packages
   echo -e "Checking if apt/dpkg running, start: $(date +%r)"
@@ -48,7 +48,7 @@ if [ -n "$openjdk" ]; then
   done
 
   echo -e "No other procs: $(date +%r)"
-  apt-get -y update
+  #apt-get -y update
   apt-get -y install openjdk-8-jdk
   exit 0
 fi
@@ -57,7 +57,7 @@ if [ -z "$manual" ]; then
   # check for lock
   echo -e "Checking if apt/dpkg running, start: $(date +%r)"
   #while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
-  end=$((SECONDS+300))
+  end=150
 
   # install extra packages
   echo -e "Checking if apt/dpkg running, start: $(date +%r)"
@@ -75,7 +75,7 @@ if [ -z "$manual" ]; then
   apt-get -y install software-properties-common
 
   add-apt-repository -y ppa:webupd8team/java
-  apt-get -y update
+  #apt-get -y update
   echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
   echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
   apt-get -y install oracle-java8-installer

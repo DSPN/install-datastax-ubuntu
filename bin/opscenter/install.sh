@@ -27,7 +27,7 @@ fi
 
 echo -e "Checking if apt/dpkg running, start: $(date +%r)"
 #while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
-end=$((SECONDS+300))
+end=150
 
 # install extra packages
 echo -e "Checking if apt/dpkg running, start: $(date +%r)"
@@ -43,5 +43,5 @@ echo -e "No other procs: $(date +%r)"
 
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 
-apt-get update
+#apt-get update
 apt-get -y install opscenter=$opscenter_version

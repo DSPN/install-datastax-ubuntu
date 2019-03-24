@@ -43,7 +43,7 @@ fi
 # check for lock
 echo -e "Checking if apt/dpkg running, start: $(date +%r)"
 #while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
-end=$((SECONDS+300))
+end=150
 
 # install extra packages
 echo -e "Checking if apt/dpkg running, start: $(date +%r)"
@@ -58,7 +58,7 @@ done
 echo -e "No other procs: $(date +%r)"
 
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
-apt-get -y update
+#apt-get -y update
 
 echo "Running apt-get install dse"
 apt-get -y install dse-full=$dse_version dse=$dse_version dse-demos=$dse_version dse-libsolr=$dse_version dse-libtomcat=$dse_version dse-liblog4j=$dse_version dse-libcassandra=$dse_version dse-libspark=$dse_version dse-libhadoop2-client-native=$dse_version dse-libgraph=$dse_version dse-libhadoop2-client=$dse_version
