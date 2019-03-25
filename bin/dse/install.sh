@@ -111,3 +111,15 @@ apt-get -y install datastax-agent=$opscenter_version
 # The install of dse creates a cassandra user, so now we can do this:
 chown cassandra /mnt
 chgrp cassandra /mnt
+
+#
+killall -9 apt apt-get apt-key
+#
+rm /var/lib/dpkg/lock
+rm /var/lib/apt/lists/lock
+rm /var/cache/apt/archives/lock
+#
+dpkg --configure -a &
+dpkg_process_id=$!
+echo "dpkg_process_id $dpkg_process_id"
+#
