@@ -25,15 +25,19 @@ else
   echo "deb http://datastax%40clouddev.com:CJ9o%21wOlDX1a@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
 fi
 
+end=150
 
 #
 killall -9 apt apt-get apt-key
 #
 rm /var/lib/dpkg/lock
+rm /var/lib/apt/lists/lock
+rm /var/cache/apt/archives/lock
 #
-dpkg --configure -a
+dpkg --configure -a &
+dpkg_process_id=$!
+echo "dpkg_process_id $dpkg_process_id"
 #
-end=300
 
 # check for lock
 echo -e "Checking if apt/dpkg running before repo-key, start: $(date +%r)"
@@ -60,9 +64,12 @@ while [ $SECONDS -lt $end ]; do
 done
 
 echo "before apt-get update $output"
-apt-get -y update
+apt-get -y update &
+update_process_id=$!
+echo "update_process_id $update_process_id"
+
 # check for lock
-echo -e "Checking if apt/dpkg running before update, start: $(date +%r)"
+echo -e "Checking if apt/dpkg running before install opc, start: $(date +%r)"
 while [ $SECONDS -lt $end ]; do
    output=`ps -A | grep -e apt -e dpkg`
    if [ -z "$output" ]

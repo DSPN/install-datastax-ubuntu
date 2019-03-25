@@ -3,8 +3,20 @@
 end=150
 
 # install extra packages
-echo -e "Checking if apt/dpkg running, start: $(date +%r)"
-#while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
+#
+killall -9 apt apt-get apt-key
+#
+rm /var/lib/dpkg/lock
+rm /var/lib/apt/lists/lock
+rm /var/cache/apt/archives/lock
+#
+dpkg --configure -a &
+dpkg_process_id=$!
+echo "dpkg_process_id $dpkg_process_id" 
+#
+
+# check for lock
+echo -e "Checking if dpkg is running after dpkg --configure -a, start: $(date +%r)"
 while [ $SECONDS -lt $end ]; do
    output=`ps -A | grep -e apt -e dpkg`
    if [ -z "$output" ]
@@ -12,10 +24,35 @@ while [ $SECONDS -lt $end ]; do
      break;
    fi
 done
-echo -e "No other procs: $(date +%r)"
 
-#apt-get update
+
+apt-get -y update &
+update_process_id=$!
+echo "update_process_id $update_process_id"
+
+
+# check for lock
+echo -e "Checking if apt/dpkg running update, start: $(date +%r)"
+while [ $SECONDS -lt $end ]; do
+   output=`ps -A | grep -e apt -e dpkg`
+   if [ -z "$output" ]
+   then
+     break;
+   fi
+done
+
 apt-get -y install zip unzip python-pip jq sysstat
+
+# check for lock
+echo -e "Checking if apt/dpkg running before pip, start: $(date +%r)"
+while [ $SECONDS -lt $end ]; do
+   output=`ps -A | grep -e apt -e dpkg`
+   if [ -z "$output" ]
+   then
+     break;
+   fi
+done
+
 
 # install requests pip pacakge
 pip install requests
