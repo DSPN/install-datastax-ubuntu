@@ -43,12 +43,12 @@ fi
 end=150
 #
 #killall -9 apt apt-get apt-key
-systemctl stop apt-daily.service
-systemctl stop apt-daily-upgrade.service 
+#systemctl stop apt-daily.service
+#systemctl stop apt-daily-upgrade.service 
 #
-rm /var/lib/dpkg/lock
-rm /var/lib/apt/lists/lock
-rm /var/cache/apt/archives/lock
+#rm /var/lib/dpkg/lock
+#rm /var/lib/apt/lists/lock
+#rm /var/cache/apt/archives/lock
 #
 #dpkg --configure -a &
 #dpkg_process_id=$!
@@ -81,9 +81,9 @@ done
 
 echo "before apt-get update $output"
 #
-#apt-get -y update &
-#update_process_id=$!
-#echo "update_process_id $update_process_id"
+apt-get -y update &
+update_process_id=$!
+echo "update_process_id $update_process_id"
 #
 
 echo "Running apt-get install dse"
@@ -107,6 +107,3 @@ apt-get -y install datastax-agent=$opscenter_version
 # The install of dse creates a cassandra user, so now we can do this:
 chown cassandra /mnt
 chgrp cassandra /mnt
-
-systemctl start apt-daily.service
-systemctl start apt-daily-upgrade.service 

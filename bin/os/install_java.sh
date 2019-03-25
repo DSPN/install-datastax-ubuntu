@@ -48,8 +48,13 @@ if [ -n "$openjdk" ]; then
   done
 
   echo -e "No other procs: $(date +%r)"
-  #apt-get -y update
-  apt-get -y install openjdk-8-jdk
+  apt-get -y update &
+  upd_process_id=$!
+  echo upd_process_id $upd_process_id
+  apt-get -y install openjdk-8-jdk &
+  oj_process_id=$!
+  echo oj_process_id $upd_process_id
+
   exit 0
 fi
 if [ -z "$manual" ]; then
