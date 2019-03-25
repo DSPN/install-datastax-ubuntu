@@ -49,11 +49,11 @@ if [ -n "$openjdk" ]; then
 
   echo -e "No other procs: $(date +%r)"
   apt-get -y update &
-  upd_process_id=$!
-  echo upd_process_id exited with $?
-  apt-get -y install openjdk-8-jdk &
-  oj_process_id=$!
-  echo oj_process_id exited with $?
+  #upd_process_id=$!
+  #echo upd_process_id exited with $?
+  apt-get -y install openjdk-8-jdk 
+  #oj_process_id=$!
+  #echo oj_process_id exited with $?
 
   exit 0
 fi
