@@ -38,7 +38,7 @@ if [ -n "$openjdk" ]; then
   end=150
 
   # install extra packages
-  echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+  echo -e "Checking if apt/dpkg running befor openjdk install, start: $(date +%r)"
   while [ $SECONDS -lt $end ]; do
    output=`ps -A | grep -e apt -e dpkg`
    if [ -z "$output" ]
@@ -50,12 +50,12 @@ if [ -n "$openjdk" ]; then
   echo -e "No other procs: $(date +%r)"
   apt-get -y update &
   upd_process_id=$!
-  echo upd_process_id $upd_process_id
+  echo upd_process_id exited with $?
   apt-get -y install openjdk-8-jdk &
   oj_process_id=$!
-  echo oj_process_id $upd_process_id
+  echo oj_process_id exited with $?
 
-  exit 0
+  #exit 0
 fi
 if [ -z "$manual" ]; then
   echo "Performing package Oracle install"

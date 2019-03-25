@@ -28,17 +28,17 @@ fi
 end=150
 
 #
-#killall -9 apt apt-get apt-key
+killall -9 apt apt-get apt-key
 #systemctl stop apt-daily.service
 #systemctl stop apt-daily-upgrade.service 
 #
-#rm /var/lib/dpkg/lock
-#rm /var/lib/apt/lists/lock
-#rm /var/cache/apt/archives/lock
+rm /var/lib/dpkg/lock
+rm /var/lib/apt/lists/lock
+rm /var/cache/apt/archives/lock
 #
-#dpkg --configure -a &
-#dpkg_process_id=$!
-#echo "dpkg_process_id $dpkg_process_id"
+dpkg --configure -a &
+dpkg_process_id=$!
+echo "dpkg_process_id $dpkg_process_id"
 #
 
 # check for lock
