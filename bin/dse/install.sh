@@ -71,7 +71,7 @@ export DEBIAN_FRONTEND=noninteractive
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 #
 # check for lock
-echo -e "node Checking if apt/dpkg running after update, start: $(date +%r)"
+echo -e "node Checking if apt/dpkg running after repo_key, start: $(date +%r)"
 while [ $SECONDS -lt $end ]; do
    output=`ps -A | grep -e apt -e dpkg`
    if [ -z "$output" ]
@@ -87,6 +87,17 @@ apt-get -y update &
 update_process_id=$!
 echo "update_process_id $update_process_id"
 #
+
+# check for lock
+echo -e "node Checking if apt/dpkg running after update, start: $(date +%r)"
+while [ $SECONDS -lt $end ]; do
+   output=`ps -A | grep -e apt -e dpkg`
+   if [ -z "$output" ]
+   then
+     break;
+   fi
+done
+
 
 echo "Running apt-get install dse"
 export DEBIAN_FRONTEND=noninteractive
