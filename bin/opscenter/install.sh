@@ -29,18 +29,18 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 echo -e "Checking if apt/dpkg running, start: $(date +%r)"
 #while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
-while true; do
-  STATUS=`ps -A | grep -e apt -e dpkg`
+#while true; do
+#  STATUS=`ps -A | grep -e apt -e dpkg`
 
-  if [ -z "$STATUS" ]; then
-    break
-  else
-    echo "" &> /dev/null
-  fi
+#  if [ -z "$STATUS" ]; then
+#    break
+#  else
+#    echo "" &> /dev/null
+#  fi
 
-  sleep 60
+  sleep 1200
 
-done
+#done
 echo -e "No other procs: $(date +%r)"
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 

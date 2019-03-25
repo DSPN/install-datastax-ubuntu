@@ -37,18 +37,18 @@ if [ -n "$openjdk" ]; then
   # check for lock
   echo -e "Checking if apt/dpkg running, start: $(date +%r)"
   #while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
-  while true; do
-  STATUS=`ps -A | grep -e apt -e dpkg`
+  #while true; do
+  #STATUS=`ps -A | grep -e apt -e dpkg`
 
-  if [ -z "$STATUS" ]; then
-    break
-  else
-    echo "" &> /dev/null
-  fi
+  #if [ -z "$STATUS" ]; then
+  #  break
+  #else
+  #  echo "" &> /dev/null
+  #fi
 
-  sleep 60
+  #sleep 60
 
-  done
+  #done
 
   echo -e "No other procs: $(date +%r)"
   apt-get -y update
