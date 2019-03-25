@@ -34,23 +34,7 @@ echo "Installing the JDK"
 if [ -n "$openjdk" ]; then
 
   echo "Performing package OpenJDK install"
-  # check for lock
-  echo -e "Checking if apt/dpkg running, start: $(date +%r)"
-  #while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
-  #while true; do
-  #STATUS=`ps -A | grep -e apt -e dpkg`
 
-  #if [ -z "$STATUS" ]; then
-  #  break
-  #else
-  #  echo "" &> /dev/null
-  #fi
-
-  #sleep 60
-
-  #done
-
-  echo -e "No other procs: $(date +%r)"
   apt-get -y update
   apt-get -y install openjdk-8-jdk 
   exit 0
