@@ -41,79 +41,29 @@ else
 fi
 
 export DEBIAN_FRONTEND=noninteractive
-end=150
-#
-#
-killall -9 apt apt-get apt-key
-#
-rm /var/lib/dpkg/lock
-rm /var/lib/apt/lists/lock
-rm /var/cache/apt/archives/lock
-#
-dpkg --configure -a &
-dpkg_process_id=$!
-echo "dpkg_process_id $dpkg_process_id"
-#
+echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+#while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
+while true; do
+  STATUS=`ps -A | grep -e apt -e dpkg`
 
-#
+  if [ -z "$STATUS" ]; then
+    break
+  else
+    echo "" &> /dev/null
+  fi
 
-# check for lock
-echo -e "node Checking if apt/dpkg running before repo_key, start: $(date +%r)"
-while [ $SECONDS -lt $end ]; do
-   output=`ps -A | grep -e apt -e dpkg`
-   if [ -z "$output" ]
-   then
-     break;
-   fi
+  sleep 60
+
 done
-#
-export DEBIAN_FRONTEND=noninteractive
+echo -e "No other procs: $(date +%r)"
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
-#
-# check for lock
-echo -e "node Checking if apt/dpkg running after repo_key, start: $(date +%r)"
-while [ $SECONDS -lt $end ]; do
-   output=`ps -A | grep -e apt -e dpkg`
-   if [ -z "$output" ]
-   then
-     break;
-   fi
-done
 
-echo "before apt-get update $output"
-#
-export DEBIAN_FRONTEND=noninteractive
-apt-get -y update &
-update_process_id=$!
-echo "update_process_id $update_process_id"
-#
-
-# check for lock
-echo -e "node Checking if apt/dpkg running after update, start: $(date +%r)"
-while [ $SECONDS -lt $end ]; do
-   output=`ps -A | grep -e apt -e dpkg`
-   if [ -z "$output" ]
-   then
-     break;
-   fi
-done
+apt-get -y update 
 
 
 echo "Running apt-get install dse"
-export DEBIAN_FRONTEND=noninteractive
 apt-get -y install dse-full=$dse_version dse=$dse_version dse-demos=$dse_version dse-libsolr=$dse_version dse-libtomcat=$dse_version dse-liblog4j=$dse_version dse-libcassandra=$dse_version dse-libspark=$dse_version dse-libhadoop2-client-native=$dse_version dse-libgraph=$dse_version dse-libhadoop2-client=$dse_version
 
-# check for lock
-echo -e "Checking if apt/dpkg running after install dse-full, start: $(date +%r)"
-while [ $SECONDS -lt $end ]; do
-   output=`ps -A | grep -e apt -e dpkg`
-   if [ -z "$output" ]
-   then
-     break;
-   fi
-done
-
-echo "before agent $output"
 
 echo "Running apt-get install datastax-agent"
 export DEBIAN_FRONTEND=noninteractive
@@ -123,14 +73,3 @@ apt-get -y install datastax-agent=$opscenter_version
 chown cassandra /mnt
 chgrp cassandra /mnt
 
-#
-killall -9 apt apt-get apt-key
-#
-rm /var/lib/dpkg/lock
-rm /var/lib/apt/lists/lock
-rm /var/cache/apt/archives/lock
-#
-dpkg --configure -a &
-dpkg_process_id=$!
-echo "dpkg_process_id $dpkg_process_id"
-#

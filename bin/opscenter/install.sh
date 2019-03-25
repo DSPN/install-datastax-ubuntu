@@ -25,60 +25,24 @@ else
   echo "deb http://datastax%40clouddev.com:CJ9o%21wOlDX1a@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
 fi
 
-end=150
 
 export DEBIAN_FRONTEND=noninteractive
-#
-killall -9 apt apt-get apt-key
-#
-rm /var/lib/dpkg/lock
-rm /var/lib/apt/lists/lock
-rm /var/cache/apt/archives/lock
-#
-dpkg --configure -a &
-dpkg_process_id=$!
-echo "dpkg_process_id $dpkg_process_id"
-#
+echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+#while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
+while true; do
+  STATUS=`ps -A | grep -e apt -e dpkg`
 
-# check for lock
-echo -e "opscenter Checking if apt/dpkg running before repo-key, start: $(date +%r)"
-while [ $SECONDS -lt $end ]; do
-   output=`ps -A | grep -e apt -e dpkg`
-   if [ -z "$output" ]
-   then
-     break;
-   fi
+  if [ -z "$STATUS" ]; then
+    break
+  else
+    echo "" &> /dev/null
+  fi
+
+  sleep 60
+
 done
-
-
-export DEBIAN_FRONTEND=noninteractive
+echo -e "No other procs: $(date +%r)"
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 
-# check for lock 
-echo -e "opscenter Checking if apt/dpkg running before update, start: $(date +%r)"
-while [ $SECONDS -lt $end ]; do
-   output=`ps -A | grep -e apt -e dpkg`
-   if [ -z "$output" ]
-   then
-     break;
-   fi
-done
-
-echo "before apt-get update $output"
-export DEBIAN_FRONTEND=noninteractive
-apt-get -y update &
-update_process_id=$!
-echo "update_process_id exit status is $?"
-
-# check for lock
-echo -e "opscenter Checking if apt/dpkg running before update, start: $(date +%r)"
-while [ $SECONDS -lt $end ]; do
-   output=`ps -A | grep -e apt -e dpkg`
-   if [ -z "$output" ]
-   then
-     break;
-   fi
-done
-
-export DEBIAN_FRONTEND=noninteractive
+apt-get update
 apt-get -y install opscenter=$opscenter_version

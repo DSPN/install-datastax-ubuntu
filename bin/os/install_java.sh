@@ -28,34 +28,33 @@ while getopts 'hmo' opt; do
   esac
 done
 
+export DEBIAN_FRONTEND=noninteractive
 echo "Installing the JDK"
 
 if [ -n "$openjdk" ]; then
-  export DEBIAN_FRONTEND=noninteractive
-  echo "Performing package OpenJDK install"
-  end=150
 
-  # install extra packages
-  echo -e "Checking if apt/dpkg running befor openjdk install, start: $(date +%r)"
-  while [ $SECONDS -lt $end ]; do
-   output=`ps -A | grep -e apt -e dpkg`
-   if [ -z "$output" ]
-   then
-     break;
-   fi
+  echo "Performing package OpenJDK install"
+  # check for lock
+  echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+  #while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
+  while true; do
+  STATUS=`ps -A | grep -e apt -e dpkg`
+
+  if [ -z "$STATUS" ]; then
+    break
+  else
+    echo "" &> /dev/null
+  fi
+
+  sleep 60
+
   done
 
   echo -e "No other procs: $(date +%r)"
-  export DEBIAN_FRONTEND=noninteractive
-  #apt-get -y update &
-  #upd_process_id=$!
-  #echo upd_process_id exited with $?
-  export DEBIAN_FRONTEND=noninteractive
+  apt-get -y update
   apt-get -y install openjdk-8-jdk 
-  #oj_process_id=$!
-  #echo oj_process_id exited with $?
-
   exit 0
+
 fi
 if [ -z "$manual" ]; then
   echo "Performing package Oracle install"
