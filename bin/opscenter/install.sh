@@ -68,7 +68,16 @@ done
 echo "before apt-get update $output"
 apt-get -y update &
 update_process_id=$!
-echo "update_process_id $update_process_id"
+echo "update_process_id exit status is $?"
 
+# check for lock
+echo -e "opscenter Checking if apt/dpkg running before update, start: $(date +%r)"
+while [ $SECONDS -lt $end ]; do
+   output=`ps -A | grep -e apt -e dpkg`
+   if [ -z "$output" ]
+   then
+     break;
+   fi
+done
 
 apt-get -y install opscenter=$opscenter_version
