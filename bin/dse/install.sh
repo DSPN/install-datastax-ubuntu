@@ -40,19 +40,19 @@ else
   echo "deb http://datastax%40clouddev.com:CJ9o%21wOlDX1a@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
 fi
 
+export DEBIAN_FRONTEND=noninteractive
 end=150
 #
-#killall -9 apt apt-get apt-key
-#systemctl stop apt-daily.service
-#systemctl stop apt-daily-upgrade.service 
 #
-#rm /var/lib/dpkg/lock
-#rm /var/lib/apt/lists/lock
-#rm /var/cache/apt/archives/lock
+killall -9 apt apt-get apt-key
 #
-#dpkg --configure -a &
-#dpkg_process_id=$!
-#echo "dpkg_process_id $dpkg_process_id"
+rm /var/lib/dpkg/lock
+rm /var/lib/apt/lists/lock
+rm /var/cache/apt/archives/lock
+#
+dpkg --configure -a &
+dpkg_process_id=$!
+echo "dpkg_process_id $dpkg_process_id"
 #
 
 #

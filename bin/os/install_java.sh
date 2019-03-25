@@ -31,10 +31,8 @@ done
 echo "Installing the JDK"
 
 if [ -n "$openjdk" ]; then
+  export DEBIAN_FRONTEND=noninteractive
   echo "Performing package OpenJDK install"
-  # check for lock
-  echo -e "Checking if apt/dpkg running, start: $(date +%r)"
-  #while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
   end=150
 
   # install extra packages

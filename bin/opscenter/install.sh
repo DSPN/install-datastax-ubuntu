@@ -27,10 +27,9 @@ fi
 
 end=150
 
+export DEBIAN_FRONTEND=noninteractive
 #
 killall -9 apt apt-get apt-key
-#systemctl stop apt-daily.service
-#systemctl stop apt-daily-upgrade.service 
 #
 rm /var/lib/dpkg/lock
 rm /var/lib/apt/lists/lock
