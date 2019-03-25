@@ -28,19 +28,21 @@ fi
 end=150
 
 #
-killall -9 apt apt-get apt-key
+#killall -9 apt apt-get apt-key
+systemctl stop apt-daily.service
+systemctl stop apt-daily-upgrade.service 
 #
 rm /var/lib/dpkg/lock
 rm /var/lib/apt/lists/lock
 rm /var/cache/apt/archives/lock
 #
-dpkg --configure -a &
-dpkg_process_id=$!
-echo "dpkg_process_id $dpkg_process_id"
+#dpkg --configure -a &
+#dpkg_process_id=$!
+#echo "dpkg_process_id $dpkg_process_id"
 #
 
 # check for lock
-echo -e "Checking if apt/dpkg running before repo-key, start: $(date +%r)"
+echo -e "opscenter Checking if apt/dpkg running before repo-key, start: $(date +%r)"
 while [ $SECONDS -lt $end ]; do
    output=`ps -A | grep -e apt -e dpkg`
    if [ -z "$output" ]
@@ -54,7 +56,7 @@ done
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 
 # check for lock 
-echo -e "Checking if apt/dpkg running before update, start: $(date +%r)"
+echo -e "opscenter Checking if apt/dpkg running before update, start: $(date +%r)"
 while [ $SECONDS -lt $end ]; do
    output=`ps -A | grep -e apt -e dpkg`
    if [ -z "$output" ]
@@ -64,19 +66,12 @@ while [ $SECONDS -lt $end ]; do
 done
 
 echo "before apt-get update $output"
-apt-get -y update &
-update_process_id=$!
-echo "update_process_id $update_process_id"
+#apt-get -y update &
+#update_process_id=$!
+#echo "update_process_id $update_process_id"
 
-# check for lock
-echo -e "Checking if apt/dpkg running before install opc, start: $(date +%r)"
-while [ $SECONDS -lt $end ]; do
-   output=`ps -A | grep -e apt -e dpkg`
-   if [ -z "$output" ]
-   then
-     break;
-   fi
-done
-echo "before opsc install  $output"
 
 apt-get -y install opscenter=$opscenter_version
+
+systemctl start apt-daily.service
+systemctl start apt-daily-upgrade.service 

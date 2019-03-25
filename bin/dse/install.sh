@@ -42,21 +42,23 @@ fi
 
 end=150
 #
-killall -9 apt apt-get apt-key
+#killall -9 apt apt-get apt-key
+systemctl stop apt-daily.service
+systemctl stop apt-daily-upgrade.service 
 #
 rm /var/lib/dpkg/lock
 rm /var/lib/apt/lists/lock
 rm /var/cache/apt/archives/lock
 #
-dpkg --configure -a &
-dpkg_process_id=$!
-echo "dpkg_process_id $dpkg_process_id"
+#dpkg --configure -a &
+#dpkg_process_id=$!
+#echo "dpkg_process_id $dpkg_process_id"
 #
 
 #
 
 # check for lock
-echo -e "Checking if apt/dpkg running before repo_key, start: $(date +%r)"
+echo -e "node Checking if apt/dpkg running before repo_key, start: $(date +%r)"
 while [ $SECONDS -lt $end ]; do
    output=`ps -A | grep -e apt -e dpkg`
    if [ -z "$output" ]
@@ -68,7 +70,7 @@ done
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 #
 # check for lock
-echo -e "Checking if apt/dpkg running after update, start: $(date +%r)"
+echo -e "node Checking if apt/dpkg running after update, start: $(date +%r)"
 while [ $SECONDS -lt $end ]; do
    output=`ps -A | grep -e apt -e dpkg`
    if [ -z "$output" ]
@@ -79,21 +81,10 @@ done
 
 echo "before apt-get update $output"
 #
-apt-get -y update &
-update_process_id=$!
-echo "update_process_id $update_process_id"
+#apt-get -y update &
+#update_process_id=$!
+#echo "update_process_id $update_process_id"
 #
-# check for lock
-echo -e "Checking if apt/dpkg running after update, start: $(date +%r)"
-while [ $SECONDS -lt $end ]; do
-   output=`ps -A | grep -e apt -e dpkg`
-   if [ -z "$output" ]
-   then
-     break;
-   fi
-done
-
-echo "before install $output"
 
 echo "Running apt-get install dse"
 apt-get -y install dse-full=$dse_version dse=$dse_version dse-demos=$dse_version dse-libsolr=$dse_version dse-libtomcat=$dse_version dse-liblog4j=$dse_version dse-libcassandra=$dse_version dse-libspark=$dse_version dse-libhadoop2-client-native=$dse_version dse-libgraph=$dse_version dse-libhadoop2-client=$dse_version
@@ -116,3 +107,6 @@ apt-get -y install datastax-agent=$opscenter_version
 # The install of dse creates a cassandra user, so now we can do this:
 chown cassandra /mnt
 chgrp cassandra /mnt
+
+systemctl start apt-daily.service
+systemctl start apt-daily-upgrade.service 
