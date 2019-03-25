@@ -47,7 +47,7 @@ rm /var/lib/dpkg/lock
 #
 dpkg --configure -a
 #
-end=150
+end=300
 
 # check for lock
 echo -e "Checking if apt/dpkg running before update, start: $(date +%r)"
@@ -75,6 +75,17 @@ echo "before apt-get update $output"
 #
 apt-get -y update
 #
+# check for lock
+echo -e "Checking if apt/dpkg running after update, start: $(date +%r)"
+while [ $SECONDS -lt $end ]; do
+   output=`ps -A | grep -e apt -e dpkg`
+   if [ -z "$output" ]
+   then
+     break;
+   fi
+done
+
+echo "before install $output"
 
 echo "Running apt-get install dse"
 apt-get -y install dse-full=$dse_version dse=$dse_version dse-demos=$dse_version dse-libsolr=$dse_version dse-libtomcat=$dse_version dse-liblog4j=$dse_version dse-libcassandra=$dse_version dse-libspark=$dse_version dse-libhadoop2-client-native=$dse_version dse-libgraph=$dse_version dse-libhadoop2-client=$dse_version
