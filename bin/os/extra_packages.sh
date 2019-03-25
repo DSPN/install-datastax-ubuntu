@@ -31,6 +31,7 @@ done
 #echo "update_process_id $update_process_id"
 
 
+export DEBIAN_FRONTEND=noninteractive
 apt-get -y install zip unzip python-pip jq sysstat
 
 # check for lock

@@ -67,6 +67,7 @@ while [ $SECONDS -lt $end ]; do
    fi
 done
 #
+export DEBIAN_FRONTEND=noninteractive
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 #
 # check for lock
@@ -81,12 +82,14 @@ done
 
 echo "before apt-get update $output"
 #
+export DEBIAN_FRONTEND=noninteractive
 apt-get -y update &
 update_process_id=$!
 echo "update_process_id $update_process_id"
 #
 
 echo "Running apt-get install dse"
+export DEBIAN_FRONTEND=noninteractive
 apt-get -y install dse-full=$dse_version dse=$dse_version dse-demos=$dse_version dse-libsolr=$dse_version dse-libtomcat=$dse_version dse-liblog4j=$dse_version dse-libcassandra=$dse_version dse-libspark=$dse_version dse-libhadoop2-client-native=$dse_version dse-libgraph=$dse_version dse-libhadoop2-client=$dse_version
 
 # check for lock
@@ -102,6 +105,7 @@ done
 echo "before agent $output"
 
 echo "Running apt-get install datastax-agent"
+export DEBIAN_FRONTEND=noninteractive
 apt-get -y install datastax-agent=$opscenter_version
 
 # The install of dse creates a cassandra user, so now we can do this:

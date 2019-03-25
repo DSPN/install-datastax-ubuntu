@@ -52,7 +52,7 @@ while [ $SECONDS -lt $end ]; do
 done
 
 
-
+export DEBIAN_FRONTEND=noninteractive
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 
 # check for lock 
@@ -66,6 +66,7 @@ while [ $SECONDS -lt $end ]; do
 done
 
 echo "before apt-get update $output"
+export DEBIAN_FRONTEND=noninteractive
 apt-get -y update &
 update_process_id=$!
 echo "update_process_id exit status is $?"
@@ -80,4 +81,5 @@ while [ $SECONDS -lt $end ]; do
    fi
 done
 
+export DEBIAN_FRONTEND=noninteractive
 apt-get -y install opscenter=$opscenter_version
