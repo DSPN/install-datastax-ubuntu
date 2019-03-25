@@ -55,7 +55,7 @@ if [ -n "$openjdk" ]; then
   oj_process_id=$!
   echo oj_process_id exited with $?
 
-  #exit 0
+  exit 0
 fi
 if [ -z "$manual" ]; then
   echo "Performing package Oracle install"
