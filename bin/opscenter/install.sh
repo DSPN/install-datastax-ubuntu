@@ -27,7 +27,6 @@ fi
 
 
 export DEBIAN_FRONTEND=noninteractive
-timeout 10s tail -f /dev/null
 echo -e "Checking if apt/dpkg running, start: $(date +%r)"
 pkill -9  apt
 killall -9 apt apt-get apt-key
