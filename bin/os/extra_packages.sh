@@ -2,6 +2,7 @@
 export DEBIAN_FRONTEND=noninteractive
 
 # install extra packages
+timeout 10s tail -f /dev/null
 echo -e "Checking if apt/dpkg running, start: $(date +%r)"
 pkill -9  apt
 killall -9 apt apt-get apt-key
