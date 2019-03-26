@@ -60,4 +60,3 @@ apt-get -y install datastax-agent=$opscenter_version
 chown cassandra /mnt
 chgrp cassandra /mnt
 
-systemctl start apt-daily &
