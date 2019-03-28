@@ -26,18 +26,29 @@ else
 fi
 
 
-export DEBIAN_FRONTEND=noninteractive
-echo -e "Checking if apt/dpkg running, start: $(date +%r)"
-pkill -9  apt
-killall -9 apt apt-get apt-key
+#export DEBIAN_FRONTEND=noninteractive
+#echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+#pkill -9  apt
+#killall -9 apt apt-get apt-key
 #
-rm /var/lib/dpkg/lock
-rm /var/lib/apt/lists/lock
-rm /var/cache/apt/archives/lock
+#rm /var/lib/dpkg/lock
+#rm /var/lib/apt/lists/lock
+#rm /var/cache/apt/archives/lock
 #
-dpkg --configure -a &
-dpkg_process_id=$!
-echo "dpkg_process_id $dpkg_process_id"
+#dpkg --configure -a &
+#dpkg_process_id=$!
+#echo "dpkg_process_id $dpkg_process_id"
+
+systemctl stop apt-daily.service
+systemctl kill --kill-who=all apt-daily.service
+
+# wait until `apt-get updated` has been killed
+while ! (systemctl list-units --all apt-daily.service | fgrep -q dead)
+do
+  sleep 1;
+done
+
+
 echo -e "No other procs: $(date +%r)"
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 
