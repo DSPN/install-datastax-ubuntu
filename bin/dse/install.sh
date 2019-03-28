@@ -42,6 +42,7 @@ fi
 
 export DEBIAN_FRONTEND=noninteractive
 echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+echo "---> install dse - dealing with apt.daily"
 pkill -9  apt
 killall -9 apt apt-get apt-key
 #
@@ -50,6 +51,7 @@ rm /var/lib/apt/lists/lock
 rm /var/cache/apt/archives/lock
 systemctl stop apt-daily.service
 systemctl kill --kill-who=all apt-daily.service
+echo "---> install dse - apt.daily dealt with"
 
 # wait until `apt-get updated` has been killed
 #while ! (systemctl list-units --all apt-daily.service | fgrep -q dead)

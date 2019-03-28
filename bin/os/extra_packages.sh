@@ -3,6 +3,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # install extra packages
 echo -e "Checking if apt/dpkg running, start: $(date +%r)"
+echo "---> install extrapkg - dealing with apt.daily"
 pkill -9  apt
 killall -9 apt apt-get apt-key
 #
@@ -18,6 +19,7 @@ rm /var/cache/apt/archives/lock
 
 systemctl stop apt-daily.service
 systemctl kill --kill-who=all apt-daily.service
+echo "---> install extrapkg -  apt.daily dealt with"
 
 # wait until `apt-get updated` has been killed
 #while ! (systemctl list-units --all apt-daily.service | fgrep -q dead)

@@ -29,6 +29,22 @@ while getopts 'hmo' opt; do
 done
 
 echo "Installing the JDK"
+echo "---> install_java - dealing with apt.daily"
+killall -9 apt apt-get apt-key
+#
+rm /var/lib/dpkg/lock
+rm /var/lib/apt/lists/lock
+rm /var/cache/apt/archives/lock
+#
+#dpkg --configure -a &
+#dpkg_process_id=$!
+#echo "dpkg_process_id $dpkg_process_id"
+
+systemctl stop apt-daily.service
+systemctl kill --kill-who=all apt-daily.service
+echo "<--- install_java - apt.daily dealt with"
+
+
 
 if [ -n "$openjdk" ]; then
 
