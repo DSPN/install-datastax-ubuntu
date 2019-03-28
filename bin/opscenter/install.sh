@@ -28,12 +28,12 @@ fi
 
 #export DEBIAN_FRONTEND=noninteractive
 #echo -e "Checking if apt/dpkg running, start: $(date +%r)"
-#pkill -9  apt
-#killall -9 apt apt-get apt-key
+pkill -9  apt
+killall -9 apt apt-get apt-key
 #
-#rm /var/lib/dpkg/lock
-#rm /var/lib/apt/lists/lock
-#rm /var/cache/apt/archives/lock
+rm /var/lib/dpkg/lock
+rm /var/lib/apt/lists/lock
+rm /var/cache/apt/archives/lock
 #
 #dpkg --configure -a &
 #dpkg_process_id=$!
