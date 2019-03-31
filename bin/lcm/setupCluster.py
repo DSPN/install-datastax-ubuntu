@@ -101,7 +101,7 @@ def main():
         "json": {
             'cassandra-yaml': {
                 "authenticator":"com.datastax.bdp.cassandra.auth.DseAuthenticator",
-                "num_tokens":8,
+                "num_tokens":64,
                 "allocate_tokens_for_local_replication_factor": 2,
                 "endpoint_snitch":"org.apache.cassandra.locator.GossipingPropertyFileSnitch",
                 "compaction_throughput_mb_per_sec": 64
