@@ -62,7 +62,7 @@ echo "---> install dse - apt.daily dealt with"
 echo -e "No other procs: $(date +%r)"
 curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 
-apt-get update 
+apt-get -y update
 
 
 echo "Running apt-get install dse"
