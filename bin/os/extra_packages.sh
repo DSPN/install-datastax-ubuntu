@@ -27,11 +27,11 @@ echo "---> install extrapkg -  apt.daily dealt with"
 #  sleep 1;
 #done
 
-apt-get -y upgrade walinuxagent
+#apt-get -y upgrade walinuxagent
 #systemctl restart walinuxagent.service
 
 
-#apt-get update
+apt-get update
 apt-get -y install zip unzip python-pip jq sysstat
 
 
