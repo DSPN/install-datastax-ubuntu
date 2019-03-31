@@ -9,7 +9,7 @@ apt-get update
 apt-get -y install zip unzip python-pip jq sysstat
 
 #
-sudo apt-get install walinuxagent
+apt-get -y upgrade walinuxagent
 systemctl restart walinuxagent.service
 
 # install requests pip pacakge
