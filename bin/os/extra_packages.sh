@@ -8,5 +8,9 @@ echo -e "No other procs: $(date +%r)"
 apt-get update
 apt-get -y install zip unzip python-pip jq sysstat
 
+#
+sudo apt-get install walinuxagent
+systemctl restart walinuxagent.service
+
 # install requests pip pacakge
 pip install requests
