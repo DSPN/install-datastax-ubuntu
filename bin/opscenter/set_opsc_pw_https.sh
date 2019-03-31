@@ -9,9 +9,9 @@ echo "Turn on OpsC auth"
 sed -i 's/enabled = False/enabled = True/g' /etc/opscenter/opscenterd.conf
 
 echo "Turn on SSL"
-#sed -i 's/#ssl_keyfile/ssl_keyfile/g' /etc/opscenter/opscenterd.conf
-#sed -i 's/#ssl_certfile/ssl_certfile/g' /etc/opscenter/opscenterd.conf
-#sed -i 's/#ssl_port/ssl_port/g' /etc/opscenter/opscenterd.conf
+sed -i 's/#ssl_keyfile/ssl_keyfile/g' /etc/opscenter/opscenterd.conf
+sed -i 's/#ssl_certfile/ssl_certfile/g' /etc/opscenter/opscenterd.conf
+sed -i 's/#ssl_port/ssl_port/g' /etc/opscenter/opscenterd.conf
 
 echo "Turn on Agent SSL"
 #echo -e "\n\n# enable agent ssl\n[agents]\nuse_ssl = True" >> /etc/opscenter/opscenterd.conf
