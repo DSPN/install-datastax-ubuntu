@@ -28,7 +28,7 @@ echo "---> install extrapkg -  apt.daily dealt with"
 #done
 
 apt-get -y upgrade walinuxagent
-systemctl restart walinuxagent.service
+#systemctl restart walinuxagent.service
 
 
 #apt-get update
