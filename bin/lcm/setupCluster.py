@@ -34,7 +34,7 @@ def setupArgs():
     parser.add_argument('--config', type=str, help='JSON for config profile. WILL OVERRIDE ALL OTHER CONFIG ARGUMENTS')
     parser.add_argument('--pause', type=int, default=6,
                         help="pause time (sec) between attempts to contact OpsCenter")
-    parser.add_argument('--trys', type=int, default=100,
+    parser.add_argument('--trys', type=int, default=150,
                         help="number of times to attempt to contact OpsCenter")
     parser.add_argument('--verbose', action='store_true', help='verbose flag')
     return parser
