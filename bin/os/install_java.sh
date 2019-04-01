@@ -50,7 +50,7 @@ if [ -n "$openjdk" ]; then
 
   echo "Performing package OpenJDK install"
 
-  apt-get -y update
+  #apt-get -y update
   apt-get -y install openjdk-8-jdk 
   exit 0
 
