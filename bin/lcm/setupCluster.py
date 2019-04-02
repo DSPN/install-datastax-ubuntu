@@ -110,10 +110,7 @@ def main():
                 "authorization_options": {"enabled": True},
                 "authentication_options": {"enabled": True},
                 "dsefs_options": {"enabled": True}
-            },
-	    "job-data": {
-               "continue-on-error": false
-	    }
+            }
         }}
     # Since this isn't necessarily being called on the nodes where 'datapath'
     # exists checking is pointless
@@ -137,7 +134,6 @@ def main():
         print "--nojava passed, adding disable java/jce-policy to default config"
         defaultconfig["json"]["java-setup"] = {}
         defaultconfig["json"]["java-setup"]["manage-java"] = True
-        defaultconfig["json"]["java-setup"] = {}
 
     # Overriding all config profile logic above
     # Todo, read config json from a file or http endpoint
