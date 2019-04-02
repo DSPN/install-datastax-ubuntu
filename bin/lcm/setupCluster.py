@@ -110,7 +110,10 @@ def main():
                 "authorization_options": {"enabled": True},
                 "authentication_options": {"enabled": True},
                 "dsefs_options": {"enabled": True}
-            }
+            },
+	    "job-data": {
+               "continue-on-error": false
+	    }
         }}
     # Since this isn't necessarily being called on the nodes where 'datapath'
     # exists checking is pointless
