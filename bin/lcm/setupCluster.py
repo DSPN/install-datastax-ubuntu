@@ -126,7 +126,7 @@ def main():
         print "--aoss passed, adding enable AOSS to default config"
         defaultconfig["json"]["dse-yaml"]["alwayson_sql_options"] = {"enabled": True}
         defaultconfig["json"]["dse-yaml"]["resource_manager_options"] = {"worker_options": {"workpools": [{"memory": "0.4", "cores": "0.4", "name": "alwayson_sql"}]}}
-        defaultconfig["json"]["job-data"]["concurrency-strategy"] = "rack-per-cluster-at-a-time" 
+        defaultconfig["json"]["job-data"]["concurrency-strategy"] = "cluster-at-a-time" 
     elif args.aoss and args.dsever.startswith('5'):
         print "WARNING: --aoss passed and DSE version <6, ignoring --aoss"
     # if nojava option passed, disable java/jce
