@@ -286,7 +286,7 @@ class OpsCenter:
                "resource-id":r_id,
                "auto-bootstrap":False,
                "concurrency-strategy":"cluster-at-a-time",
-               "batch-size": 6,
+               "batch-size": 2,
                "continue-on-error":True}
         data = json.dumps(job)
         response = self.session.post("{url}/api/v2/lcm/actions/install".format(url=self.url), data=data).json()
