@@ -28,17 +28,7 @@ fi
 echo "Installing DataStax Enterprise"
 
 echo "Adding the DataStax repository"
-if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
-  echo "deb http://datastax%40google.com:8GdeeVT2s7zi@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
-elif [[ $cloud_type == "azure" ]]; then
-  echo "deb http://datastax%40microsoft.com:3A7vadPHbNT@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
-elif [[ $cloud_type == "aws" ]]; then
-  echo "deb http://datastax%40amazon.com:A8ePXn%5EHH0%260@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
-elif [[ $cloud_type == "oracle" ]] || [[ $cloud_type == "bmc" ]]; then
-  echo "deb http://datastax%40oracle.com:*9En9HH4j%5Ep4@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
-else
-  echo "deb http://datastax%40clouddev.com:CJ9o%21wOlDX1a@debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
-fi
+echo "deb https://debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
 
 # check for lock
 echo -e "Checking if apt/dpkg running, start: $(date +%r)"
