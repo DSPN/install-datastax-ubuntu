@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 cloud_type=$1
-opscenter_version=6.7.1
+opscenter_version=6.7.8
 
 if [ -z "$OPSC_VERSION" ]
 then
@@ -13,17 +13,7 @@ fi
 echo "Installing OpsCenter"
 
 echo "Adding the DataStax repository"
-if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
-  echo "deb http://debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
-elif [[ $cloud_type == "azure" ]]; then
-  echo "deb http://debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
-elif [[ $cloud_type == "aws" ]]; then
-  echo "deb http://debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
-elif [[ $cloud_type == "oracle" ]] || [[ $cloud_type == "bmc" ]]; then
-  echo "deb http://debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
-else
-  echo "deb http://debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
-fi
+echo "deb https://debian.datastax.com/enterprise stable main" | sudo tee -a /etc/apt/sources.list.d/datastax.sources.list
 
 echo -e "Checking if apt/dpkg running, start: $(date +%r)"
 while ps -A | grep -e apt -e dpkg >/dev/null 2>&1; do sleep 10s; done;
